@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Save } from "lucide-react";
+import { Loader2, Plus, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -20,17 +21,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addWord, updateWord } from "@/lib/storage";
+import { createWord, updateWordAPI, type VocabularyWordDB } from "@/lib/api";
 import {
   CATEGORIES,
   type Category,
   LANGUAGES,
   type Language,
-  type VocabularyWord,
 } from "@/types/vocabulary";
 
 interface Props {
-  word?: VocabularyWord | null;
+  word?: VocabularyWordDB | null;
   onClose: () => void;
   onSave: () => void;
   open: boolean;
@@ -44,12 +44,14 @@ export default function WordForm({
   open,
   defaultLanguage = "english",
 }: Props) {
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     word: "",
     pronunciation: "",
     category: "Noun" as Category | string,
     meaning: "",
     example: "",
+    exampleTranslation: "",
     note: "",
     language: "english" as Language,
     check1: false,
@@ -65,8 +67,9 @@ export default function WordForm({
         category: word.category,
         meaning: word.meaning,
         example: word.example,
+        exampleTranslation: word.exampleTranslation || "",
         note: word.note,
-        language: word.language,
+        language: word.language as Language,
         check1: word.check1,
         check2: word.check2,
         check3: word.check3,
@@ -78,6 +81,7 @@ export default function WordForm({
         category: "Noun",
         meaning: "",
         example: "",
+        exampleTranslation: "",
         note: "",
         language: defaultLanguage,
         check1: false,
@@ -87,7 +91,7 @@ export default function WordForm({
     }
   }, [word, defaultLanguage]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.word.trim()) {
@@ -95,21 +99,29 @@ export default function WordForm({
       return;
     }
 
-    if (word) {
-      updateWord(word.id, formData);
-    } else {
-      addWord(formData);
-    }
+    setSaving(true);
+    try {
+      if (word) {
+        await updateWordAPI(word.id, formData);
+      } else {
+        await createWord(formData);
+      }
 
-    onSave();
-    onClose();
+      onSave();
+      onClose();
+    } catch (error) {
+      console.error("Failed to save word:", error);
+      alert("保存に失敗しました");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col bg-white">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
             {word ? <Save className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
             {word ? "単語を編集" : "新しい単語を追加"}
           </DialogTitle>
@@ -122,9 +134,9 @@ export default function WordForm({
           <div className="grid grid-cols-2 gap-4">
             {/* 言語 */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">
+              <Label htmlFor="language" className="text-gray-600">
                 言語
-              </label>
+              </Label>
               <Select
                 value={formData.language}
                 onValueChange={(value) =>
@@ -133,8 +145,9 @@ export default function WordForm({
                     language: value as Language,
                   }))
                 }
+                disabled={saving}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger id="language" className="w-full">
                   <SelectValue placeholder="言語を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -149,9 +162,9 @@ export default function WordForm({
 
             {/* 品詞 */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">
+              <Label htmlFor="category" className="text-gray-600">
                 品詞
-              </label>
+              </Label>
               <Select
                 value={formData.category}
                 onValueChange={(value) =>
@@ -160,8 +173,9 @@ export default function WordForm({
                     category: value as Category,
                   }))
                 }
+                disabled={saving}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger id="category" className="w-full">
                   <SelectValue placeholder="品詞を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -177,25 +191,28 @@ export default function WordForm({
 
           {/* 単語 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
-              単語 <span className="text-destructive">*</span>
-            </label>
+            <Label htmlFor="word" className="text-gray-600">
+              単語 <span className="text-red-500">*</span>
+            </Label>
             <Input
+              id="word"
               value={formData.word}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, word: e.target.value }))
               }
               placeholder="例: ephemeral"
               required
+              disabled={saving}
             />
           </div>
 
           {/* 発音記号 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <Label htmlFor="pronunciation" className="text-gray-600">
               発音記号
-            </label>
+            </Label>
             <Input
+              id="pronunciation"
               value={formData.pronunciation}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -205,66 +222,91 @@ export default function WordForm({
               }
               placeholder="例: ɪˈfem(ə)rəl"
               className="font-mono"
+              disabled={saving}
             />
           </div>
 
           {/* 意味 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <Label htmlFor="meaning" className="text-gray-600">
               意味
-            </label>
+            </Label>
             <Textarea
+              id="meaning"
               value={formData.meaning}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, meaning: e.target.value }))
               }
               placeholder="日本語での意味を入力"
               rows={2}
+              disabled={saving}
             />
           </div>
 
           {/* 例文 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <Label htmlFor="example" className="text-gray-600">
               例文
-            </label>
+            </Label>
             <Textarea
+              id="example"
               value={formData.example}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, example: e.target.value }))
               }
               placeholder="例文を入力"
               rows={2}
+              disabled={saving}
+            />
+          </div>
+
+          {/* 例文の日本語訳 */}
+          <div className="space-y-2">
+            <Label htmlFor="exampleTranslation" className="text-gray-600">
+              例文の日本語訳
+            </Label>
+            <Textarea
+              id="exampleTranslation"
+              value={formData.exampleTranslation}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  exampleTranslation: e.target.value,
+                }))
+              }
+              placeholder="例文の日本語訳を入力（任意）"
+              rows={2}
+              disabled={saving}
             />
           </div>
 
           {/* メモ */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <Label htmlFor="note" className="text-gray-600">
               メモ
-            </label>
+            </Label>
             <Textarea
+              id="note"
               value={formData.note}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, note: e.target.value }))
               }
               placeholder="覚え方のヒントなど"
               rows={2}
+              disabled={saving}
             />
           </div>
 
           {/* 進捗チェック */}
           <div className="space-y-3">
-            <label className="text-sm font-medium text-muted-foreground">
+            <span className="text-sm font-medium text-gray-600">
               進捗チェック
-            </label>
+            </span>
             <div className="flex gap-6">
               {[1, 2, 3].map((num) => (
-                <label
-                  key={num}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
+                <div key={num} className="flex items-center gap-2">
                   <Checkbox
+                    id={`check${num}`}
                     checked={
                       formData[`check${num}` as "check1" | "check2" | "check3"]
                     }
@@ -274,20 +316,35 @@ export default function WordForm({
                         [`check${num}`]: checked,
                       }))
                     }
+                    disabled={saving}
                   />
-                  <span className="text-sm">Check {num}</span>
-                </label>
+                  <Label
+                    htmlFor={`check${num}`}
+                    className="text-sm text-gray-700 cursor-pointer"
+                  >
+                    Check {num}
+                  </Label>
+                </div>
               ))}
             </div>
           </div>
         </form>
 
-        <DialogFooter className="mt-4 pt-4 border-t">
-          <Button type="button" variant="ghost" onClick={onClose}>
+        <DialogFooter className="mt-4 pt-4 border-t border-gray-200">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onClose}
+            disabled={saving}
+          >
             キャンセル
           </Button>
-          <Button onClick={handleSubmit}>
-            <Save className="w-4 h-4" />
+          <Button onClick={handleSubmit} disabled={saving}>
+            {saving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
             {word ? "更新" : "追加"}
           </Button>
         </DialogFooter>

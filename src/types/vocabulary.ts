@@ -23,6 +23,7 @@ export interface VocabularyWord {
   category: Category | string;
   meaning: string;
   example: string;
+  exampleTranslation: string; // 例文の日本語訳
   note: string;
   language: Language;
   check1: boolean;
@@ -45,7 +46,7 @@ export interface FilterOptions {
   search: string;
   language: Language | "all";
   category: string | "all";
-  status: "all" | "mastered" | "learning" | "notStarted";
+  status: "all" | "mastered" | "learning" | "notStarted" | "level1" | "level2";
   sortBy: "word" | "createdAt" | "updatedAt";
   sortOrder: "asc" | "desc";
 }

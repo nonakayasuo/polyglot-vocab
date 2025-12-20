@@ -76,6 +76,12 @@ export function importFromNotionCSV(csvText: string): VocabularyWord[] {
   const check3Idx = getIndex(["check 3", "check3"]);
   const createdIdx = getIndex(["created", "created time", "作成日"]);
   const exampleIdx = getIndex(["example", "例文"]);
+  const exampleTranslationIdx = getIndex([
+    "example translation",
+    "exampletranslation",
+    "例文訳",
+    "例文の日本語訳",
+  ]);
   const japaneseIdx = getIndex(["japanese", "meaning", "意味", "日本語"]);
   const noteIdx = getIndex(["note", "notes", "メモ"]);
   const pronunciationIdx = getIndex(["pronunciation", "発音", "発音記号"]);
@@ -91,6 +97,8 @@ export function importFromNotionCSV(csvText: string): VocabularyWord[] {
       category: categoryIdx >= 0 ? row[categoryIdx] || "Other" : "Other",
       meaning: japaneseIdx >= 0 ? row[japaneseIdx] || "" : "",
       example: exampleIdx >= 0 ? row[exampleIdx] || "" : "",
+      exampleTranslation:
+        exampleTranslationIdx >= 0 ? row[exampleTranslationIdx] || "" : "",
       note: noteIdx >= 0 ? row[noteIdx] || "" : "",
       language: "english" as Language,
       check1: check1Idx >= 0 ? row[check1Idx]?.toLowerCase() === "yes" : false,
@@ -131,6 +139,7 @@ export function exportToCSV(words: VocabularyWord[]): string {
     "Category",
     "Meaning",
     "Example",
+    "Example Translation",
     "Note",
     "Language",
     "Check 1",
@@ -153,6 +162,7 @@ export function exportToCSV(words: VocabularyWord[]): string {
     escapeCSV(word.category),
     escapeCSV(word.meaning),
     escapeCSV(word.example),
+    escapeCSV(word.exampleTranslation || ""),
     escapeCSV(word.note),
     word.language,
     word.check1 ? "Yes" : "No",

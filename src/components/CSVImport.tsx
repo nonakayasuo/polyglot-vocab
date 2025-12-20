@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { importWordsAPI } from "@/lib/api";
 import { importFromNotionCSV } from "@/lib/csv";
-import { importWords } from "@/lib/storage";
 
 interface Props {
   onImport: () => void;
@@ -47,9 +47,11 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
         return;
       }
 
-      const importedCount = importWords(words);
+      setMessage("データベースに保存中...");
+      const result = await importWordsAPI(words);
+
       setStatus("success");
-      setMessage(`${importedCount}件の新しい単語をインポートしました`);
+      setMessage(`${result.imported}件の新しい単語をインポートしました`);
 
       setTimeout(() => {
         onImport();
@@ -98,20 +100,21 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-white">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
             <Upload className="w-5 h-5" />
             CSVインポート
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: Drop zone requires drag events */}
           <div
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
               dragActive
-                ? "border-primary bg-primary/10"
-                : "border-border hover:border-muted-foreground"
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-300 hover:border-gray-400"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -128,10 +131,12 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
 
             {status === "idle" && (
               <>
-                <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="mb-2">CSVファイルをドラッグ＆ドロップ</p>
-                <p className="text-sm text-muted-foreground">
-                  または<span className="text-primary">クリック</span>
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="mb-2 text-gray-700">
+                  CSVファイルをドラッグ＆ドロップ
+                </p>
+                <p className="text-sm text-gray-500">
+                  または<span className="text-blue-500">クリック</span>
                   して選択
                 </p>
               </>
@@ -139,26 +144,26 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
 
             {status === "loading" && (
               <div className="flex flex-col items-center">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-                <p>{message}</p>
+                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-gray-700">{message}</p>
               </div>
             )}
 
             {status === "success" && (
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
-                  <Check className="w-6 h-6 text-emerald-400" />
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+                  <Check className="w-6 h-6 text-emerald-500" />
                 </div>
-                <p className="text-emerald-400">{message}</p>
+                <p className="text-emerald-600">{message}</p>
               </div>
             )}
 
             {status === "error" && (
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-destructive/20 rounded-full flex items-center justify-center mb-4">
-                  <AlertCircle className="w-6 h-6 text-destructive" />
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                  <AlertCircle className="w-6 h-6 text-red-500" />
                 </div>
-                <p className="text-destructive">{message}</p>
+                <p className="text-red-600">{message}</p>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -171,17 +176,18 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
             )}
           </div>
 
-          <div className="p-4 bg-muted rounded-xl">
-            <h4 className="text-sm font-medium text-muted-foreground mb-2">
+          <div className="p-4 bg-gray-50 rounded-xl">
+            <h4 className="text-sm font-medium text-gray-600 mb-2">
               対応フォーマット
             </h4>
-            <ul className="text-xs text-muted-foreground space-y-1">
+            <ul className="text-xs text-gray-500 space-y-1">
               <li>• Notionからエクスポートした単語帳CSV</li>
               <li>
                 • ヘッダー行: English, Category, Check 1-3, Japanese, Example,
                 Note, Pronunciation
               </li>
               <li>• 既存の単語と重複する場合はスキップされます</li>
+              <li>• データはSQLiteデータベースに永続保存されます</li>
             </ul>
           </div>
         </div>

@@ -74,9 +74,9 @@ export default function SearchFilter({
               <span className="text-xs">{tab.icon}</span>
             ) : (
               <div className="flex gap-0.5">
-                {tab.checks?.map((checked, i) => (
+                {tab.checks?.map((checked, checkIndex) => (
                   <div
-                    key={i}
+                    key={`${tab.value}-check-${checkIndex}`}
                     className={`w-2.5 h-2.5 rounded-sm ${
                       checked ? "bg-gray-800" : "bg-gray-300"
                     }`}

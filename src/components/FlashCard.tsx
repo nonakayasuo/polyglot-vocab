@@ -158,17 +158,10 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
       </div>
 
       {/* カード */}
-      <div
-        className="relative perspective-1000 cursor-pointer"
+      <button
+        type="button"
+        className="relative perspective-1000 cursor-pointer w-full text-left"
         onClick={() => setIsFlipped(!isFlipped)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setIsFlipped(!isFlipped);
-          }
-        }}
-        role="button"
-        tabIndex={0}
       >
         <div
           className={`relative w-full min-h-[400px] transition-transform duration-500 transform-style-3d ${
@@ -262,7 +255,7 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
             )}
           </div>
         </div>
-      </div>
+      </button>
 
       {/* コントロール */}
       <div className="mt-8 flex items-center justify-center gap-4">

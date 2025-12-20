@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChevronRight, Languages, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { BookOpen, Languages, ChevronRight } from "lucide-react";
-import { LANGUAGES, Language } from "@/types/vocabulary";
-import { getStatsByLanguage, getStats, LanguageStats } from "@/lib/storage";
+import { useCallback, useEffect, useState } from "react";
+import {
+  fetchStats,
+  type LanguageStats,
+  type VocabularyStats,
+} from "@/lib/api";
+import { LANGUAGES, type Language } from "@/types/vocabulary";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const [languageStats, setLanguageStats] = useState<
     Record<Language, LanguageStats>
   >({
@@ -46,45 +51,68 @@ export default function Home() {
     notStarted: 0,
   });
 
-  const loadData = () => {
-    const stats: Record<Language, LanguageStats> = {
-      english: getStatsByLanguage("english"),
-      spanish: getStatsByLanguage("spanish"),
-      korean: getStatsByLanguage("korean"),
-      chinese: getStatsByLanguage("chinese"),
-    };
-    setLanguageStats(stats);
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+      // 各言語の統計を並列取得
+      const [english, spanish, korean, chinese, overall] = await Promise.all([
+        fetchStats("english") as Promise<LanguageStats>,
+        fetchStats("spanish") as Promise<LanguageStats>,
+        fetchStats("korean") as Promise<LanguageStats>,
+        fetchStats("chinese") as Promise<LanguageStats>,
+        fetchStats() as Promise<VocabularyStats>,
+      ]);
 
-    const overall = getStats();
-    setTotalStats({
-      total: overall.total,
-      mastered: overall.mastered,
-      learning: overall.learning,
-      notStarted: overall.notStarted,
-    });
-  };
+      setLanguageStats({
+        english,
+        spanish,
+        korean,
+        chinese,
+      });
+
+      setTotalStats({
+        total: overall.total,
+        mastered: overall.mastered,
+        learning: overall.learning,
+        notStarted: overall.notStarted,
+      });
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const getProgressPercent = (stats: LanguageStats) => {
     if (stats.total === 0) return 0;
     return Math.round((stats.mastered / stats.total) * 100);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* ヘッダー */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-14">
+          <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-2">
-              <Languages className="w-5 h-5 text-gray-700" />
+              <Languages className="w-5 h-5 text-gray-900" />
               <h1 className="text-lg font-semibold text-gray-900">
                 Vocabulary Book
               </h1>
             </div>
+            <div className="text-xs text-gray-500">SQLite Database</div>
           </div>
         </div>
       </header>
@@ -102,28 +130,28 @@ export default function Home() {
         </div>
 
         {/* 総合統計 */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <p className="text-gray-500 text-xs">総単語数</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">
               {totalStats.total}
             </p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
             <p className="text-emerald-600 text-xs">■■■ 習得済み</p>
             <p className="text-2xl font-bold text-emerald-600 mt-1">
               {totalStats.mastered}
             </p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-amber-600 text-xs">学習中</p>
             <p className="text-2xl font-bold text-amber-600 mt-1">
               {totalStats.learning}
             </p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-400 text-xs">□□□ 未学習</p>
-            <p className="text-2xl font-bold text-gray-400 mt-1">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <p className="text-gray-500 text-xs">□□□ 未学習</p>
+            <p className="text-2xl font-bold text-gray-500 mt-1">
               {totalStats.notStarted}
             </p>
           </div>
@@ -137,16 +165,16 @@ export default function Home() {
                 <th className="text-left px-4 py-3 text-gray-500 text-xs font-medium">
                   言語
                 </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium">
+                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden sm:table-cell">
                   単語数
                 </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium">
+                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
                   ■■■
                 </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium">
+                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
                   学習中
                 </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium">
+                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
                   □□□
                 </th>
                 <th className="px-4 py-3 text-gray-500 text-xs font-medium">
@@ -175,29 +203,29 @@ export default function Home() {
                           <span className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
                             {lang.label}
                           </span>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-gray-500">
                             Vocabulary Book
                           </p>
                         </div>
                       </Link>
                     </td>
-                    <td className="text-center px-4 py-4">
+                    <td className="text-center px-4 py-4 hidden sm:table-cell">
                       <span className="font-semibold text-gray-900">
                         {stats.total}
                       </span>
                     </td>
-                    <td className="text-center px-4 py-4">
+                    <td className="text-center px-4 py-4 hidden md:table-cell">
                       <span className="text-emerald-600 font-medium">
                         {stats.mastered}
                       </span>
                     </td>
-                    <td className="text-center px-4 py-4">
+                    <td className="text-center px-4 py-4 hidden md:table-cell">
                       <span className="text-amber-600 font-medium">
                         {stats.learning}
                       </span>
                     </td>
-                    <td className="text-center px-4 py-4">
-                      <span className="text-gray-400 font-medium">
+                    <td className="text-center px-4 py-4 hidden md:table-cell">
+                      <span className="text-gray-500 font-medium">
                         {stats.notStarted}
                       </span>
                     </td>
@@ -217,7 +245,7 @@ export default function Home() {
                     <td className="px-4 py-4">
                       <Link
                         href={`/${lang.value}`}
-                        className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                        className="p-1 text-gray-400 hover:text-gray-900 transition-colors"
                       >
                         <ChevronRight className="w-5 h-5" />
                       </Link>
@@ -230,8 +258,10 @@ export default function Home() {
         </div>
 
         {/* ヒント */}
-        <div className="mt-6 text-center text-gray-400 text-sm">
-          <p>💡 各言語をクリックして、フラッシュカードで効率的に復習しましょう</p>
+        <div className="mt-6 text-center text-gray-500 text-sm">
+          <p>
+            💡 各言語をクリックして、フラッシュカードで効率的に復習しましょう
+          </p>
         </div>
       </main>
     </div>

@@ -103,12 +103,87 @@
         "dependencies": [],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "SQLite + Prismaによるデータベース実装",
+        "description": "LocalStorageからSQLite + Prismaへのデータ永続化層の移行",
+        "details": "Prismaのセットアップ、スキーマ定義（VocabularyWord, Language）、マイグレーション実行、APIルートの作成、既存のストレージ関数をDB操作に置き換え",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "本番環境用データベース設定（Turso/LibSQL）",
+        "description": "Vercelサーバーレス環境で使用するための本番用データベースを設定する",
+        "details": "SQLiteはVercelのサーバーレス環境では永続化できないため、Turso（LibSQL）などのエッジ対応DBサービスへ移行する。\n\n必要な作業：\n1. Tursoアカウント作成とデータベース作成\n2. @libsql/clientのインストール\n3. Prismaアダプターの設定変更\n4. 環境変数（TURSO_DATABASE_URL, TURSO_AUTH_TOKEN）の設定\n5. マイグレーションの実行\n6. 既存データの移行（必要に応じて）",
+        "testStrategy": "本番環境でCRUD操作が正常に動作することを確認",
+        "status": "pending",
+        "dependencies": [
+          10
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "アプリのブランディングとメタデータ設定",
+        "description": "「野中やすおの単語帳」としてブランディングし、適切なメタデータを設定する",
+        "details": "アプリ名とメタデータの設定：\n1. layout.tsxのmetadata設定（title: 野中やすおの単語帳, description, keywords）\n2. ファビコンの作成と設定（favicon.ico: 16x16, 32x32）\n3. apple-touch-icon.png（180x180）\n4. Open Graph画像の作成（1200x630）\n5. Twitter Card設定\n6. PWAマニフェストの更新（アプリ名、アイコン各サイズ）\n\nデザイン：シンプルで学習をイメージさせるアイコン（本、言語、脳などのモチーフ）",
+        "testStrategy": "OGPデバッガーでメタデータが正しく表示されることを確認",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Vercelデプロイとnonakayasuo.comドメイン設定",
+        "description": "本番環境へのデプロイとカスタムドメインの設定を行う",
+        "details": "Vercelへのデプロイ設定：\n1. Vercelアカウントとプロジェクト連携（GitHub連携推奨）\n2. 本番環境用の環境変数設定（DATABASE_URL, TURSO_AUTH_TOKENなど）\n3. ビルド設定の確認\n\nドメイン設定：\n1. nonakayasuo.comのDNSレコード設定\n   - CNAME: cname.vercel-dns.com（またはAレコード）\n2. Vercelダッシュボードでカスタムドメイン追加\n3. SSL証明書の自動発行確認\n4. www.nonakayasuo.comのリダイレクト設定（オプション）",
+        "testStrategy": "nonakayasuo.comでアプリが正常に表示され、HTTPS接続できることを確認",
+        "status": "pending",
+        "dependencies": [
+          11,
+          12
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "SEO対策の実装",
+        "description": "検索エンジン最適化のための各種設定を行う",
+        "details": "SEO設定：\n1. robots.txtの作成（/public/robots.txt）\n2. sitemap.xmlの生成（next-sitemapパッケージ推奨）\n3. 各ページの適切なメタタグ設定\n4. canonicalタグの設定\n5. 言語ページのhreflang設定（多言語対応）\n6. 構造化データ（JSON-LD）の追加（オプション）\n\n言語ページ用のメタ情報：\n- /english: English Vocabulary\n- /korean: 韓国語単語帳\n- /chinese: 中国語単語帳\n- /spanish: Spanish Vocabulary",
+        "testStrategy": "Google Search Consoleでインデックス状況を確認、Lighthouse SEOスコア90以上",
+        "status": "pending",
+        "dependencies": [
+          13
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "アクセス解析ツールの導入",
+        "description": "ユーザー行動分析のためのアクセス解析ツールを導入する",
+        "details": "アクセス解析の設定：\n1. Google Analytics 4（GA4）の設定\n   - GA4プロパティ作成\n   - 測定IDの取得\n   - next/script での読み込み実装\n2. Vercel Analyticsの有効化（オプション、Vercelダッシュボードから）\n3. イベントトラッキング設定：\n   - 単語追加イベント\n   - フラッシュカード学習開始/完了\n   - 言語ページ閲覧\n4. プライバシー配慮（Cookie同意バナーの検討）",
+        "testStrategy": "GA4リアルタイムレポートでイベントが計測されることを確認",
+        "status": "pending",
+        "dependencies": [
+          13
+        ],
+        "priority": "low",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-12-20T09:20:41.573Z",
       "description": "Default tasks context",
-      "updated": "2025-12-20T09:31:13.204Z"
+      "updated": "2025-12-20T09:56:00.859Z"
     }
   }
 }

@@ -62,6 +62,8 @@ body {
 /* Notion風テーブルスタイル */
 .notion-table {
   border-collapse: collapse;
+  width: max-content;
+  min-width: 100%;
 }
 
 .notion-table th {
@@ -75,6 +77,16 @@ body {
 
 .notion-table tr:hover td {
   background: #f9fafb;
+}
+
+/* リサイズ中は全体のテキスト選択を無効化 */
+body.resizing {
+  user-select: none;
+  cursor: col-resize !important;
+}
+
+body.resizing * {
+  cursor: col-resize !important;
 }
 
 /* セレクトボックスのカスタマイズ */

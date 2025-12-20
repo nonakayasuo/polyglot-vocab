@@ -1,35 +1,36 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useParams } from "next/navigation";
-import { notFound } from "next/navigation";
 import {
-  VocabularyWord,
-  FilterOptions,
-  Language,
-  LANGUAGES,
-} from "@/types/vocabulary";
-import {
-  getVocabularyByLanguage,
-  getStatsByLanguage,
-  LanguageStats,
-} from "@/lib/storage";
-import { downloadCSV } from "@/lib/csv";
-import VocabularyTable from "@/components/VocabularyTable";
-import WordForm from "@/components/WordForm";
-import SearchFilter from "@/components/SearchFilter";
-import FlashCard from "@/components/FlashCard";
-import CSVImport from "@/components/CSVImport";
-import {
+  ArrowLeft,
+  BarChart3,
+  BookOpen,
+  Download,
+  Layers,
+  Loader2,
   Plus,
   Upload,
-  Download,
-  BookOpen,
-  BarChart3,
-  Layers,
-  ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
+import { notFound, useParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import CSVImport from "@/components/CSVImport";
+import FlashCard from "@/components/FlashCard";
+import SearchFilter from "@/components/SearchFilter";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import VocabularyTable from "@/components/VocabularyTable";
+import WordForm from "@/components/WordForm";
+import {
+  fetchStats,
+  fetchWords,
+  type LanguageStats,
+  type VocabularyWordDB,
+} from "@/lib/api";
+import { downloadCSV } from "@/lib/csv";
+import {
+  type FilterOptions,
+  LANGUAGES,
+  type Language,
+} from "@/types/vocabulary";
 
 type View = "list" | "flashcard" | "stats";
 
@@ -46,11 +47,12 @@ export default function LanguagePage() {
 
   const languageInfo = LANGUAGES.find((l) => l.value === language);
 
-  const [words, setWords] = useState<VocabularyWord[]>([]);
+  const [words, setWords] = useState<VocabularyWordDB[]>([]);
   const [stats, setStats] = useState<LanguageStats | null>(null);
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>("list");
   const [showWordForm, setShowWordForm] = useState(false);
-  const [editingWord, setEditingWord] = useState<VocabularyWord | null>(null);
+  const [editingWord, setEditingWord] = useState<VocabularyWordDB | null>(null);
   const [showImport, setShowImport] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     search: "",
@@ -61,14 +63,25 @@ export default function LanguagePage() {
     sortOrder: "desc",
   });
 
-  const loadData = () => {
-    setWords(getVocabularyByLanguage(language));
-    setStats(getStatsByLanguage(language));
-  };
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const [wordsData, statsData] = await Promise.all([
+        fetchWords(language),
+        fetchStats(language) as Promise<LanguageStats>,
+      ]);
+      setWords(wordsData);
+      setStats(statsData);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [language]);
 
   useEffect(() => {
     loadData();
-  }, [language]);
+  }, [loadData]);
 
   // フィルタリングされた単語リスト
   const filteredWords = useMemo(() => {
@@ -132,50 +145,63 @@ export default function LanguagePage() {
     return result;
   }, [words, filters]);
 
-  const handleEdit = (word: VocabularyWord) => {
+  const handleEdit = (word: VocabularyWordDB) => {
     setEditingWord(word);
     setShowWordForm(true);
   };
 
   const handleExport = () => {
+    // VocabularyWordDB型をVocabularyWord型に変換
+    const exportWords = words.map((w) => ({
+      ...w,
+      language: w.language as Language,
+    }));
     downloadCSV(
-      words,
+      exportWords,
       `polyglot-vocab-${language}-${new Date().toISOString().split("T")[0]}.csv`,
     );
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* ヘッダー（Notion風） */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             {/* 戻るボタン & タイトル */}
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
                 title="ダッシュボードに戻る"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Link>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{languageInfo?.flag}</span>
-                <h1 className="text-lg font-semibold text-gray-900">
+                <h1 className="text-lg font-semibold text-foreground">
                   Vocabulary Book ({languageInfo?.label})
                 </h1>
               </div>
             </div>
 
             {/* ナビゲーション */}
-            <nav className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+            <nav className="flex items-center gap-1 bg-secondary rounded-lg p-1">
               <button
                 type="button"
                 onClick={() => setView("list")}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   view === "list"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <Layers className="w-4 h-4" />
@@ -186,8 +212,8 @@ export default function LanguagePage() {
                 onClick={() => setView("flashcard")}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   view === "flashcard"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <BookOpen className="w-4 h-4" />
@@ -198,8 +224,8 @@ export default function LanguagePage() {
                 onClick={() => setView("stats")}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   view === "stats"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <BarChart3 className="w-4 h-4" />
@@ -209,23 +235,24 @@ export default function LanguagePage() {
 
             {/* アクション */}
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <button
                 type="button"
                 onClick={() => setShowImport(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors text-sm"
                 title="CSVインポート"
               >
                 <Upload className="w-4 h-4" />
-                <span className="hidden sm:inline">インポート</span>
+                <span className="hidden lg:inline">インポート</span>
               </button>
               <button
                 type="button"
                 onClick={handleExport}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors text-sm"
                 title="CSVエクスポート"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">エクスポート</span>
+                <span className="hidden lg:inline">エクスポート</span>
               </button>
               <button
                 type="button"
@@ -233,7 +260,7 @@ export default function LanguagePage() {
                   setEditingWord(null);
                   setShowWordForm(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors text-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md transition-colors text-sm"
               >
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">新規</span>
@@ -244,17 +271,25 @@ export default function LanguagePage() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main
+        className={
+          view === "list"
+            ? "py-4"
+            : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
+        }
+      >
         {view === "list" && (
           <div className="space-y-4">
-            <SearchFilter
-              filters={filters}
-              onChange={setFilters}
-              totalCount={words.length}
-              filteredCount={filteredWords.length}
-              hideLanguageFilter
-            />
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="px-4 sm:px-6">
+              <SearchFilter
+                filters={filters}
+                onChange={setFilters}
+                totalCount={words.length}
+                filteredCount={filteredWords.length}
+                hideLanguageFilter
+              />
+            </div>
+            <div className="bg-card border-y border-border overflow-x-auto">
               <VocabularyTable
                 words={filteredWords}
                 filters={filters}
@@ -265,6 +300,7 @@ export default function LanguagePage() {
                   setEditingWord(null);
                   setShowWordForm(true);
                 }}
+                defaultLanguage={language}
               />
             </div>
           </div>
@@ -274,17 +310,20 @@ export default function LanguagePage() {
           <div>
             {filteredWords.length > 0 ? (
               <FlashCard
-                words={filteredWords}
+                words={filteredWords.map((w) => ({
+                  ...w,
+                  language: w.language as Language,
+                }))}
                 onComplete={() => setView("list")}
                 onRefresh={loadData}
               />
             ) : (
               <div className="text-center py-16">
-                <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                <BookOpen className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-foreground mb-2">
                   フラッシュカードに表示する単語がありません
                 </h2>
-                <p className="text-gray-500 mb-6">
+                <p className="text-muted-foreground mb-6">
                   新しい単語を追加するか、フィルターを調整してください
                 </p>
                 <button
@@ -293,7 +332,7 @@ export default function LanguagePage() {
                     setEditingWord(null);
                     setShowWordForm(true);
                   }}
-                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
+                  className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md transition-colors"
                 >
                   単語を追加
                 </button>
@@ -311,7 +350,11 @@ export default function LanguagePage() {
 
       {/* モーダル */}
       <WordForm
-        word={editingWord}
+        word={
+          editingWord
+            ? { ...editingWord, language: editingWord.language as Language }
+            : null
+        }
         onClose={() => {
           setShowWordForm(false);
           setEditingWord(null);
@@ -343,27 +386,31 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
     <div className="space-y-6">
       {/* 概要 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-lg p-5">
-          <p className="text-gray-500 text-sm">総単語数</p>
-          <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
+        <div className="bg-card border border-border rounded-lg p-5">
+          <p className="text-muted-foreground text-sm">総単語数</p>
+          <p className="text-3xl font-bold text-foreground mt-1">
+            {stats.total}
+          </p>
         </div>
-        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
-          <p className="text-emerald-600 text-sm">習得済み (■■■)</p>
-          <p className="text-3xl font-bold text-emerald-600 mt-1">
+        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-5">
+          <p className="text-emerald-600 dark:text-emerald-400 text-sm">
+            習得済み (■■■)
+          </p>
+          <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
             {stats.mastered}
             <span className="text-lg ml-2">({masteredPercent}%)</span>
           </p>
         </div>
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
-          <p className="text-amber-600 text-sm">学習中</p>
-          <p className="text-3xl font-bold text-amber-600 mt-1">
+        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-5">
+          <p className="text-amber-600 dark:text-amber-400 text-sm">学習中</p>
+          <p className="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">
             {stats.learning}
             <span className="text-lg ml-2">({learningPercent}%)</span>
           </p>
         </div>
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
-          <p className="text-gray-500 text-sm">未学習 (□□□)</p>
-          <p className="text-3xl font-bold text-gray-500 mt-1">
+        <div className="bg-secondary border border-border rounded-lg p-5">
+          <p className="text-muted-foreground text-sm">未学習 (□□□)</p>
+          <p className="text-3xl font-bold text-muted-foreground mt-1">
             {stats.notStarted}
             <span className="text-lg ml-2">({notStartedPercent}%)</span>
           </p>
@@ -371,42 +418,42 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
       </div>
 
       {/* 進捗バー */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">学習進捗</h3>
-        <div className="h-4 bg-gray-100 rounded-full overflow-hidden flex">
+      <div className="bg-card border border-border rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">学習進捗</h3>
+        <div className="h-4 bg-secondary rounded-full overflow-hidden flex">
           <div
-            className="bg-emerald-500 transition-all duration-500"
+            className="bg-emerald-500 dark:bg-emerald-400 transition-all duration-500"
             style={{ width: `${masteredPercent}%` }}
           />
           <div
-            className="bg-amber-400 transition-all duration-500"
+            className="bg-amber-400 dark:bg-amber-500 transition-all duration-500"
             style={{ width: `${learningPercent}%` }}
           />
           <div
-            className="bg-gray-300 transition-all duration-500"
+            className="bg-muted-foreground/30 transition-all duration-500"
             style={{ width: `${notStartedPercent}%` }}
           />
         </div>
         <div className="flex items-center justify-center gap-6 mt-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-emerald-500 rounded-full" />
-            <span className="text-gray-600">習得済み</span>
+            <div className="w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full" />
+            <span className="text-muted-foreground">習得済み</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-amber-400 rounded-full" />
-            <span className="text-gray-600">学習中</span>
+            <div className="w-3 h-3 bg-amber-400 dark:bg-amber-500 rounded-full" />
+            <span className="text-muted-foreground">学習中</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-gray-300 rounded-full" />
-            <span className="text-gray-600">未学習</span>
+            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full" />
+            <span className="text-muted-foreground">未学習</span>
           </div>
         </div>
       </div>
 
       {/* カテゴリ別 */}
       {Object.keys(stats.byCategory).length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-card border border-border rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
             品詞別分布
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -415,10 +462,10 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
               .map(([category, count]) => (
                 <div
                   key={category}
-                  className="bg-gray-50 rounded-lg p-3 text-center border border-gray-100"
+                  className="bg-secondary rounded-lg p-3 text-center border border-border"
                 >
-                  <p className="text-gray-500 text-xs">{category}</p>
-                  <p className="text-xl font-semibold text-gray-800 mt-1">
+                  <p className="text-muted-foreground text-xs">{category}</p>
+                  <p className="text-xl font-semibold text-foreground mt-1">
                     {count}
                   </p>
                 </div>
