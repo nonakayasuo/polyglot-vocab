@@ -20,8 +20,18 @@ export type VocabularyWordModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateVocabularyWord = {
   _count: VocabularyWordCountAggregateOutputType | null
+  _avg: VocabularyWordAvgAggregateOutputType | null
+  _sum: VocabularyWordSumAggregateOutputType | null
   _min: VocabularyWordMinAggregateOutputType | null
   _max: VocabularyWordMaxAggregateOutputType | null
+}
+
+export type VocabularyWordAvgAggregateOutputType = {
+  displayOrder: number | null
+}
+
+export type VocabularyWordSumAggregateOutputType = {
+  displayOrder: number | null
 }
 
 export type VocabularyWordMinAggregateOutputType = {
@@ -37,6 +47,7 @@ export type VocabularyWordMinAggregateOutputType = {
   check1: boolean | null
   check2: boolean | null
   check3: boolean | null
+  displayOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +65,7 @@ export type VocabularyWordMaxAggregateOutputType = {
   check1: boolean | null
   check2: boolean | null
   check3: boolean | null
+  displayOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,11 +83,20 @@ export type VocabularyWordCountAggregateOutputType = {
   check1: number
   check2: number
   check3: number
+  displayOrder: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type VocabularyWordAvgAggregateInputType = {
+  displayOrder?: true
+}
+
+export type VocabularyWordSumAggregateInputType = {
+  displayOrder?: true
+}
 
 export type VocabularyWordMinAggregateInputType = {
   id?: true
@@ -90,6 +111,7 @@ export type VocabularyWordMinAggregateInputType = {
   check1?: true
   check2?: true
   check3?: true
+  displayOrder?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -107,6 +129,7 @@ export type VocabularyWordMaxAggregateInputType = {
   check1?: true
   check2?: true
   check3?: true
+  displayOrder?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +147,7 @@ export type VocabularyWordCountAggregateInputType = {
   check1?: true
   check2?: true
   check3?: true
+  displayOrder?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -167,6 +191,18 @@ export type VocabularyWordAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: VocabularyWordAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: VocabularyWordSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: VocabularyWordMinAggregateInputType
@@ -197,6 +233,8 @@ export type VocabularyWordGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: VocabularyWordCountAggregateInputType | true
+  _avg?: VocabularyWordAvgAggregateInputType
+  _sum?: VocabularyWordSumAggregateInputType
   _min?: VocabularyWordMinAggregateInputType
   _max?: VocabularyWordMaxAggregateInputType
 }
@@ -214,9 +252,12 @@ export type VocabularyWordGroupByOutputType = {
   check1: boolean
   check2: boolean
   check3: boolean
+  displayOrder: number
   createdAt: Date
   updatedAt: Date
   _count: VocabularyWordCountAggregateOutputType | null
+  _avg: VocabularyWordAvgAggregateOutputType | null
+  _sum: VocabularyWordSumAggregateOutputType | null
   _min: VocabularyWordMinAggregateOutputType | null
   _max: VocabularyWordMaxAggregateOutputType | null
 }
@@ -252,6 +293,7 @@ export type VocabularyWordWhereInput = {
   check1?: Prisma.BoolFilter<"VocabularyWord"> | boolean
   check2?: Prisma.BoolFilter<"VocabularyWord"> | boolean
   check3?: Prisma.BoolFilter<"VocabularyWord"> | boolean
+  displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
 }
@@ -269,6 +311,7 @@ export type VocabularyWordOrderByWithRelationInput = {
   check1?: Prisma.SortOrder
   check2?: Prisma.SortOrder
   check3?: Prisma.SortOrder
+  displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -289,6 +332,7 @@ export type VocabularyWordWhereUniqueInput = Prisma.AtLeast<{
   check1?: Prisma.BoolFilter<"VocabularyWord"> | boolean
   check2?: Prisma.BoolFilter<"VocabularyWord"> | boolean
   check3?: Prisma.BoolFilter<"VocabularyWord"> | boolean
+  displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
 }, "id">
@@ -306,11 +350,14 @@ export type VocabularyWordOrderByWithAggregationInput = {
   check1?: Prisma.SortOrder
   check2?: Prisma.SortOrder
   check3?: Prisma.SortOrder
+  displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.VocabularyWordCountOrderByAggregateInput
+  _avg?: Prisma.VocabularyWordAvgOrderByAggregateInput
   _max?: Prisma.VocabularyWordMaxOrderByAggregateInput
   _min?: Prisma.VocabularyWordMinOrderByAggregateInput
+  _sum?: Prisma.VocabularyWordSumOrderByAggregateInput
 }
 
 export type VocabularyWordScalarWhereWithAggregatesInput = {
@@ -329,6 +376,7 @@ export type VocabularyWordScalarWhereWithAggregatesInput = {
   check1?: Prisma.BoolWithAggregatesFilter<"VocabularyWord"> | boolean
   check2?: Prisma.BoolWithAggregatesFilter<"VocabularyWord"> | boolean
   check3?: Prisma.BoolWithAggregatesFilter<"VocabularyWord"> | boolean
+  displayOrder?: Prisma.IntWithAggregatesFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"VocabularyWord"> | Date | string
 }
@@ -346,6 +394,7 @@ export type VocabularyWordCreateInput = {
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -363,6 +412,7 @@ export type VocabularyWordUncheckedCreateInput = {
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -380,6 +430,7 @@ export type VocabularyWordUpdateInput = {
   check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -397,6 +448,7 @@ export type VocabularyWordUncheckedUpdateInput = {
   check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,6 +466,7 @@ export type VocabularyWordCreateManyInput = {
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -431,6 +484,7 @@ export type VocabularyWordUpdateManyMutationInput = {
   check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -448,6 +502,7 @@ export type VocabularyWordUncheckedUpdateManyInput = {
   check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
   check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -465,8 +520,13 @@ export type VocabularyWordCountOrderByAggregateInput = {
   check1?: Prisma.SortOrder
   check2?: Prisma.SortOrder
   check3?: Prisma.SortOrder
+  displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type VocabularyWordAvgOrderByAggregateInput = {
+  displayOrder?: Prisma.SortOrder
 }
 
 export type VocabularyWordMaxOrderByAggregateInput = {
@@ -482,6 +542,7 @@ export type VocabularyWordMaxOrderByAggregateInput = {
   check1?: Prisma.SortOrder
   check2?: Prisma.SortOrder
   check3?: Prisma.SortOrder
+  displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -499,8 +560,13 @@ export type VocabularyWordMinOrderByAggregateInput = {
   check1?: Prisma.SortOrder
   check2?: Prisma.SortOrder
   check3?: Prisma.SortOrder
+  displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type VocabularyWordSumOrderByAggregateInput = {
+  displayOrder?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -509,6 +575,14 @@ export type StringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -530,6 +604,7 @@ export type VocabularyWordSelect<ExtArgs extends runtime.Types.Extensions.Intern
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["vocabularyWord"]>
@@ -547,6 +622,7 @@ export type VocabularyWordSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["vocabularyWord"]>
@@ -564,6 +640,7 @@ export type VocabularyWordSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["vocabularyWord"]>
@@ -581,11 +658,12 @@ export type VocabularyWordSelectScalar = {
   check1?: boolean
   check2?: boolean
   check3?: boolean
+  displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VocabularyWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "pronunciation" | "category" | "meaning" | "example" | "exampleTranslation" | "note" | "language" | "check1" | "check2" | "check3" | "createdAt" | "updatedAt", ExtArgs["result"]["vocabularyWord"]>
+export type VocabularyWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "pronunciation" | "category" | "meaning" | "example" | "exampleTranslation" | "note" | "language" | "check1" | "check2" | "check3" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["vocabularyWord"]>
 
 export type $VocabularyWordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "VocabularyWord"
@@ -603,6 +681,7 @@ export type $VocabularyWordPayload<ExtArgs extends runtime.Types.Extensions.Inte
     check1: boolean
     check2: boolean
     check3: boolean
+    displayOrder: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["vocabularyWord"]>
@@ -1040,6 +1119,7 @@ export interface VocabularyWordFieldRefs {
   readonly check1: Prisma.FieldRef<"VocabularyWord", 'Boolean'>
   readonly check2: Prisma.FieldRef<"VocabularyWord", 'Boolean'>
   readonly check3: Prisma.FieldRef<"VocabularyWord", 'Boolean'>
+  readonly displayOrder: Prisma.FieldRef<"VocabularyWord", 'Int'>
   readonly createdAt: Prisma.FieldRef<"VocabularyWord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"VocabularyWord", 'DateTime'>
 }

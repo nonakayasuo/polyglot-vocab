@@ -15,6 +15,7 @@ export interface VocabularyWordDB {
   check1: boolean;
   check2: boolean;
   check3: boolean;
+  displayOrder: number; // 表示順序
   createdAt: string;
   updatedAt: string;
 }
@@ -48,7 +49,10 @@ export async function fetchWords(
 
 // 単語を追加
 export async function createWord(
-  data: Omit<VocabularyWordDB, "id" | "createdAt" | "updatedAt">,
+  data: Omit<
+    VocabularyWordDB,
+    "id" | "createdAt" | "updatedAt" | "displayOrder"
+  >,
 ): Promise<VocabularyWordDB> {
   const res = await fetch("/api/words", {
     method: "POST",
@@ -114,5 +118,18 @@ export async function fetchStats(
   const url = language ? `/api/stats?language=${language}` : "/api/stats";
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch stats");
+  return res.json();
+}
+
+// 単語の順序を更新
+export async function reorderWordsAPI(
+  orderedIds: string[],
+): Promise<{ updated: number }> {
+  const res = await fetch("/api/words/bulk", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderedIds }),
+  });
+  if (!res.ok) throw new Error("Failed to reorder words");
   return res.json();
 }

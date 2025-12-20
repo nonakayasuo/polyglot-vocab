@@ -62,8 +62,13 @@ body {
 /* Notion風テーブルスタイル */
 .notion-table {
   border-collapse: collapse;
-  width: max-content;
-  min-width: 100%;
+  table-layout: fixed !important;
+}
+
+.notion-table th,
+.notion-table td {
+  overflow: hidden !important;
+  box-sizing: border-box;
 }
 
 .notion-table th {
@@ -77,6 +82,13 @@ body {
 
 .notion-table tr:hover td {
   background: #f9fafb;
+}
+
+/* セル内のコンテンツもオーバーフローを制御 */
+.notion-table td > *,
+.notion-table th > * {
+  max-width: 100%;
+  overflow: hidden;
 }
 
 /* リサイズ中は全体のテキスト選択を無効化 */

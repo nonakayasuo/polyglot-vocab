@@ -178,6 +178,17 @@
         ],
         "priority": "low",
         "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "VocabularyTableのドラッグ＆ドロップ パフォーマンス改善",
+        "description": "VocabularyTableコンポーネントのドラッグ＆ドロップ（並び替え）機能のパフォーマンスを改善する",
+        "details": "現在@dnd-kitを使用しているが、ドラッグ操作が遅い・反応が悪い問題がある。\n\n検討すべき改善策：\n1. 仮想化（react-virtual/tanstack-virtual）の導入で大量の行でもスムーズに動作させる\n2. ドラッグ中の再レンダリングを最小限に抑える\n3. DragOverlayの最適化\n4. センサー設定の調整\n5. 必要に応じて別のドラッグライブラリ（react-beautiful-dnd、pragmatic-drag-and-drop等）への移行を検討\n\n現在の実装：\n- @dnd-kit/core, @dnd-kit/sortable を使用\n- PointerSensor（distance: 3）とKeyboardSensorを使用\n- restrictToVerticalAxisモディファイアを使用",
+        "testStrategy": "50件以上の単語でスムーズにドラッグ＆ドロップできることを確認",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
       }
     ],
     "metadata": {

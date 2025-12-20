@@ -7,10 +7,28 @@ export async function GET(request: NextRequest) {
   const language = searchParams.get("language");
 
   try {
-    const words = await prisma.vocabularyWord.findMany({
+    let words = await prisma.vocabularyWord.findMany({
       where: language ? { language } : undefined,
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
     });
+
+    // displayOrderがすべて0の場合、createdAt順でdisplayOrderを初期化
+    const allZero = words.every((w) => w.displayOrder === 0);
+    if (allZero && words.length > 0) {
+      const updates = words.map((w, index) =>
+        prisma.vocabularyWord.update({
+          where: { id: w.id },
+          data: { displayOrder: index },
+        }),
+      );
+      await Promise.all(updates);
+
+      // 更新後のデータを再取得
+      words = await prisma.vocabularyWord.findMany({
+        where: language ? { language } : undefined,
+        orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+      });
+    }
 
     return NextResponse.json(words);
   } catch (error) {
@@ -27,6 +45,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // 最大のdisplayOrderを取得して+1する
+    const maxOrder = await prisma.vocabularyWord.aggregate({
+      _max: { displayOrder: true },
+      where: body.language ? { language: body.language } : undefined,
+    });
+    const nextOrder = (maxOrder._max.displayOrder ?? -1) + 1;
+
     const word = await prisma.vocabularyWord.create({
       data: {
         word: body.word,
@@ -39,6 +64,7 @@ export async function POST(request: NextRequest) {
         check1: body.check1 || false,
         check2: body.check2 || false,
         check3: body.check3 || false,
+        displayOrder: nextOrder,
       },
     });
 
@@ -51,4 +77,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

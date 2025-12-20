@@ -1,10 +1,36 @@
 "use client";
 
-import { Check, Languages, Trash2, Volume2, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  type DraggableAttributes,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  Check,
+  GripVertical,
+  Languages,
+  Plus,
+  Trash2,
+  Volume2,
+  X,
+} from "lucide-react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -16,7 +42,7 @@ import {
 import {
   createWord,
   deleteWordAPI,
-  deleteWordsAPI,
+  reorderWordsAPI,
   updateWordAPI,
   type VocabularyWordDB,
 } from "@/lib/api";
@@ -40,15 +66,13 @@ interface Props {
 
 // デフォルトの列幅
 const DEFAULT_COLUMN_WIDTHS = {
-  checkbox: 40,
-  progress: 80,
+  rowActions: 70, // ドラッグ、追加、削除をまとめた列
   word: 140,
   pronunciation: 100,
   category: 90,
   meaning: 150,
   example: 300,
   note: 120,
-  actions: 50,
 };
 
 // 列幅をローカルストレージから取得/保存
@@ -95,7 +119,7 @@ function ResizableHeader({
       startXRef.current = e.clientX;
       startWidthRef.current = width;
     },
-    [width],
+    [width]
   );
 
   useEffect(() => {
@@ -187,7 +211,7 @@ const highlightWord = (example: string, word: string) => {
   const wordLower = word.toLowerCase();
   const regex = new RegExp(
     `\\b(${word}|${wordLower}|${word}s|${word}ed|${word}ing|${word}d)\\b`,
-    "gi",
+    "gi"
   );
 
   const parts = example.split(regex);
@@ -283,11 +307,13 @@ function EditableCell({
         setEditValue(value);
         setIsEditing(true);
       }}
-      className={`px-2 py-1 rounded cursor-text hover:bg-gray-100 min-h-[28px] text-left w-full ${className} ${
+      className={`px-2 py-1 rounded cursor-text hover:bg-gray-100 min-h-[28px] text-left w-full overflow-hidden ${className} ${
         !value ? "text-gray-300" : ""
       }`}
     >
-      {value || placeholder || "-"}
+      <span className="block overflow-hidden text-ellipsis">
+        {value || placeholder || "-"}
+      </span>
     </button>
   );
 }
@@ -303,7 +329,7 @@ function ExampleCell({
   const [showTranslation, setShowTranslation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editField, setEditField] = useState<"example" | "exampleTranslation">(
-    "example",
+    "example"
   );
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -372,19 +398,19 @@ function ExampleCell({
             handleStartEdit("exampleTranslation");
           }
         }}
-        className={`flex-shrink-0 p-1 rounded transition-colors ${
+        className={`shrink-0 p-1 rounded transition-colors ${
           showTranslation
             ? "text-blue-500 bg-blue-50"
             : hasTranslation
-              ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
-              : "text-gray-300 hover:text-blue-400"
+            ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+            : "text-gray-300 hover:text-blue-400"
         }`}
         title={
           showTranslation
             ? "原文を表示"
             : hasTranslation
-              ? "日本語訳を表示"
-              : "日本語訳を追加"
+            ? "日本語訳を表示"
+            : "日本語訳を追加"
         }
       >
         <Languages className="w-4 h-4" />
@@ -467,6 +493,243 @@ function CategoryCell({
   );
 }
 
+// 行アクションボタン（メモ化）
+const RowActions = memo(function RowActions({
+  onAddBelow,
+  onDelete,
+  dragAttributes,
+  dragListeners,
+}: {
+  onAddBelow: () => void;
+  onDelete: () => void;
+  dragAttributes: DraggableAttributes;
+  dragListeners: SyntheticListenerMap | undefined;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-0.5">
+      {/* ドラッグハンドル */}
+      <div
+        className="p-1 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500"
+        {...dragAttributes}
+        {...dragListeners}
+      >
+        <GripVertical className="w-4 h-4" />
+      </div>
+      {/* 下に追加 */}
+      <button
+        type="button"
+        onClick={onAddBelow}
+        className="p-1 text-gray-300 hover:text-blue-500 transition-colors"
+        title="下に行を追加"
+      >
+        <Plus className="w-4 h-4" />
+      </button>
+      {/* 削除 */}
+      <button
+        type="button"
+        onClick={onDelete}
+        className="p-1 text-gray-300 hover:text-red-500 transition-colors"
+        title="削除"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  );
+});
+
+// ドラッグ可能な行コンポーネント（メモ化）
+const SortableRow = memo(function SortableRow({
+  word,
+  columnWidths,
+  onUpdateField,
+  onDelete,
+  onAddBelow,
+}: {
+  word: VocabularyWordDB;
+  columnWidths: typeof DEFAULT_COLUMN_WIDTHS;
+  onUpdateField: (
+    field: keyof VocabularyWordDB,
+    value: string | boolean
+  ) => void;
+  onDelete: () => void;
+  onAddBelow: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: word.id });
+
+  const style = useMemo(
+    () => ({
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+      zIndex: isDragging ? 1000 : undefined,
+    }),
+    [transform, transition, isDragging]
+  );
+
+  return (
+    <TableRow
+      ref={setNodeRef}
+      style={style}
+      className={`hover:bg-gray-50 border-b border-gray-100 group ${
+        isDragging ? "bg-gray-100 shadow-lg" : ""
+      }`}
+    >
+      {/* 行アクション: ドラッグ、追加、選択、削除 */}
+      <TableCell
+        className="p-1"
+        style={{
+          width: columnWidths.rowActions,
+          maxWidth: columnWidths.rowActions,
+        }}
+      >
+        <RowActions
+          onAddBelow={onAddBelow}
+          onDelete={onDelete}
+          dragAttributes={attributes}
+          dragListeners={listeners}
+        />
+      </TableCell>
+
+      {/* 単語（インライン編集可能） */}
+      <TableCell
+        style={{ width: columnWidths.word, maxWidth: columnWidths.word }}
+      >
+        <div className="flex items-center gap-1 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => speak(word.word, word.language as Language)}
+            className="text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+            title="発音を聞く"
+          >
+            <Volume2 className="w-4 h-4" />
+          </button>
+          <EditableCell
+            value={word.word}
+            onChange={(v) => onUpdateField("word", v)}
+            placeholder="単語"
+            className="font-medium text-gray-900"
+          />
+        </div>
+      </TableCell>
+
+      {/* 発音記号（インライン編集可能） */}
+      <TableCell
+        style={{
+          width: columnWidths.pronunciation,
+          maxWidth: columnWidths.pronunciation,
+        }}
+      >
+        <EditableCell
+          value={word.pronunciation}
+          onChange={(v) => onUpdateField("pronunciation", v)}
+          placeholder="発音"
+          className="text-gray-500 font-mono text-sm"
+        />
+      </TableCell>
+
+      {/* 分類（品詞）- カテゴリ選択 */}
+      <TableCell
+        style={{
+          width: columnWidths.category,
+          maxWidth: columnWidths.category,
+        }}
+      >
+        <CategoryCell
+          value={word.category}
+          onChange={(v) => onUpdateField("category", v)}
+        />
+      </TableCell>
+
+      {/* 意味（インライン編集可能、省略表示） */}
+      <TableCell
+        style={{ width: columnWidths.meaning, maxWidth: columnWidths.meaning }}
+      >
+        <EditableCell
+          value={word.meaning}
+          onChange={(v) => onUpdateField("meaning", v)}
+          placeholder="意味"
+          className="text-gray-700 text-sm line-clamp-2"
+        />
+      </TableCell>
+
+      {/* 例文（単語ハイライト付き、インライン編集可能、翻訳切り替え付き） */}
+      <TableCell
+        className="text-gray-600 text-sm"
+        style={{ width: columnWidths.example, maxWidth: columnWidths.example }}
+      >
+        <ExampleCell
+          word={word}
+          onUpdate={(field, value) => onUpdateField(field, value)}
+        />
+      </TableCell>
+
+      {/* メモ（インライン編集可能） */}
+      <TableCell
+        style={{ width: columnWidths.note, maxWidth: columnWidths.note }}
+      >
+        <EditableCell
+          value={word.note}
+          onChange={(v) => onUpdateField("note", v)}
+          placeholder="メモ"
+          className="text-gray-500 text-sm line-clamp-2"
+        />
+      </TableCell>
+    </TableRow>
+  );
+});
+
+// 行ごとのコールバックをメモ化するラッパー
+const SortableRowWrapper = memo(function SortableRowWrapper({
+  word,
+  columnWidths,
+  onUpdateField,
+  onDelete,
+  onAddBelow,
+}: {
+  word: VocabularyWordDB;
+  columnWidths: typeof DEFAULT_COLUMN_WIDTHS;
+  onUpdateField: (
+    id: string,
+    field: keyof VocabularyWordDB,
+    value: string | boolean
+  ) => void;
+  onDelete: (id: string) => void;
+  onAddBelow: (afterId: string) => void;
+}) {
+  // 各行ごとのコールバックをメモ化
+  const handleUpdateField = useCallback(
+    (field: keyof VocabularyWordDB, value: string | boolean) => {
+      onUpdateField(word.id, field, value);
+    },
+    [onUpdateField, word.id]
+  );
+
+  const handleDelete = useCallback(() => {
+    onDelete(word.id);
+  }, [onDelete, word.id]);
+
+  const handleAddBelow = useCallback(() => {
+    onAddBelow(word.id);
+  }, [onAddBelow, word.id]);
+
+  return (
+    <SortableRow
+      word={word}
+      columnWidths={columnWidths}
+      onUpdateField={handleUpdateField}
+      onDelete={handleDelete}
+      onAddBelow={handleAddBelow}
+    />
+  );
+});
+
 // 新規行コンポーネント
 function NewWordRow({
   onSave,
@@ -527,7 +790,7 @@ function NewWordRow({
         className="hover:bg-gray-50 cursor-pointer"
         onClick={() => setIsAdding(true)}
       >
-        <TableCell colSpan={9} className="py-3">
+        <TableCell colSpan={8} className="py-3">
           <div className="flex items-center gap-2 text-gray-400 hover:text-gray-600">
             <span className="w-5 h-5 flex items-center justify-center rounded border border-dashed border-gray-300 text-gray-400">
               +
@@ -606,17 +869,15 @@ function NewWordRow({
         />
       </TableCell>
       <TableCell>
-        <input
-          type="text"
-          value={newWord.note}
-          onChange={(e) => setNewWord({ ...newWord, note: e.target.value })}
-          placeholder="メモ"
-          disabled={saving}
-          className="w-full px-2 py-1 text-sm border border-gray-200 rounded outline-none bg-white"
-        />
-      </TableCell>
-      <TableCell>
         <div className="flex items-center gap-1">
+          <input
+            type="text"
+            value={newWord.note}
+            onChange={(e) => setNewWord({ ...newWord, note: e.target.value })}
+            placeholder="メモ"
+            disabled={saving}
+            className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded outline-none bg-white"
+          />
           <Button
             type="button"
             variant="ghost"
@@ -652,9 +913,20 @@ export default function VocabularyTable({
   onAddNew,
   defaultLanguage = "english",
 }: Props) {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [columnWidths, setColumnWidths] = useState(DEFAULT_COLUMN_WIDTHS);
   const [localWords, setLocalWords] = useState(words);
+
+  // ドラッグ＆ドロップ用のセンサー（距離を小さくしてより敏感に）
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // 親からwordsが変わったらローカル状態を更新
   useEffect(() => {
@@ -675,18 +947,18 @@ export default function VocabularyTable({
         return newWidths;
       });
     },
-    [],
+    []
   );
 
   // オプティミスティック更新：ローカル状態を即座に更新し、APIは非同期で実行
   const handleUpdateField = async (
     id: string,
     field: keyof VocabularyWordDB,
-    value: string | boolean,
+    value: string | boolean
   ) => {
     // ローカル状態を即座に更新
     setLocalWords((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w)),
+      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w))
     );
 
     // APIを非同期で実行（エラー時はリフレッシュ）
@@ -698,294 +970,198 @@ export default function VocabularyTable({
     }
   };
 
-  const toggleCheck = async (word: VocabularyWordDB, checkNum: 1 | 2 | 3) => {
-    const key = `check${checkNum}` as "check1" | "check2" | "check3";
-    const newValue = !word[key];
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (confirm("この単語を削除しますか？")) {
+        // オプティミスティック更新：ローカル状態から即座に削除
+        setLocalWords((prev) => prev.filter((w) => w.id !== id));
 
-    // ローカル状態を即座に更新
-    setLocalWords((prev) =>
-      prev.map((w) => (w.id === word.id ? { ...w, [key]: newValue } : w)),
-    );
+        try {
+          await deleteWordAPI(id);
+        } catch (error) {
+          console.error("Failed to delete word:", error);
+          // エラー時のみリフレッシュ
+          onRefresh();
+        }
+      }
+    },
+    [onRefresh]
+  );
 
-    try {
-      await updateWordAPI(word.id, { [key]: newValue });
-    } catch (error) {
-      console.error("Failed to toggle check:", error);
-      onRefresh();
-    }
-  };
+  // ドラッグ終了時のハンドラ
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
 
-  const handleDelete = async (id: string) => {
-    if (confirm("この単語を削除しますか？")) {
-      try {
-        await deleteWordAPI(id);
-        onRefresh();
-      } catch (error) {
-        console.error("Failed to delete word:", error);
+    if (over && active.id !== over.id) {
+      const oldIndex = localWords.findIndex((w) => w.id === active.id);
+      const newIndex = localWords.findIndex((w) => w.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        // ローカル状態を即座に更新
+        const newWords = [...localWords];
+        const [movedWord] = newWords.splice(oldIndex, 1);
+        newWords.splice(newIndex, 0, movedWord);
+        setLocalWords(newWords);
+
+        // APIで順序を保存
+        try {
+          await reorderWordsAPI(newWords.map((w) => w.id));
+        } catch (error) {
+          console.error("Failed to reorder words:", error);
+          // エラー時は元に戻す
+          onRefresh();
+        }
       }
     }
   };
 
-  const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    if (confirm(`${selectedIds.size}件の単語を削除しますか？`)) {
+  // ソート可能なアイテムIDリスト（メモ化）
+  const sortableItems = useMemo(
+    () => localWords.map((w) => w.id),
+    [localWords]
+  );
+
+  // 指定した行の下に新しい行を追加
+  const handleAddBelow = useCallback(
+    async (afterId: string) => {
       try {
-        await deleteWordsAPI(Array.from(selectedIds));
-        setSelectedIds(new Set());
-        onRefresh();
+        const newWord = await createWord({
+          word: "",
+          pronunciation: "",
+          category: "Noun",
+          meaning: "",
+          example: "",
+          exampleTranslation: "",
+          note: "",
+          language: defaultLanguage,
+          check1: false,
+          check2: false,
+          check3: false,
+        });
+
+        // 現在の状態を取得して新しい順序を計算
+        const idx = localWords.findIndex((w) => w.id === afterId);
+        const newWords = [...localWords];
+        if (idx === -1) {
+          newWords.push(newWord);
+        } else {
+          newWords.splice(idx + 1, 0, newWord);
+        }
+
+        // ローカル状態を更新
+        setLocalWords(newWords);
+
+        // 順序をAPIに保存
+        await reorderWordsAPI(newWords.map((w) => w.id));
       } catch (error) {
-        console.error("Failed to delete words:", error);
+        console.error("Failed to add word:", error);
+        onRefresh();
       }
-    }
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.size === localWords.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(localWords.map((w) => w.id)));
-    }
-  };
-
-  const toggleSelect = (id: string) => {
-    const newSet = new Set(selectedIds);
-    if (newSet.has(id)) {
-      newSet.delete(id);
-    } else {
-      newSet.add(id);
-    }
-    setSelectedIds(newSet);
-  };
+    },
+    [defaultLanguage, localWords, onRefresh]
+  );
 
   return (
     <div className="w-full bg-white">
-      {/* 一括操作バー */}
-      {selectedIds.size > 0 && (
-        <div className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center gap-4">
-          <span className="text-sm text-gray-500">
-            {selectedIds.size}件選択中
-          </span>
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            onClick={handleBulkDelete}
-          >
-            <Trash2 className="w-4 h-4" />
-            削除
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setSelectedIds(new Set())}
-          >
-            選択解除
-          </Button>
-        </div>
-      )}
-
-      {/* Notion風テーブル（列幅リサイズ可能） */}
-      <Table className="notion-table">
-        <TableHeader>
-          <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
-            <TableHead
-              style={{ width: columnWidths.checkbox }}
-              className="text-center"
-            >
-              <Checkbox
-                checked={
-                  selectedIds.size === localWords.length &&
-                  localWords.length > 0
-                }
-                onCheckedChange={toggleSelectAll}
+      {/* Notion風テーブル（列幅リサイズ可能、ドラッグ＆ドロップ対応） */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <Table
+          className="notion-table"
+          style={{
+            width: Object.values(columnWidths).reduce((a, b) => a + b, 0),
+            minWidth: Object.values(columnWidths).reduce((a, b) => a + b, 0),
+          }}
+        >
+          {/* 列幅を明示的に設定 */}
+          <colgroup>
+            <col style={{ width: columnWidths.rowActions }} />
+            <col style={{ width: columnWidths.word }} />
+            <col style={{ width: columnWidths.pronunciation }} />
+            <col style={{ width: columnWidths.category }} />
+            <col style={{ width: columnWidths.meaning }} />
+            <col style={{ width: columnWidths.example }} />
+            <col style={{ width: columnWidths.note }} />
+          </colgroup>
+          <TableHeader>
+            <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead
+                style={{ width: columnWidths.rowActions }}
+                className="text-center text-gray-500 text-xs font-medium"
               />
-            </TableHead>
-            <ResizableHeader
-              width={columnWidths.progress}
-              onResize={(w) => handleColumnResize("progress", w)}
-              className="text-center text-gray-500 text-xs font-medium"
-            >
-              進捗
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.word}
-              onResize={(w) => handleColumnResize("word", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              <div className="flex items-center gap-1">
-                <Volume2 className="w-3 h-3" />
-                単語
-              </div>
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.pronunciation}
-              onResize={(w) => handleColumnResize("pronunciation", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              発音記号
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.category}
-              onResize={(w) => handleColumnResize("category", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              分類
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.meaning}
-              onResize={(w) => handleColumnResize("meaning", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              意味
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.example}
-              onResize={(w) => handleColumnResize("example", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              例文
-            </ResizableHeader>
-            <ResizableHeader
-              width={columnWidths.note}
-              onResize={(w) => handleColumnResize("note", w)}
-              className="text-gray-500 text-xs font-medium"
-            >
-              メモ
-            </ResizableHeader>
-            <TableHead style={{ width: columnWidths.actions }} />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {localWords.map((word) => (
-            <TableRow
-              key={word.id}
-              className={`hover:bg-gray-50 border-b border-gray-100 group ${
-                selectedIds.has(word.id) ? "bg-blue-50" : ""
-              }`}
-            >
-              <TableCell className="text-center">
-                <Checkbox
-                  checked={selectedIds.has(word.id)}
-                  onCheckedChange={() => toggleSelect(word.id)}
-                />
-              </TableCell>
-
-              {/* 3つのチェックボックス */}
-              <TableCell>
-                <div className="flex items-center justify-center gap-1">
-                  {[1, 2, 3].map((num) => {
-                    const checked =
-                      word[`check${num}` as "check1" | "check2" | "check3"];
-                    return (
-                      <button
-                        key={num}
-                        type="button"
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                          checked
-                            ? "bg-blue-500 border-blue-500 text-white"
-                            : "bg-white border-gray-300 hover:border-gray-400"
-                        }`}
-                        onClick={() => toggleCheck(word, num as 1 | 2 | 3)}
-                      >
-                        {checked && <Check className="w-3 h-3" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </TableCell>
-
-              {/* 単語（インライン編集可能） */}
-              <TableCell>
+              <ResizableHeader
+                width={columnWidths.word}
+                onResize={(w) => handleColumnResize("word", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
                 <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => speak(word.word, word.language as Language)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
-                    title="発音を聞く"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                  </button>
-                  <EditableCell
-                    value={word.word}
-                    onChange={(v) => handleUpdateField(word.id, "word", v)}
-                    placeholder="単語"
-                    className="font-medium text-gray-900"
-                  />
+                  <Volume2 className="w-3 h-3" />
+                  単語
                 </div>
-              </TableCell>
-
-              {/* 発音記号（インライン編集可能） */}
-              <TableCell>
-                <EditableCell
-                  value={word.pronunciation}
-                  onChange={(v) =>
-                    handleUpdateField(word.id, "pronunciation", v)
-                  }
-                  placeholder="発音"
-                  className="text-gray-500 font-mono text-sm"
-                />
-              </TableCell>
-
-              {/* 分類（品詞）- カテゴリ選択 */}
-              <TableCell>
-                <CategoryCell
-                  value={word.category}
-                  onChange={(v) => handleUpdateField(word.id, "category", v)}
-                />
-              </TableCell>
-
-              {/* 意味（インライン編集可能、省略表示） */}
-              <TableCell>
-                <EditableCell
-                  value={word.meaning}
-                  onChange={(v) => handleUpdateField(word.id, "meaning", v)}
-                  placeholder="意味"
-                  className="text-gray-700 text-sm line-clamp-2"
-                />
-              </TableCell>
-
-              {/* 例文（単語ハイライト付き、インライン編集可能、翻訳切り替え付き） */}
-              <TableCell className="text-gray-600 text-sm">
-                <ExampleCell
-                  word={word}
-                  onUpdate={(field, value) =>
-                    handleUpdateField(word.id, field, value)
-                  }
-                />
-              </TableCell>
-
-              {/* メモ（インライン編集可能） */}
-              <TableCell>
-                <EditableCell
-                  value={word.note}
-                  onChange={(v) => handleUpdateField(word.id, "note", v)}
-                  placeholder="メモ"
-                  className="text-gray-500 text-sm line-clamp-2"
-                />
-              </TableCell>
-
-              {/* アクション */}
-              <TableCell>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => handleDelete(word.id)}
-                    className="text-gray-400 hover:text-red-500"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </TableCell>
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.pronunciation}
+                onResize={(w) => handleColumnResize("pronunciation", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                発音記号
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.category}
+                onResize={(w) => handleColumnResize("category", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                分類
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.meaning}
+                onResize={(w) => handleColumnResize("meaning", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                意味
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.example}
+                onResize={(w) => handleColumnResize("example", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                例文
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.note}
+                onResize={(w) => handleColumnResize("note", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                メモ
+              </ResizableHeader>
             </TableRow>
-          ))}
+          </TableHeader>
+          <TableBody>
+            <SortableContext
+              items={sortableItems}
+              strategy={verticalListSortingStrategy}
+            >
+              {localWords.map((word) => (
+                <SortableRowWrapper
+                  key={word.id}
+                  word={word}
+                  columnWidths={columnWidths}
+                  onUpdateField={handleUpdateField}
+                  onDelete={handleDelete}
+                  onAddBelow={handleAddBelow}
+                />
+              ))}
+            </SortableContext>
 
-          {/* 新規追加行（Notion風） */}
-          <NewWordRow onSave={onRefresh} defaultLanguage={defaultLanguage} />
-        </TableBody>
-      </Table>
+            {/* 新規追加行（Notion風） */}
+            <NewWordRow onSave={onRefresh} defaultLanguage={defaultLanguage} />
+          </TableBody>
+        </Table>
+      </DndContext>
 
       {localWords.length === 0 && (
         <div className="text-center py-8 text-gray-400">

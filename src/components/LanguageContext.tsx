@@ -71,4 +71,3 @@ export function useLanguage() {
 export function useLanguageOptional() {
   return useContext(LanguageContext);
 }
-

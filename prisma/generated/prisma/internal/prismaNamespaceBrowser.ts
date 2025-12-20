@@ -80,6 +80,7 @@ export const VocabularyWordScalarFieldEnum = {
   check1: 'check1',
   check2: 'check2',
   check3: 'check3',
+  displayOrder: 'displayOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

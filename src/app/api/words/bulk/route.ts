@@ -91,3 +91,31 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
+// PATCH: 単語の順序を一括更新
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const orderedIds = body.orderedIds as string[];
+
+    // 各IDに対してdisplayOrderを更新
+    const updates = orderedIds.map((id, index) =>
+      prisma.vocabularyWord.update({
+        where: { id },
+        data: { displayOrder: index },
+      }),
+    );
+
+    await Promise.all(updates);
+
+    return NextResponse.json({
+      updated: orderedIds.length,
+      message: `${orderedIds.length} words reordered successfully`,
+    });
+  } catch (error) {
+    console.error("Failed to reorder words:", error);
+    return NextResponse.json(
+      { error: "Failed to reorder words" },
+      { status: 500 },
+    );
+  }
+}
