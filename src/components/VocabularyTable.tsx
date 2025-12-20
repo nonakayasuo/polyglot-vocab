@@ -52,6 +52,7 @@ import {
   type Category,
   type FilterOptions,
   type Language,
+  WORD_SOURCES,
 } from "@/types/vocabulary";
 
 interface Props {
@@ -71,8 +72,9 @@ const DEFAULT_COLUMN_WIDTHS = {
   pronunciation: 100,
   category: 90,
   meaning: 150,
-  example: 300,
-  note: 120,
+  example: 240,
+  note: 130, // ソース表示用
+  createdAt: 140, // 追加日（年月日時分秒表示用）
 };
 
 // 列幅をローカルストレージから取得/保存
@@ -202,6 +204,52 @@ const getCategoryStyle = (category: string) => {
     Other: "bg-gray-100 text-gray-700 border-gray-200",
   };
   return styles[category] || styles.Other;
+};
+
+// メモからソース（出典）を抽出
+const parseNoteSource = (note: string): { source: string; text: string } => {
+  const sourceMatch = note.match(/^\[([^\]]+)\]\s*/);
+  if (sourceMatch) {
+    const sourceValue = sourceMatch[1];
+    const isValidSource = WORD_SOURCES.some((s) => s.value === sourceValue);
+    if (isValidSource) {
+      return {
+        source: sourceValue,
+        text: note.replace(sourceMatch[0], ""),
+      };
+    }
+  }
+  return { source: "", text: note };
+};
+
+// 日付をフォーマット（年月日 時:分:秒）
+const formatDate = (dateString: string | Date): string => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+};
+
+// ソースごとのスタイル
+const getSourceStyle = (source: string) => {
+  const styles: Record<string, string> = {
+    英検準1級: "bg-green-100 text-green-700",
+    英検1級: "bg-emerald-100 text-emerald-700",
+    "The New York Times": "bg-slate-100 text-slate-700",
+    BBC: "bg-red-100 text-red-700",
+    CNN: "bg-red-100 text-red-700",
+    "The Economist": "bg-rose-100 text-rose-700",
+    TOEFL: "bg-blue-100 text-blue-700",
+    TOEIC: "bg-amber-100 text-amber-700",
+    GRE: "bg-purple-100 text-purple-700",
+    SAT: "bg-indigo-100 text-indigo-700",
+  };
+  return styles[source] || "bg-gray-100 text-gray-600";
 };
 
 // 例文内の単語をハイライト
@@ -670,16 +718,45 @@ const SortableRow = memo(function SortableRow({
         />
       </TableCell>
 
-      {/* メモ（インライン編集可能） */}
+      {/* メモ・出典 */}
       <TableCell
         style={{ width: columnWidths.note, maxWidth: columnWidths.note }}
       >
-        <EditableCell
-          value={word.note}
-          onChange={(v) => onUpdateField("note", v)}
-          placeholder="メモ"
-          className="text-gray-500 text-sm line-clamp-2"
-        />
+        <div className="space-y-1">
+          {/* 出典バッジ */}
+          {parseNoteSource(word.note).source && (
+            <span
+              className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${getSourceStyle(
+                parseNoteSource(word.note).source
+              )}`}
+            >
+              {parseNoteSource(word.note).source}
+            </span>
+          )}
+          {/* メモテキスト（インライン編集可能） */}
+          <EditableCell
+            value={parseNoteSource(word.note).text}
+            onChange={(v) => {
+              const { source } = parseNoteSource(word.note);
+              const newNote = source ? `[${source}] ${v}`.trim() : v;
+              onUpdateField("note", newNote);
+            }}
+            placeholder="メモ"
+            className="text-gray-500 text-xs line-clamp-2"
+          />
+        </div>
+      </TableCell>
+
+      {/* 追加日 */}
+      <TableCell
+        style={{
+          width: columnWidths.createdAt,
+          maxWidth: columnWidths.createdAt,
+        }}
+      >
+        <span className="text-xs text-gray-400">
+          {formatDate(word.createdAt)}
+        </span>
       </TableCell>
     </TableRow>
   );
@@ -730,7 +807,7 @@ const SortableRowWrapper = memo(function SortableRowWrapper({
   );
 });
 
-// 新規行コンポーネント
+// 新規行コンポーネント（Notion風：フォーカスを外したら自動保存）
 function NewWordRow({
   onSave,
   defaultLanguage,
@@ -740,6 +817,7 @@ function NewWordRow({
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [saving, setSaving] = useState(false);
+  const rowRef = useRef<HTMLTableRowElement>(null);
   const [newWord, setNewWord] = useState({
     word: "",
     pronunciation: "",
@@ -750,7 +828,7 @@ function NewWordRow({
     note: "",
   });
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!newWord.word.trim()) {
       setIsAdding(false);
       return;
@@ -782,7 +860,22 @@ function NewWordRow({
     } finally {
       setSaving(false);
     }
-  };
+  }, [newWord, defaultLanguage, onSave]);
+
+  // 行外をクリックしたら保存
+  const handleBlur = useCallback(
+    (e: React.FocusEvent) => {
+      // フォーカスが行内の別の要素に移動した場合は保存しない
+      if (rowRef.current?.contains(e.relatedTarget as Node)) {
+        return;
+      }
+      // 少し遅延させて保存（selectのonChangeが先に処理されるように）
+      setTimeout(() => {
+        handleSave();
+      }, 100);
+    },
+    [handleSave]
+  );
 
   if (!isAdding) {
     return (
@@ -803,8 +896,7 @@ function NewWordRow({
   }
 
   return (
-    <TableRow className="bg-blue-50/50">
-      <TableCell />
+    <TableRow ref={rowRef} className="bg-blue-50/50" onBlur={handleBlur}>
       <TableCell />
       <TableCell>
         <input
@@ -813,6 +905,7 @@ function NewWordRow({
           onChange={(e) => setNewWord({ ...newWord, word: e.target.value })}
           placeholder="単語を入力..."
           disabled={saving}
+          autoFocus
           className="w-full px-2 py-1 text-sm border border-blue-400 rounded outline-none bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSave();
@@ -869,36 +962,18 @@ function NewWordRow({
         />
       </TableCell>
       <TableCell>
-        <div className="flex items-center gap-1">
-          <input
-            type="text"
-            value={newWord.note}
-            onChange={(e) => setNewWord({ ...newWord, note: e.target.value })}
-            placeholder="メモ"
-            disabled={saving}
-            className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded outline-none bg-white"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={handleSave}
-            disabled={saving}
-            className="text-emerald-500 hover:text-emerald-600"
-          >
-            <Check className="w-4 h-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setIsAdding(false)}
-            disabled={saving}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+        <input
+          type="text"
+          value={newWord.note}
+          onChange={(e) => setNewWord({ ...newWord, note: e.target.value })}
+          placeholder="メモ"
+          disabled={saving}
+          className="w-full px-2 py-1 text-sm border border-gray-200 rounded outline-none bg-white"
+        />
+      </TableCell>
+      {/* 追加日（新規追加時は空） */}
+      <TableCell>
+        <span className="text-xs text-gray-400">-</span>
       </TableCell>
     </TableRow>
   );
@@ -1086,6 +1161,7 @@ export default function VocabularyTable({
             <col style={{ width: columnWidths.meaning }} />
             <col style={{ width: columnWidths.example }} />
             <col style={{ width: columnWidths.note }} />
+            <col style={{ width: columnWidths.createdAt }} />
           </colgroup>
           <TableHeader>
             <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
@@ -1136,7 +1212,14 @@ export default function VocabularyTable({
                 onResize={(w) => handleColumnResize("note", w)}
                 className="text-gray-500 text-xs font-medium"
               >
-                メモ
+                出典・メモ
+              </ResizableHeader>
+              <ResizableHeader
+                width={columnWidths.createdAt}
+                onResize={(w) => handleColumnResize("createdAt", w)}
+                className="text-gray-500 text-xs font-medium"
+              >
+                追加日
               </ResizableHeader>
             </TableRow>
           </TableHeader>

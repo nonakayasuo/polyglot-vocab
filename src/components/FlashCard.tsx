@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { updateWord } from "@/lib/storage";
+import { updateWordAPI } from "@/lib/api";
 import { speak } from "@/lib/tts";
 import type { VocabularyWord } from "@/types/vocabulary";
 
@@ -63,19 +63,17 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
     }
   }, [currentIndex]);
 
-  const markAsKnown = useCallback(() => {
+  const markAsKnown = useCallback(async () => {
     if (currentWord) {
-      // 次のチェックを更新
-      const updates: Partial<VocabularyWord> = {};
-      if (!currentWord.check1) updates.check1 = true;
-      else if (!currentWord.check2) updates.check2 = true;
-      else if (!currentWord.check3) updates.check3 = true;
-
-      if (Object.keys(updates).length > 0) {
-        updateWord(currentWord.id, updates);
-        onRefresh();
+      // 習得済みフラグを立てる（まだ習得済みでない場合のみ）
+      if (!currentWord.check1) {
+        try {
+          await updateWordAPI(currentWord.id, { check1: true });
+          onRefresh();
+        } catch (error) {
+          console.error("Failed to mark as learned:", error);
+        }
       }
-
       setKnownCount((prev) => prev + 1);
     }
     goToNext();
@@ -158,10 +156,17 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
       </div>
 
       {/* カード */}
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         className="relative perspective-1000 cursor-pointer w-full text-left"
         onClick={() => setIsFlipped(!isFlipped)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsFlipped(!isFlipped);
+          }
+        }}
       >
         <div
           className={`relative w-full min-h-[400px] transition-transform duration-500 transform-style-3d ${
@@ -255,7 +260,7 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
             )}
           </div>
         </div>
-      </button>
+      </div>
 
       {/* コントロール */}
       <div className="mt-8 flex items-center justify-center gap-4">

@@ -59,8 +59,8 @@ export default function LanguagePage() {
     language: language,
     category: "all",
     status: "all",
-    sortBy: "createdAt",
-    sortOrder: "desc",
+    sortBy: "displayOrder",
+    sortOrder: "asc",
   });
 
   const loadData = useCallback(async () => {
@@ -104,27 +104,11 @@ export default function LanguagePage() {
       result = result.filter((w) => w.category === filters.category);
     }
 
-    // 進捗フィルター（Notion風）
-    if (filters.status !== "all") {
-      result = result.filter((w) => {
-        const checks = [w.check1, w.check2, w.check3];
-        const checkCount = checks.filter(Boolean).length;
-
-        switch (filters.status) {
-          case "notStarted":
-            return checkCount === 0;
-          case "level1":
-            return checkCount === 1;
-          case "level2":
-            return checkCount === 2;
-          case "mastered":
-            return checkCount === 3;
-          case "learning":
-            return checkCount > 0 && checkCount < 3;
-          default:
-            return true;
-        }
-      });
+    // 進捗フィルター（習得済み = check1がtrue）
+    if (filters.status === "learned") {
+      result = result.filter((w) => w.check1 === true);
+    } else if (filters.status === "notLearned") {
+      result = result.filter((w) => w.check1 === false);
     }
 
     // ソート

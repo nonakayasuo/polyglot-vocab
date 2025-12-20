@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { BookCheck, BookX, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,11 +23,9 @@ interface Props {
 
 // 進捗フィルタータブの定義
 const progressTabs = [
-  { value: "all", label: "All", icon: "田" },
-  { value: "notStarted", label: "□□□", checks: [false, false, false] },
-  { value: "level1", label: "■□□", checks: [true, false, false] },
-  { value: "level2", label: "■■□", checks: [true, true, false] },
-  { value: "mastered", label: "■■■", checks: [true, true, true] },
+  { value: "all", label: "すべて", icon: null },
+  { value: "notLearned", label: "未学習", icon: BookX },
+  { value: "learned", label: "習得済み", icon: BookCheck },
 ];
 
 export default function SearchFilter({
@@ -47,8 +45,8 @@ export default function SearchFilter({
       language: filters.language, // 言語ページの場合は維持
       category: "all",
       status: "all",
-      sortBy: "createdAt",
-      sortOrder: "desc",
+      sortBy: "displayOrder",
+      sortOrder: "asc",
     });
   };
 
@@ -57,36 +55,26 @@ export default function SearchFilter({
 
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg border border-gray-200">
-      {/* 進捗フィルタータブ（Notion風） */}
+      {/* 進捗フィルタータブ */}
       <div className="flex items-center gap-1 border-b border-gray-200 pb-3">
-        {progressTabs.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            onClick={() => handleChange("status", tab.value)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              filters.status === tab.value
-                ? "bg-gray-100 text-gray-900"
-                : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-            }`}
-          >
-            {tab.icon ? (
-              <span className="text-xs">{tab.icon}</span>
-            ) : (
-              <div className="flex gap-0.5">
-                {tab.checks?.map((checked, checkIndex) => (
-                  <div
-                    key={`${tab.value}-check-${checkIndex}`}
-                    className={`w-2.5 h-2.5 rounded-sm ${
-                      checked ? "bg-gray-800" : "bg-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-            <span>{tab.label === "All" ? "All" : ""}</span>
-          </button>
-        ))}
+        {progressTabs.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => handleChange("status", tab.value)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                filters.status === tab.value
+                  ? "bg-gray-100 text-gray-900"
+                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              }`}
+            >
+              {Icon && <Icon className="w-4 h-4" />}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
 
         {/* 件数表示 */}
         <div className="ml-auto">

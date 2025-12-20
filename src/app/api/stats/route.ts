@@ -15,28 +15,24 @@ export async function GET(request: NextRequest) {
         language: true,
         category: true,
         check1: true,
-        check2: true,
-        check3: true,
       },
     });
 
     const stats = {
       total: words.length,
-      mastered: 0,
-      learning: 0,
-      notStarted: 0,
+      learned: 0,
+      notLearned: 0,
       byLanguage: {} as Record<string, number>,
       byCategory: {} as Record<string, number>,
     };
 
     words.forEach((word) => {
-      // ステータスカウント
-      const checks = [word.check1, word.check2, word.check3].filter(
-        Boolean,
-      ).length;
-      if (checks === 3) stats.mastered++;
-      else if (checks > 0) stats.learning++;
-      else stats.notStarted++;
+      // 習得済みカウント（check1がtrueなら習得済み）
+      if (word.check1) {
+        stats.learned++;
+      } else {
+        stats.notLearned++;
+      }
 
       // 言語別カウント
       stats.byLanguage[word.language] =

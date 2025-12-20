@@ -22,17 +22,15 @@ export interface VocabularyWordDB {
 
 export interface LanguageStats {
   total: number;
-  mastered: number;
-  learning: number;
-  notStarted: number;
+  learned: number;
+  notLearned: number;
   byCategory: Record<string, number>;
 }
 
 export interface VocabularyStats {
   total: number;
-  mastered: number;
-  learning: number;
-  notStarted: number;
+  learned: number;
+  notLearned: number;
   byLanguage: Record<string, number>;
   byCategory: Record<string, number>;
 }

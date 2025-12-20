@@ -27,6 +27,8 @@ import {
   type Category,
   LANGUAGES,
   type Language,
+  WORD_SOURCES,
+  type WordSource,
 } from "@/types/vocabulary";
 
 interface Props {
@@ -52,6 +54,7 @@ export default function WordForm({
     meaning: "",
     example: "",
     exampleTranslation: "",
+    source: "" as WordSource,
     note: "",
     language: "english" as Language,
     check1: false,
@@ -59,8 +62,28 @@ export default function WordForm({
     check3: false,
   });
 
+  // noteフィールドからsourceを抽出するヘルパー関数
+  const parseNoteAndSource = (
+    note: string,
+  ): { source: WordSource; note: string } => {
+    // noteの先頭に[ソース名]の形式があるかチェック
+    const sourceMatch = note.match(/^\[([^\]]+)\]\s*/);
+    if (sourceMatch) {
+      const sourceValue = sourceMatch[1];
+      const isValidSource = WORD_SOURCES.some((s) => s.value === sourceValue);
+      if (isValidSource) {
+        return {
+          source: sourceValue as WordSource,
+          note: note.replace(sourceMatch[0], ""),
+        };
+      }
+    }
+    return { source: "", note };
+  };
+
   useEffect(() => {
     if (word) {
+      const { source, note } = parseNoteAndSource(word.note);
       setFormData({
         word: word.word,
         pronunciation: word.pronunciation,
@@ -68,7 +91,8 @@ export default function WordForm({
         meaning: word.meaning,
         example: word.example,
         exampleTranslation: word.exampleTranslation || "",
-        note: word.note,
+        source,
+        note,
         language: word.language as Language,
         check1: word.check1,
         check2: word.check2,
@@ -82,6 +106,7 @@ export default function WordForm({
         meaning: "",
         example: "",
         exampleTranslation: "",
+        source: "",
         note: "",
         language: defaultLanguage,
         check1: false,
@@ -99,12 +124,22 @@ export default function WordForm({
       return;
     }
 
+    // sourceとnoteを結合してnoteフィールドに保存
+    const combinedNote = formData.source
+      ? `[${formData.source}] ${formData.note}`.trim()
+      : formData.note;
+
+    const dataToSave = {
+      ...formData,
+      note: combinedNote,
+    };
+
     setSaving(true);
     try {
       if (word) {
-        await updateWordAPI(word.id, formData);
+        await updateWordAPI(word.id, dataToSave);
       } else {
-        await createWord(formData);
+        await createWord(dataToSave);
       }
 
       onSave();
@@ -280,18 +315,44 @@ export default function WordForm({
             />
           </div>
 
-          {/* メモ */}
-          <div className="space-y-2">
-            <Label htmlFor="note" className="text-gray-600">
-              メモ
-            </Label>
+          {/* 出典・メモ */}
+          <div className="space-y-3">
+            <Label className="text-gray-600">出典・メモ</Label>
+
+            {/* ソース選択 */}
+            <div className="flex items-center gap-3">
+              <Select
+                value={formData.source || "__none__"}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    source: value === "__none__" ? "" : (value as WordSource),
+                  }))
+                }
+                disabled={saving}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="出典を選択（任意）" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">選択なし</SelectItem>
+                  {WORD_SOURCES.map((source) => (
+                    <SelectItem key={source.value} value={source.value}>
+                      {source.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 自由記述メモ */}
             <Textarea
               id="note"
               value={formData.note}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, note: e.target.value }))
               }
-              placeholder="覚え方のヒントなど"
+              placeholder="覚え方のヒントなど（自由記述）"
               rows={2}
               disabled={saving}
             />
