@@ -1,0 +1,114 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "言語別ページのルーティング実装",
+        "description": "各言語（English, Spanish, Korean, Chinese）を別ページに分離するためのルーティング構造を実装する",
+        "details": "Next.js App Routerを使用して /[language]/ の動的ルーティングを実装。各言語ページで単語一覧、フラッシュカード、統計を表示できるようにする。ホームページは言語選択のダッシュボードとして再設計する。",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "言語選択ダッシュボード（ホームページ）の作成",
+        "description": "ホームページを言語選択のダッシュボードとして再設計し、各言語の統計情報を表示する",
+        "details": "各言語カードに単語数、習得率、最近の学習状況を表示。言語カードをクリックすると該当の言語ページへ遷移。全体の統計サマリーも表示。",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "言語別ストレージ関数の最適化",
+        "description": "言語別にデータを効率的に取得・保存できるようにストレージ関数を拡張する",
+        "details": "getVocabularyByLanguage(language)関数の追加。言語別の統計取得関数getStatsByLanguage(language)の追加。キャッシュの最適化。",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "言語ページ共通コンポーネントの作成",
+        "description": "言語別ページで再利用可能な共通コンポーネントを作成する",
+        "details": "LanguagePageLayoutコンポーネント、言語ヘッダー、言語固有の設定（TTS言語コードなど）を管理するコンテキストの作成。",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "WordFormのopen prop問題の修正",
+        "description": "WordFormコンポーネントのDialogがopen propを要求しているが、page.tsxでは条件付きレンダリングしている不整合を修正",
+        "details": "page.tsxでのWordFormの呼び出し方法を修正し、open propを正しく渡すようにする。またはWordFormの実装を条件付きレンダリングに対応させる。",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "新言語の追加機能",
+        "description": "ユーザーが新しい言語を追加できる機能を実装する",
+        "details": "設定画面で新しい言語（言語コード、表示名、国旗絵文字、TTS言語コード）を追加・編集・削除できるようにする。カスタム言語をLocalStorageに保存。",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "ダークモード/ライトモード切り替え機能",
+        "description": "ダークモードとライトモードを切り替えられる機能を追加する",
+        "details": "現在はダークモードのみ。next-themesを使用してテーマ切り替えを実装。システム設定に従うオプションも追加。",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "PWA対応（オフライン機能）",
+        "description": "Progressive Web App対応を行い、オフラインでも利用可能にする",
+        "details": "Service Workerの設定、マニフェストファイルの作成、オフラインキャッシュ戦略の実装。モバイルでのホーム画面追加対応。",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Notion風UIデザインの実装",
+        "description": "NotionのようなクリーンなライトテーマのテーブルUI、カラフルな品詞バッジ、進捗フィルタータブを実装",
+        "details": "品詞ごとのカラーバッジ（名詞=水色、動詞=オレンジなど）、例文内の単語ハイライト、進捗フィルター（All, □□□, ■□□, ■■□, ■■■）、白背景のクリーンなデザイン",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-12-20T09:20:41.573Z",
+      "description": "Default tasks context",
+      "updated": "2025-12-20T09:31:13.204Z"
+    }
+  }
+}
