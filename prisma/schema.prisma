@@ -27,7 +27,84 @@ model VocabularyWord {
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
+  // 単語コンテキスト（どの記事から学んだか）
+  contexts            WordContext[]
+
   @@index([language])
   @@index([createdAt])
   @@index([displayOrder])
+}
+
+// キャッシュされたニュース記事
+model Article {
+  id           String   @id @default(cuid())
+  externalId   String   @unique // News APIからのID（URLハッシュ等）
+  title        String
+  description  String   @default("")
+  content      String   @default("")
+  url          String
+  imageUrl     String?
+  source       String   // ニュースソース名
+  author       String?
+  language     String   @default("en")
+  category     String?
+  publishedAt  DateTime
+  cachedAt     DateTime @default(now())
+
+  // リレーション
+  readingHistory ReadingHistory[]
+  wordContexts   WordContext[]
+
+  @@index([language])
+  @@index([source])
+  @@index([publishedAt])
+  @@index([cachedAt])
+}
+
+// 読書履歴
+model ReadingHistory {
+  id           String   @id @default(cuid())
+  articleId    String
+  article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  readAt       DateTime @default(now())
+  wordsLearned Int      @default(0) // この記事から学んだ単語数
+  readTime     Int?     // 読書時間（秒）
+
+  @@index([articleId])
+  @@index([readAt])
+}
+
+// 単語と記事のコンテキスト（どの記事のどの文から学んだか）
+model WordContext {
+  id              String         @id @default(cuid())
+  wordId          String
+  word            VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  articleId       String
+  article         Article        @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  sentence        String         // 単語が含まれる文
+  sentenceIndex   Int?           // 記事内での文の位置
+  createdAt       DateTime       @default(now())
+
+  @@unique([wordId, articleId])
+  @@index([wordId])
+  @@index([articleId])
+}
+
+// 日次おすすめ単語
+model DailyWordRecommendation {
+  id              String   @id @default(cuid())
+  date            DateTime @default(now()) // 推薦日
+  word            String
+  definition      String   @default("")
+  pronunciation   String   @default("")
+  partOfSpeech    String   @default("")
+  cefrLevel       String   @default("") // B2, C1, C2
+  frequencyRank   Int?     // 頻度ランク
+  articleId       String?  // 出典記事
+  sentence        String   @default("") // 例文
+  isAdded         Boolean  @default(false) // 単語帳に追加済みか
+  isSkipped       Boolean  @default(false) // スキップされたか
+
+  @@index([date])
+  @@index([word])
 }

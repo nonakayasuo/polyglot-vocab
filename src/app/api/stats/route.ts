@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
 
     const stats = {
       total: words.length,
-      learned: 0,
-      notLearned: 0,
+      mastered: 0, // 習得済み（check1 = true）
+      notStarted: 0, // 未習得（check1 = false）
       byLanguage: {} as Record<string, number>,
       byCategory: {} as Record<string, number>,
     };
@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
     words.forEach((word) => {
       // 習得済みカウント（check1がtrueなら習得済み）
       if (word.check1) {
-        stats.learned++;
+        stats.mastered++;
       } else {
-        stats.notLearned++;
+        stats.notStarted++;
       }
 
       // 言語別カウント

@@ -51,6 +51,7 @@ import {
   CATEGORIES,
   type Category,
   type FilterOptions,
+  getSourceInfo,
   type Language,
   WORD_SOURCES,
 } from "@/types/vocabulary";
@@ -235,22 +236,75 @@ const formatDate = (dateString: string | Date): string => {
   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 };
 
-// ソースごとのスタイル
+// ソースごとのスタイル（カテゴリ別）
 const getSourceStyle = (source: string) => {
-  const styles: Record<string, string> = {
+  const sourceInfo = getSourceInfo(source);
+  if (!sourceInfo) return "bg-gray-100 text-gray-600";
+
+  // ニュースソースのスタイル
+  const newsStyles: Record<string, string> = {
+    "The New York Times": "bg-slate-800 text-white",
+    BBC: "bg-red-600 text-white",
+    "The Guardian": "bg-blue-900 text-white",
+    "Al Jazeera": "bg-amber-600 text-white",
+    CNN: "bg-red-700 text-white",
+    "The Economist": "bg-rose-700 text-white",
+    Reuters: "bg-orange-600 text-white",
+    "The Washington Post": "bg-slate-700 text-white",
+    "Le Monde": "bg-sky-700 text-white",
+    "El País": "bg-blue-600 text-white",
+    "Der Spiegel": "bg-orange-700 text-white",
+    NPR: "bg-blue-800 text-white",
+  };
+
+  // 試験ソースのスタイル
+  const examStyles: Record<string, string> = {
     英検準1級: "bg-green-100 text-green-700",
     英検1級: "bg-emerald-100 text-emerald-700",
-    "The New York Times": "bg-slate-100 text-slate-700",
-    BBC: "bg-red-100 text-red-700",
-    CNN: "bg-red-100 text-red-700",
-    "The Economist": "bg-rose-100 text-rose-700",
     TOEFL: "bg-blue-100 text-blue-700",
     TOEIC: "bg-amber-100 text-amber-700",
     GRE: "bg-purple-100 text-purple-700",
     SAT: "bg-indigo-100 text-indigo-700",
+    IELTS: "bg-red-100 text-red-700",
   };
-  return styles[source] || "bg-gray-100 text-gray-600";
+
+  return (
+    newsStyles[source] || examStyles[source] || "bg-gray-100 text-gray-600"
+  );
 };
+
+// ソースバッジコンポーネント（リンク対応）
+function SourceBadge({ source }: { source: string }) {
+  const sourceInfo = getSourceInfo(source);
+  const style = getSourceStyle(source);
+
+  const content = (
+    <span
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${style} ${
+        sourceInfo?.url ? "cursor-pointer hover:opacity-80 transition-opacity" : ""
+      }`}
+    >
+      {sourceInfo?.icon && <span>{sourceInfo.icon}</span>}
+      {sourceInfo?.shortLabel || source}
+    </span>
+  );
+
+  if (sourceInfo?.url) {
+    return (
+      <a
+        href={sourceInfo.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={`${sourceInfo.label}を開く`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return content;
+}
 
 // 例文内の単語をハイライト
 const highlightWord = (example: string, word: string) => {
@@ -541,6 +595,79 @@ function CategoryCell({
   );
 }
 
+// ソース選択セル
+function SourceCell({
+  source,
+  onChange,
+}: {
+  source: string;
+  onChange: (value: string) => void;
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const sourceInfo = getSourceInfo(source);
+
+  // ニュース/試験ソースを分類
+  const newsSources = WORD_SOURCES.filter((s) => s.category === "news");
+  const examSources = WORD_SOURCES.filter((s) => s.category === "exam");
+
+  if (isEditing) {
+    return (
+      <select
+        value={source || ""}
+        onChange={(e) => {
+          onChange(e.target.value);
+          setIsEditing(false);
+        }}
+        onBlur={() => setIsEditing(false)}
+        className="text-xs px-2 py-1 border border-blue-400 rounded outline-none bg-white w-full"
+        autoFocus
+      >
+        <option value="">選択なし</option>
+        <optgroup label="📰 ニュースメディア">
+          {newsSources.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.icon} {s.shortLabel}
+            </option>
+          ))}
+        </optgroup>
+        <optgroup label="📚 試験・資格">
+          {examSources.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.icon} {s.shortLabel}
+            </option>
+          ))}
+        </optgroup>
+      </select>
+    );
+  }
+
+  if (source && sourceInfo) {
+    return (
+      <div className="flex items-center gap-1">
+        <SourceBadge source={source} />
+        <button
+          type="button"
+          onClick={() => setIsEditing(true)}
+          className="p-0.5 text-gray-300 hover:text-gray-500 transition-colors"
+          title="出典を変更"
+        >
+          <span className="text-xs">✎</span>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setIsEditing(true)}
+      className="text-gray-300 text-xs hover:text-gray-500 px-1.5 py-0.5 rounded hover:bg-gray-100 transition-colors"
+    >
+      + 出典
+    </button>
+  );
+}
+
 // 行アクションボタン（メモ化）
 const RowActions = memo(function RowActions({
   onAddBelow,
@@ -723,16 +850,15 @@ const SortableRow = memo(function SortableRow({
         style={{ width: columnWidths.note, maxWidth: columnWidths.note }}
       >
         <div className="space-y-1">
-          {/* 出典バッジ */}
-          {parseNoteSource(word.note).source && (
-            <span
-              className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${getSourceStyle(
-                parseNoteSource(word.note).source
-              )}`}
-            >
-              {parseNoteSource(word.note).source}
-            </span>
-          )}
+          {/* 出典選択（セレクトボックス） */}
+          <SourceCell
+            source={parseNoteSource(word.note).source}
+            onChange={(newSource) => {
+              const { text } = parseNoteSource(word.note);
+              const newNote = newSource ? `[${newSource}] ${text}`.trim() : text;
+              onUpdateField("note", newNote);
+            }}
+          />
           {/* メモテキスト（インライン編集可能） */}
           <EditableCell
             value={parseNoteSource(word.note).text}

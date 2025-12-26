@@ -384,7 +384,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  VocabularyWord: 'VocabularyWord'
+  VocabularyWord: 'VocabularyWord',
+  Article: 'Article',
+  ReadingHistory: 'ReadingHistory',
+  WordContext: 'WordContext',
+  DailyWordRecommendation: 'DailyWordRecommendation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "vocabularyWord"
+    modelProps: "vocabularyWord" | "article" | "readingHistory" | "wordContext" | "dailyWordRecommendation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +482,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Article: {
+      payload: Prisma.$ArticlePayload<ExtArgs>
+      fields: Prisma.ArticleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ArticleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ArticleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        findFirst: {
+          args: Prisma.ArticleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ArticleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        findMany: {
+          args: Prisma.ArticleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>[]
+        }
+        create: {
+          args: Prisma.ArticleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        createMany: {
+          args: Prisma.ArticleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ArticleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>[]
+        }
+        delete: {
+          args: Prisma.ArticleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        update: {
+          args: Prisma.ArticleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        deleteMany: {
+          args: Prisma.ArticleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ArticleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ArticleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>[]
+        }
+        upsert: {
+          args: Prisma.ArticleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArticlePayload>
+        }
+        aggregate: {
+          args: Prisma.ArticleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateArticle>
+        }
+        groupBy: {
+          args: Prisma.ArticleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArticleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ArticleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArticleCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReadingHistory: {
+      payload: Prisma.$ReadingHistoryPayload<ExtArgs>
+      fields: Prisma.ReadingHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReadingHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReadingHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.ReadingHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReadingHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.ReadingHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.ReadingHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.ReadingHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReadingHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.ReadingHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        update: {
+          args: Prisma.ReadingHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReadingHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReadingHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReadingHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReadingHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReadingHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.ReadingHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReadingHistory>
+        }
+        groupBy: {
+          args: Prisma.ReadingHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReadingHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReadingHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReadingHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    WordContext: {
+      payload: Prisma.$WordContextPayload<ExtArgs>
+      fields: Prisma.WordContextFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WordContextFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WordContextFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        findFirst: {
+          args: Prisma.WordContextFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WordContextFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        findMany: {
+          args: Prisma.WordContextFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>[]
+        }
+        create: {
+          args: Prisma.WordContextCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        createMany: {
+          args: Prisma.WordContextCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WordContextCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>[]
+        }
+        delete: {
+          args: Prisma.WordContextDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        update: {
+          args: Prisma.WordContextUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        deleteMany: {
+          args: Prisma.WordContextDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WordContextUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WordContextUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>[]
+        }
+        upsert: {
+          args: Prisma.WordContextUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordContextPayload>
+        }
+        aggregate: {
+          args: Prisma.WordContextAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWordContext>
+        }
+        groupBy: {
+          args: Prisma.WordContextGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordContextGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WordContextCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordContextCountAggregateOutputType> | number
+        }
+      }
+    }
+    DailyWordRecommendation: {
+      payload: Prisma.$DailyWordRecommendationPayload<ExtArgs>
+      fields: Prisma.DailyWordRecommendationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyWordRecommendationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyWordRecommendationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyWordRecommendationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyWordRecommendationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        findMany: {
+          args: Prisma.DailyWordRecommendationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
+        }
+        create: {
+          args: Prisma.DailyWordRecommendationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        createMany: {
+          args: Prisma.DailyWordRecommendationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyWordRecommendationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyWordRecommendationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        update: {
+          args: Prisma.DailyWordRecommendationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyWordRecommendationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyWordRecommendationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyWordRecommendationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyWordRecommendationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyWordRecommendationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyWordRecommendation>
+        }
+        groupBy: {
+          args: Prisma.DailyWordRecommendationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyWordRecommendationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyWordRecommendationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyWordRecommendationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -535,12 +835,80 @@ export const VocabularyWordScalarFieldEnum = {
 export type VocabularyWordScalarFieldEnum = (typeof VocabularyWordScalarFieldEnum)[keyof typeof VocabularyWordScalarFieldEnum]
 
 
+export const ArticleScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  title: 'title',
+  description: 'description',
+  content: 'content',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  source: 'source',
+  author: 'author',
+  language: 'language',
+  category: 'category',
+  publishedAt: 'publishedAt',
+  cachedAt: 'cachedAt'
+} as const
+
+export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
+
+
+export const ReadingHistoryScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  readAt: 'readAt',
+  wordsLearned: 'wordsLearned',
+  readTime: 'readTime'
+} as const
+
+export type ReadingHistoryScalarFieldEnum = (typeof ReadingHistoryScalarFieldEnum)[keyof typeof ReadingHistoryScalarFieldEnum]
+
+
+export const WordContextScalarFieldEnum = {
+  id: 'id',
+  wordId: 'wordId',
+  articleId: 'articleId',
+  sentence: 'sentence',
+  sentenceIndex: 'sentenceIndex',
+  createdAt: 'createdAt'
+} as const
+
+export type WordContextScalarFieldEnum = (typeof WordContextScalarFieldEnum)[keyof typeof WordContextScalarFieldEnum]
+
+
+export const DailyWordRecommendationScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  word: 'word',
+  definition: 'definition',
+  pronunciation: 'pronunciation',
+  partOfSpeech: 'partOfSpeech',
+  cefrLevel: 'cefrLevel',
+  frequencyRank: 'frequencyRank',
+  articleId: 'articleId',
+  sentence: 'sentence',
+  isAdded: 'isAdded',
+  isSkipped: 'isSkipped'
+} as const
+
+export type DailyWordRecommendationScalarFieldEnum = (typeof DailyWordRecommendationScalarFieldEnum)[keyof typeof DailyWordRecommendationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -679,6 +1047,10 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   vocabularyWord?: Prisma.VocabularyWordOmit
+  article?: Prisma.ArticleOmit
+  readingHistory?: Prisma.ReadingHistoryOmit
+  wordContext?: Prisma.WordContextOmit
+  dailyWordRecommendation?: Prisma.DailyWordRecommendationOmit
 }
 
 /* Types for Logging */

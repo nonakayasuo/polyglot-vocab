@@ -9,4 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/VocabularyWord'
+export type * from './models/Article'
+export type * from './models/ReadingHistory'
+export type * from './models/WordContext'
+export type * from './models/DailyWordRecommendation'
 export type * from './commonInputTypes'

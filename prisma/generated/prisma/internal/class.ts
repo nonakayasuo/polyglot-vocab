@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "sqlite",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel VocabularyWord {\n  id                 String   @id @default(cuid())\n  word               String\n  pronunciation      String   @default(\"\")\n  category           String   @default(\"Noun\")\n  meaning            String   @default(\"\")\n  example            String   @default(\"\")\n  exampleTranslation String   @default(\"\") // 例文の日本語訳\n  note               String   @default(\"\")\n  language           String   @default(\"english\")\n  check1             Boolean  @default(false)\n  check2             Boolean  @default(false)\n  check3             Boolean  @default(false)\n  displayOrder       Int      @default(0) // 表示順序\n  createdAt          DateTime @default(now())\n  updatedAt          DateTime @updatedAt\n\n  @@index([language])\n  @@index([createdAt])\n  @@index([displayOrder])\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel VocabularyWord {\n  id                 String   @id @default(cuid())\n  word               String\n  pronunciation      String   @default(\"\")\n  category           String   @default(\"Noun\")\n  meaning            String   @default(\"\")\n  example            String   @default(\"\")\n  exampleTranslation String   @default(\"\") // 例文の日本語訳\n  note               String   @default(\"\")\n  language           String   @default(\"english\")\n  check1             Boolean  @default(false)\n  check2             Boolean  @default(false)\n  check3             Boolean  @default(false)\n  displayOrder       Int      @default(0) // 表示順序\n  createdAt          DateTime @default(now())\n  updatedAt          DateTime @updatedAt\n\n  // 単語コンテキスト（どの記事から学んだか）\n  contexts WordContext[]\n\n  @@index([language])\n  @@index([createdAt])\n  @@index([displayOrder])\n}\n\n// キャッシュされたニュース記事\nmodel Article {\n  id          String   @id @default(cuid())\n  externalId  String   @unique // News APIからのID（URLハッシュ等）\n  title       String\n  description String   @default(\"\")\n  content     String   @default(\"\")\n  url         String\n  imageUrl    String?\n  source      String // ニュースソース名\n  author      String?\n  language    String   @default(\"en\")\n  category    String?\n  publishedAt DateTime\n  cachedAt    DateTime @default(now())\n\n  // リレーション\n  readingHistory ReadingHistory[]\n  wordContexts   WordContext[]\n\n  @@index([language])\n  @@index([source])\n  @@index([publishedAt])\n  @@index([cachedAt])\n}\n\n// 読書履歴\nmodel ReadingHistory {\n  id           String   @id @default(cuid())\n  articleId    String\n  article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)\n  readAt       DateTime @default(now())\n  wordsLearned Int      @default(0) // この記事から学んだ単語数\n  readTime     Int? // 読書時間（秒）\n\n  @@index([articleId])\n  @@index([readAt])\n}\n\n// 単語と記事のコンテキスト（どの記事のどの文から学んだか）\nmodel WordContext {\n  id            String         @id @default(cuid())\n  wordId        String\n  word          VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)\n  articleId     String\n  article       Article        @relation(fields: [articleId], references: [id], onDelete: Cascade)\n  sentence      String // 単語が含まれる文\n  sentenceIndex Int? // 記事内での文の位置\n  createdAt     DateTime       @default(now())\n\n  @@unique([wordId, articleId])\n  @@index([wordId])\n  @@index([articleId])\n}\n\n// 日次おすすめ単語\nmodel DailyWordRecommendation {\n  id            String   @id @default(cuid())\n  date          DateTime @default(now()) // 推薦日\n  word          String\n  definition    String   @default(\"\")\n  pronunciation String   @default(\"\")\n  partOfSpeech  String   @default(\"\")\n  cefrLevel     String   @default(\"\") // B2, C1, C2\n  frequencyRank Int? // 頻度ランク\n  articleId     String? // 出典記事\n  sentence      String   @default(\"\") // 例文\n  isAdded       Boolean  @default(false) // 単語帳に追加済みか\n  isSkipped     Boolean  @default(false) // スキップされたか\n\n  @@index([date])\n  @@index([word])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"VocabularyWord\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"word\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pronunciation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meaning\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"example\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exampleTranslation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check1\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"check2\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"check3\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"displayOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"VocabularyWord\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"word\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pronunciation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meaning\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"example\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exampleTranslation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check1\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"check2\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"check3\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"displayOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"contexts\",\"kind\":\"object\",\"type\":\"WordContext\",\"relationName\":\"VocabularyWordToWordContext\"}],\"dbName\":null},\"Article\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"externalId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"author\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cachedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"readingHistory\",\"kind\":\"object\",\"type\":\"ReadingHistory\",\"relationName\":\"ArticleToReadingHistory\"},{\"name\":\"wordContexts\",\"kind\":\"object\",\"type\":\"WordContext\",\"relationName\":\"ArticleToWordContext\"}],\"dbName\":null},\"ReadingHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"articleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"article\",\"kind\":\"object\",\"type\":\"Article\",\"relationName\":\"ArticleToReadingHistory\"},{\"name\":\"readAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"wordsLearned\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"readTime\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"WordContext\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wordId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"word\",\"kind\":\"object\",\"type\":\"VocabularyWord\",\"relationName\":\"VocabularyWordToWordContext\"},{\"name\":\"articleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"article\",\"kind\":\"object\",\"type\":\"Article\",\"relationName\":\"ArticleToWordContext\"},{\"name\":\"sentence\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sentenceIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"DailyWordRecommendation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"word\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"definition\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pronunciation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"partOfSpeech\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cefrLevel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"frequencyRank\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"articleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sentence\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isAdded\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isSkipped\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -183,6 +183,46 @@ export interface PrismaClient<
     * ```
     */
   get vocabularyWord(): Prisma.VocabularyWordDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.article`: Exposes CRUD operations for the **Article** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Articles
+    * const articles = await prisma.article.findMany()
+    * ```
+    */
+  get article(): Prisma.ArticleDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.readingHistory`: Exposes CRUD operations for the **ReadingHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReadingHistories
+    * const readingHistories = await prisma.readingHistory.findMany()
+    * ```
+    */
+  get readingHistory(): Prisma.ReadingHistoryDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.wordContext`: Exposes CRUD operations for the **WordContext** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WordContexts
+    * const wordContexts = await prisma.wordContext.findMany()
+    * ```
+    */
+  get wordContext(): Prisma.WordContextDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.dailyWordRecommendation`: Exposes CRUD operations for the **DailyWordRecommendation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DailyWordRecommendations
+    * const dailyWordRecommendations = await prisma.dailyWordRecommendation.findMany()
+    * ```
+    */
+  get dailyWordRecommendation(): Prisma.DailyWordRecommendationDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

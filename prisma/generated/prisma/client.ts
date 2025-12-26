@@ -44,3 +44,23 @@ export { Prisma }
  * 
  */
 export type VocabularyWord = Prisma.VocabularyWordModel
+/**
+ * Model Article
+ * 
+ */
+export type Article = Prisma.ArticleModel
+/**
+ * Model ReadingHistory
+ * 
+ */
+export type ReadingHistory = Prisma.ReadingHistoryModel
+/**
+ * Model WordContext
+ * 
+ */
+export type WordContext = Prisma.WordContextModel
+/**
+ * Model DailyWordRecommendation
+ * 
+ */
+export type DailyWordRecommendation = Prisma.DailyWordRecommendationModel

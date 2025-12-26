@@ -35,8 +35,8 @@ export interface VocabularyWord {
 
 export interface VocabularyStats {
   total: number;
-  learned: number; // 習得済み（check1 = true）
-  notLearned: number; // 未学習（check1 = false）
+  mastered: number; // 習得済み（check1 = true）
+  notStarted: number; // 未習得（check1 = false）
   byLanguage: Record<Language, number>;
   byCategory: Record<string, number>;
 }
@@ -45,6 +45,7 @@ export interface FilterOptions {
   search: string;
   language: Language | "all";
   category: string | "all";
+  source: string | "all";
   status: "all" | "learned" | "notLearned";
   sortBy: "displayOrder" | "word" | "createdAt" | "updatedAt";
   sortOrder: "asc" | "desc";
@@ -72,18 +73,108 @@ export const LANGUAGES: { value: Language; label: string; flag: string }[] = [
   { value: "chinese", label: "中文", flag: "🇨🇳" },
 ];
 
-// 単語のソース（出典）オプション
+// ソースのカテゴリー
+export type SourceCategory = "news" | "exam" | "other";
+
+// 単語のソース（出典）オプション - ニュースサイト6つに限定
 export const WORD_SOURCES = [
-  { value: "英検準1級", label: "英検準1級" },
-  { value: "英検1級", label: "英検1級" },
-  { value: "The New York Times", label: "The New York Times" },
-  { value: "BBC", label: "BBC" },
-  { value: "CNN", label: "CNN" },
-  { value: "The Economist", label: "The Economist" },
-  { value: "TOEFL", label: "TOEFL" },
-  { value: "TOEIC", label: "TOEIC" },
-  { value: "GRE", label: "GRE" },
-  { value: "SAT", label: "SAT" },
+  // 📰 主要ニュースサイト（6メディア）
+  {
+    value: "The New York Times",
+    label: "The New York Times",
+    shortLabel: "NYT",
+    url: "https://www.nytimes.com",
+    category: "news" as SourceCategory,
+    icon: "📰",
+  },
+  {
+    value: "BBC",
+    label: "BBC News",
+    shortLabel: "BBC",
+    url: "https://www.bbc.com/news",
+    category: "news" as SourceCategory,
+    icon: "📺",
+  },
+  {
+    value: "The Guardian",
+    label: "The Guardian",
+    shortLabel: "Guardian",
+    url: "https://www.theguardian.com",
+    category: "news" as SourceCategory,
+    icon: "📰",
+  },
+  {
+    value: "Al Jazeera",
+    label: "Al Jazeera",
+    shortLabel: "Al Jazeera",
+    url: "https://www.aljazeera.com",
+    category: "news" as SourceCategory,
+    icon: "🌍",
+  },
+  {
+    value: "Reuters",
+    label: "Reuters",
+    shortLabel: "Reuters",
+    url: "https://www.reuters.com",
+    category: "news" as SourceCategory,
+    icon: "📡",
+  },
+  {
+    value: "The Wall Street Journal",
+    label: "The Wall Street Journal",
+    shortLabel: "WSJ",
+    url: "https://www.wsj.com",
+    category: "news" as SourceCategory,
+    icon: "💼",
+  },
+  // 📚 試験・資格
+  {
+    value: "英検準1級",
+    label: "英検準1級",
+    shortLabel: "英検準1",
+    url: null,
+    category: "exam" as SourceCategory,
+    icon: "📚",
+  },
+  {
+    value: "英検1級",
+    label: "英検1級",
+    shortLabel: "英検1",
+    url: null,
+    category: "exam" as SourceCategory,
+    icon: "📚",
+  },
+  {
+    value: "TOEIC",
+    label: "TOEIC",
+    shortLabel: "TOEIC",
+    url: null,
+    category: "exam" as SourceCategory,
+    icon: "💼",
+  },
+  {
+    value: "IELTS",
+    label: "IELTS",
+    shortLabel: "IELTS",
+    url: null,
+    category: "exam" as SourceCategory,
+    icon: "🎓",
+  },
 ] as const;
 
 export type WordSource = (typeof WORD_SOURCES)[number]["value"] | "";
+
+// ソース情報を取得するヘルパー関数
+export function getSourceInfo(source: string) {
+  return WORD_SOURCES.find((s) => s.value === source) || null;
+}
+
+// ニュースソースのみを取得
+export function getNewsSources() {
+  return WORD_SOURCES.filter((s) => s.category === "news");
+}
+
+// 試験ソースのみを取得
+export function getExamSources() {
+  return WORD_SOURCES.filter((s) => s.category === "exam");
+}

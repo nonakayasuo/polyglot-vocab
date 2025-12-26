@@ -84,7 +84,6 @@ export function getStats(): VocabularyStats {
   const stats: VocabularyStats = {
     total: words.length,
     mastered: 0,
-    learning: 0,
     notStarted: 0,
     byLanguage: {
       english: 0,
@@ -96,12 +95,8 @@ export function getStats(): VocabularyStats {
   };
 
   words.forEach((word) => {
-    // ステータスカウント
-    const checks = [word.check1, word.check2, word.check3].filter(
-      Boolean,
-    ).length;
-    if (checks === 3) stats.mastered++;
-    else if (checks > 0) stats.learning++;
+    // ステータスカウント（check1のみで判定）
+    if (word.check1) stats.mastered++;
     else stats.notStarted++;
 
     // 言語別カウント
@@ -139,7 +134,6 @@ export function clearAllData(): void {
 export interface LanguageStats {
   total: number;
   mastered: number;
-  learning: number;
   notStarted: number;
   byCategory: Record<string, number>;
 }
@@ -150,17 +144,13 @@ export function getStatsByLanguage(language: Language): LanguageStats {
   const stats: LanguageStats = {
     total: words.length,
     mastered: 0,
-    learning: 0,
     notStarted: 0,
     byCategory: {},
   };
 
   words.forEach((word) => {
-    const checks = [word.check1, word.check2, word.check3].filter(
-      Boolean,
-    ).length;
-    if (checks === 3) stats.mastered++;
-    else if (checks > 0) stats.learning++;
+    // check1のみで判定
+    if (word.check1) stats.mastered++;
     else stats.notStarted++;
 
     if (word.category) {

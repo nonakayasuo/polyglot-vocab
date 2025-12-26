@@ -331,16 +331,33 @@ export default function WordForm({
                 }
                 disabled={saving}
               >
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-[240px]">
                   <SelectValue placeholder="出典を選択（任意）" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__none__">選択なし</SelectItem>
-                  {WORD_SOURCES.map((source) => (
-                    <SelectItem key={source.value} value={source.value}>
-                      {source.label}
-                    </SelectItem>
-                  ))}
+                  {/* ニュースソース */}
+                  <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                    📰 ニュースメディア
+                  </div>
+                  {WORD_SOURCES.filter((s) => s.category === "news").map(
+                    (source) => (
+                      <SelectItem key={source.value} value={source.value}>
+                        {source.icon} {source.label}
+                      </SelectItem>
+                    ),
+                  )}
+                  {/* 試験ソース */}
+                  <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                    📚 試験・資格
+                  </div>
+                  {WORD_SOURCES.filter((s) => s.category === "exam").map(
+                    (source) => (
+                      <SelectItem key={source.value} value={source.value}>
+                        {source.icon} {source.label}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
             </div>

@@ -1,8 +1,10 @@
 "use client";
 
-import { ChevronRight, Languages, Loader2 } from "lucide-react";
+import { ChevronRight, Languages, Loader2, Newspaper } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import DailyRecommendations from "@/components/DailyRecommendations";
+import ReadingStats from "@/components/ReadingStats";
 import {
   fetchStats,
   type LanguageStats,
@@ -18,28 +20,24 @@ export default function Home() {
     english: {
       total: 0,
       mastered: 0,
-      learning: 0,
       notStarted: 0,
       byCategory: {},
     },
     spanish: {
       total: 0,
       mastered: 0,
-      learning: 0,
       notStarted: 0,
       byCategory: {},
     },
     korean: {
       total: 0,
       mastered: 0,
-      learning: 0,
       notStarted: 0,
       byCategory: {},
     },
     chinese: {
       total: 0,
       mastered: 0,
-      learning: 0,
       notStarted: 0,
       byCategory: {},
     },
@@ -47,7 +45,6 @@ export default function Home() {
   const [totalStats, setTotalStats] = useState({
     total: 0,
     mastered: 0,
-    learning: 0,
     notStarted: 0,
   });
 
@@ -73,7 +70,6 @@ export default function Home() {
       setTotalStats({
         total: overall.total,
         mastered: overall.mastered,
-        learning: overall.learning,
         notStarted: overall.notStarted,
       });
     } catch (error) {
@@ -143,14 +139,8 @@ export default function Home() {
               {totalStats.mastered}
             </p>
           </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-amber-600 text-xs">学習中</p>
-            <p className="text-2xl font-bold text-amber-600 mt-1">
-              {totalStats.learning}
-            </p>
-          </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-500 text-xs">□□□ 未学習</p>
+            <p className="text-gray-500 text-xs">□□□ 未習得</p>
             <p className="text-2xl font-bold text-gray-500 mt-1">
               {totalStats.notStarted}
             </p>
@@ -169,13 +159,10 @@ export default function Home() {
                   単語数
                 </th>
                 <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
-                  ■■■
+                  習得済み
                 </th>
                 <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
-                  学習中
-                </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
-                  □□□
+                  未習得
                 </th>
                 <th className="px-4 py-3 text-gray-500 text-xs font-medium">
                   進捗
@@ -220,11 +207,6 @@ export default function Home() {
                       </span>
                     </td>
                     <td className="text-center px-4 py-4 hidden md:table-cell">
-                      <span className="text-amber-600 font-medium">
-                        {stats.learning}
-                      </span>
-                    </td>
-                    <td className="text-center px-4 py-4 hidden md:table-cell">
                       <span className="text-gray-500 font-medium">
                         {stats.notStarted}
                       </span>
@@ -255,6 +237,37 @@ export default function Home() {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* 今日のおすすめ単語 */}
+        <div className="mt-8">
+          <DailyRecommendations onWordAdded={loadData} />
+        </div>
+
+        {/* 読書統計 */}
+        <div className="mt-6">
+          <ReadingStats />
+        </div>
+
+        {/* ニュースリーダーへのリンク */}
+        <div className="mt-6">
+          <Link
+            href="/news"
+            className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl hover:shadow-md transition-shadow group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Newspaper className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">📰 News Reader</p>
+                <p className="text-sm text-gray-500">
+                  英語ニュースを読んで語彙を増やそう
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+          </Link>
         </div>
 
         {/* ヒント */}

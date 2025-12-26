@@ -58,6 +58,7 @@ export default function LanguagePage() {
     search: "",
     language: language,
     category: "all",
+    source: "all",
     status: "all",
     sortBy: "displayOrder",
     sortOrder: "asc",
@@ -102,6 +103,18 @@ export default function LanguagePage() {
     // カテゴリフィルター
     if (filters.category !== "all") {
       result = result.filter((w) => w.category === filters.category);
+    }
+
+    // ソース（出典）フィルター
+    if (filters.source !== "all") {
+      result = result.filter((w) => {
+        // noteフィールドから[ソース名]を抽出
+        const sourceMatch = w.note.match(/^\[([^\]]+)\]/);
+        if (sourceMatch) {
+          return sourceMatch[1] === filters.source;
+        }
+        return false;
+      });
     }
 
     // 進捗フィルター（習得済み = check1がtrue）
@@ -361,15 +374,13 @@ export default function LanguagePage() {
 function LanguageStatistics({ stats }: { stats: LanguageStats }) {
   const masteredPercent =
     stats.total > 0 ? Math.round((stats.mastered / stats.total) * 100) : 0;
-  const learningPercent =
-    stats.total > 0 ? Math.round((stats.learning / stats.total) * 100) : 0;
   const notStartedPercent =
     stats.total > 0 ? Math.round((stats.notStarted / stats.total) * 100) : 0;
 
   return (
     <div className="space-y-6">
       {/* 概要 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-card border border-border rounded-lg p-5">
           <p className="text-muted-foreground text-sm">総単語数</p>
           <p className="text-3xl font-bold text-foreground mt-1">
@@ -378,22 +389,15 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
         </div>
         <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-5">
           <p className="text-emerald-600 dark:text-emerald-400 text-sm">
-            習得済み (■■■)
+            ✓ 習得済み
           </p>
           <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
             {stats.mastered}
             <span className="text-lg ml-2">({masteredPercent}%)</span>
           </p>
         </div>
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-5">
-          <p className="text-amber-600 dark:text-amber-400 text-sm">学習中</p>
-          <p className="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">
-            {stats.learning}
-            <span className="text-lg ml-2">({learningPercent}%)</span>
-          </p>
-        </div>
         <div className="bg-secondary border border-border rounded-lg p-5">
-          <p className="text-muted-foreground text-sm">未学習 (□□□)</p>
+          <p className="text-muted-foreground text-sm">□ 未習得</p>
           <p className="text-3xl font-bold text-muted-foreground mt-1">
             {stats.notStarted}
             <span className="text-lg ml-2">({notStartedPercent}%)</span>
@@ -410,10 +414,6 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
             style={{ width: `${masteredPercent}%` }}
           />
           <div
-            className="bg-amber-400 dark:bg-amber-500 transition-all duration-500"
-            style={{ width: `${learningPercent}%` }}
-          />
-          <div
             className="bg-muted-foreground/30 transition-all duration-500"
             style={{ width: `${notStartedPercent}%` }}
           />
@@ -424,12 +424,8 @@ function LanguageStatistics({ stats }: { stats: LanguageStats }) {
             <span className="text-muted-foreground">習得済み</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-amber-400 dark:bg-amber-500 rounded-full" />
-            <span className="text-muted-foreground">学習中</span>
-          </div>
-          <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-muted-foreground/30 rounded-full" />
-            <span className="text-muted-foreground">未学習</span>
+            <span className="text-muted-foreground">未習得</span>
           </div>
         </div>
       </div>

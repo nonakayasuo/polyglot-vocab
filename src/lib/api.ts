@@ -22,15 +22,15 @@ export interface VocabularyWordDB {
 
 export interface LanguageStats {
   total: number;
-  learned: number;
-  notLearned: number;
+  mastered: number; // 習得済み（check1 = true）
+  notStarted: number; // 未習得（check1 = false）
   byCategory: Record<string, number>;
 }
 
 export interface VocabularyStats {
   total: number;
-  learned: number;
-  notLearned: number;
+  mastered: number; // 習得済み
+  notStarted: number; // 未習得
   byLanguage: Record<string, number>;
   byCategory: Record<string, number>;
 }
@@ -98,7 +98,9 @@ export async function deleteWordsAPI(
 
 // 複数の単語を一括インポート
 export async function importWordsAPI(
-  words: Array<Omit<VocabularyWordDB, "id" | "createdAt" | "updatedAt">>,
+  words: Array<
+    Omit<VocabularyWordDB, "id" | "createdAt" | "updatedAt" | "displayOrder">
+  >,
 ): Promise<{ imported: number }> {
   const res = await fetch("/api/words/bulk", {
     method: "POST",

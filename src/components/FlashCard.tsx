@@ -26,22 +26,39 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const [knownCount, setKnownCount] = useState(0);
-  const [unknownCount, setUnknownCount] = useState(0);
+  const [sessionKnownCount, setSessionKnownCount] = useState(0); // 今回のセッションで覚えた数
+  const [sessionUnknownCount, setSessionUnknownCount] = useState(0); // 今回のセッションで覚えていなかった数
+  const [showOnlyUnlearned, setShowOnlyUnlearned] = useState(false); // 未学習のみ表示
+
+  // 習得済みの単語数（データベースに保存されている）
+  const totalMasteredCount = words.filter((w) => w.check1).length;
+  const totalUnlearnedCount = words.length - totalMasteredCount;
 
   const shuffleWords = useCallback(() => {
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
+    let wordsToShuffle = [...words];
+    // 未学習のみ表示モードの場合、check1がfalseの単語のみをシャッフル
+    if (showOnlyUnlearned) {
+      wordsToShuffle = wordsToShuffle.filter((w) => !w.check1);
+    }
+    const shuffled = wordsToShuffle.sort(() => Math.random() - 0.5);
     setShuffledWords(shuffled);
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowHint(false);
-    setKnownCount(0);
-    setUnknownCount(0);
-  }, [words]);
+    setSessionKnownCount(0);
+    setSessionUnknownCount(0);
+  }, [words, showOnlyUnlearned]);
 
+  // words または showOnlyUnlearned が変わったらシャッフルし直す
   useEffect(() => {
     shuffleWords();
   }, [shuffleWords]);
+
+  // 未学習のみモードが変更されたらシャッフルし直す
+  useEffect(() => {
+    shuffleWords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showOnlyUnlearned]);
 
   const currentWord = shuffledWords[currentIndex];
 
@@ -51,9 +68,11 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
       setIsFlipped(false);
       setShowHint(false);
     } else {
+      // フラッシュカード終了時にデータをリフレッシュしてから完了
+      onRefresh();
       onComplete();
     }
-  }, [currentIndex, shuffledWords.length, onComplete]);
+  }, [currentIndex, shuffledWords.length, onComplete, onRefresh]);
 
   const goToPrevious = useCallback(() => {
     if (currentIndex > 0) {
@@ -69,18 +88,21 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
       if (!currentWord.check1) {
         try {
           await updateWordAPI(currentWord.id, { check1: true });
-          onRefresh();
+          // shuffledWordsのローカル状態も更新（onRefreshは呼ばない - リセットされるため）
+          setShuffledWords((prev) =>
+            prev.map((w) => (w.id === currentWord.id ? { ...w, check1: true } : w))
+          );
         } catch (error) {
           console.error("Failed to mark as learned:", error);
         }
       }
-      setKnownCount((prev) => prev + 1);
+      setSessionKnownCount((prev) => prev + 1);
     }
     goToNext();
-  }, [currentWord, goToNext, onRefresh]);
+  }, [currentWord, goToNext]);
 
   const markAsUnknown = useCallback(() => {
-    setUnknownCount((prev) => prev + 1);
+    setSessionUnknownCount((prev) => prev + 1);
     goToNext();
   }, [goToNext]);
 
@@ -136,15 +158,43 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {/* 統計情報 */}
+      <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-4">
+            <span className="text-gray-600">
+              📚 全体: <strong>{words.length}</strong>語
+            </span>
+            <span className="text-emerald-600">
+              ✓ 習得済み: <strong>{totalMasteredCount}</strong>
+            </span>
+            <span className="text-gray-500">
+              □ 未学習: <strong>{totalUnlearnedCount}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowOnlyUnlearned(!showOnlyUnlearned)}
+            className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+              showOnlyUnlearned
+                ? "bg-blue-100 text-blue-700 border border-blue-300"
+                : "bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+            }`}
+          >
+            {showOnlyUnlearned ? "🎯 未学習のみ" : "📖 全単語"}
+          </button>
+        </div>
+      </div>
+
       {/* 進捗バー */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2 text-sm text-gray-500">
           <span>
-            {currentIndex + 1} / {shuffledWords.length}
+            {shuffledWords.length > 0 ? currentIndex + 1 : 0} / {shuffledWords.length}
           </span>
           <div className="flex gap-4">
-            <span className="text-emerald-500">✓ {knownCount}</span>
-            <span className="text-red-500">✗ {unknownCount}</span>
+            <span className="text-emerald-500">今回 ✓ {sessionKnownCount}</span>
+            <span className="text-red-500">✗ {sessionUnknownCount}</span>
           </div>
         </div>
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">

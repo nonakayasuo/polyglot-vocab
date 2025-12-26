@@ -51,7 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  VocabularyWord: 'VocabularyWord'
+  VocabularyWord: 'VocabularyWord',
+  Article: 'Article',
+  ReadingHistory: 'ReadingHistory',
+  WordContext: 'WordContext',
+  DailyWordRecommendation: 'DailyWordRecommendation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -88,10 +92,78 @@ export const VocabularyWordScalarFieldEnum = {
 export type VocabularyWordScalarFieldEnum = (typeof VocabularyWordScalarFieldEnum)[keyof typeof VocabularyWordScalarFieldEnum]
 
 
+export const ArticleScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  title: 'title',
+  description: 'description',
+  content: 'content',
+  url: 'url',
+  imageUrl: 'imageUrl',
+  source: 'source',
+  author: 'author',
+  language: 'language',
+  category: 'category',
+  publishedAt: 'publishedAt',
+  cachedAt: 'cachedAt'
+} as const
+
+export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
+
+
+export const ReadingHistoryScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  readAt: 'readAt',
+  wordsLearned: 'wordsLearned',
+  readTime: 'readTime'
+} as const
+
+export type ReadingHistoryScalarFieldEnum = (typeof ReadingHistoryScalarFieldEnum)[keyof typeof ReadingHistoryScalarFieldEnum]
+
+
+export const WordContextScalarFieldEnum = {
+  id: 'id',
+  wordId: 'wordId',
+  articleId: 'articleId',
+  sentence: 'sentence',
+  sentenceIndex: 'sentenceIndex',
+  createdAt: 'createdAt'
+} as const
+
+export type WordContextScalarFieldEnum = (typeof WordContextScalarFieldEnum)[keyof typeof WordContextScalarFieldEnum]
+
+
+export const DailyWordRecommendationScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  word: 'word',
+  definition: 'definition',
+  pronunciation: 'pronunciation',
+  partOfSpeech: 'partOfSpeech',
+  cefrLevel: 'cefrLevel',
+  frequencyRank: 'frequencyRank',
+  articleId: 'articleId',
+  sentence: 'sentence',
+  isAdded: 'isAdded',
+  isSkipped: 'isSkipped'
+} as const
+
+export type DailyWordRecommendationScalarFieldEnum = (typeof DailyWordRecommendationScalarFieldEnum)[keyof typeof DailyWordRecommendationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

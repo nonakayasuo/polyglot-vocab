@@ -11,7 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CATEGORIES, type FilterOptions, LANGUAGES } from "@/types/vocabulary";
+import {
+  CATEGORIES,
+  type FilterOptions,
+  LANGUAGES,
+  WORD_SOURCES,
+} from "@/types/vocabulary";
 
 interface Props {
   filters: FilterOptions;
@@ -44,6 +49,7 @@ export default function SearchFilter({
       search: "",
       language: filters.language, // 言語ページの場合は維持
       category: "all",
+      source: "all",
       status: "all",
       sortBy: "displayOrder",
       sortOrder: "asc",
@@ -51,7 +57,14 @@ export default function SearchFilter({
   };
 
   const hasActiveFilters =
-    filters.search || filters.category !== "all" || filters.status !== "all";
+    filters.search ||
+    filters.category !== "all" ||
+    filters.source !== "all" ||
+    filters.status !== "all";
+
+  // ソースをカテゴリ別にグループ化
+  const newsSources = WORD_SOURCES.filter((s) => s.category === "news");
+  const examSources = WORD_SOURCES.filter((s) => s.category === "exam");
 
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg border border-gray-200">
@@ -157,6 +170,40 @@ export default function SearchFilter({
             {CATEGORIES.map((cat) => (
               <SelectItem key={cat} value={cat}>
                 {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* ソースフィルター */}
+        <Select
+          value={filters.source}
+          onValueChange={(value) => handleChange("source", value)}
+        >
+          <SelectTrigger
+            size="sm"
+            className="w-auto min-w-[140px] bg-white border-gray-200"
+          >
+            <SelectValue placeholder="出典" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">📚 すべての出典</SelectItem>
+            {/* ニュースソース */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+              📰 ニュースメディア
+            </div>
+            {newsSources.map((source) => (
+              <SelectItem key={source.value} value={source.value}>
+                {source.icon} {source.shortLabel}
+              </SelectItem>
+            ))}
+            {/* 試験ソース */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+              📚 試験・資格
+            </div>
+            {examSources.map((source) => (
+              <SelectItem key={source.value} value={source.value}>
+                {source.icon} {source.shortLabel}
               </SelectItem>
             ))}
           </SelectContent>

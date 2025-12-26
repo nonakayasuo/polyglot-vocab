@@ -1,71 +1,60 @@
 "use client";
 
-import { Monitor, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
+  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
+    // 初期テーマを確認
+    const isDarkMode =
+      localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDark(isDarkMode);
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    }
   }, []);
 
+  const toggleTheme = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    if (newIsDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
+  // マウント前はプレースホルダーを表示（ハイドレーションエラー回避）
   if (!mounted) {
     return (
       <button
         type="button"
-        className="p-2 rounded-lg bg-secondary/50 text-muted-foreground"
-        aria-label="テーマを切り替え"
+        className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
+        aria-label="テーマ切り替え"
       >
-        <Sun className="w-4 h-4" />
+        <Sun className="w-5 h-5" />
       </button>
     );
   }
 
-  const cycleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-    } else if (theme === "dark") {
-      setTheme("system");
-    } else {
-      setTheme("light");
-    }
-  };
-
-  const getIcon = () => {
-    switch (theme) {
-      case "light":
-        return <Sun className="w-4 h-4" />;
-      case "dark":
-        return <Moon className="w-4 h-4" />;
-      default:
-        return <Monitor className="w-4 h-4" />;
-    }
-  };
-
-  const getLabel = () => {
-    switch (theme) {
-      case "light":
-        return "ライト";
-      case "dark":
-        return "ダーク";
-      default:
-        return "システム";
-    }
-  };
-
   return (
     <button
       type="button"
-      onClick={cycleTheme}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors text-sm"
-      aria-label={`現在のテーマ: ${getLabel()}. クリックで切り替え`}
-      title={`テーマ: ${getLabel()}`}
+      onClick={toggleTheme}
+      className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
+      title={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+      aria-label="テーマ切り替え"
     >
-      {getIcon()}
-      <span className="hidden sm:inline text-xs">{getLabel()}</span>
+      {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
     </button>
   );
 }
+

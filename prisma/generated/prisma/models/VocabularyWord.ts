@@ -296,6 +296,7 @@ export type VocabularyWordWhereInput = {
   displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
+  contexts?: Prisma.WordContextListRelationFilter
 }
 
 export type VocabularyWordOrderByWithRelationInput = {
@@ -314,6 +315,7 @@ export type VocabularyWordOrderByWithRelationInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  contexts?: Prisma.WordContextOrderByRelationAggregateInput
 }
 
 export type VocabularyWordWhereUniqueInput = Prisma.AtLeast<{
@@ -335,6 +337,7 @@ export type VocabularyWordWhereUniqueInput = Prisma.AtLeast<{
   displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
+  contexts?: Prisma.WordContextListRelationFilter
 }, "id">
 
 export type VocabularyWordOrderByWithAggregationInput = {
@@ -397,6 +400,7 @@ export type VocabularyWordCreateInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  contexts?: Prisma.WordContextCreateNestedManyWithoutWordInput
 }
 
 export type VocabularyWordUncheckedCreateInput = {
@@ -415,6 +419,7 @@ export type VocabularyWordUncheckedCreateInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  contexts?: Prisma.WordContextUncheckedCreateNestedManyWithoutWordInput
 }
 
 export type VocabularyWordUpdateInput = {
@@ -433,6 +438,7 @@ export type VocabularyWordUpdateInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contexts?: Prisma.WordContextUpdateManyWithoutWordNestedInput
 }
 
 export type VocabularyWordUncheckedUpdateInput = {
@@ -451,6 +457,7 @@ export type VocabularyWordUncheckedUpdateInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contexts?: Prisma.WordContextUncheckedUpdateManyWithoutWordNestedInput
 }
 
 export type VocabularyWordCreateManyInput = {
@@ -569,6 +576,11 @@ export type VocabularyWordSumOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
 }
 
+export type VocabularyWordScalarRelationFilter = {
+  is?: Prisma.VocabularyWordWhereInput
+  isNot?: Prisma.VocabularyWordWhereInput
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -589,6 +601,137 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type VocabularyWordCreateNestedOneWithoutContextsInput = {
+  create?: Prisma.XOR<Prisma.VocabularyWordCreateWithoutContextsInput, Prisma.VocabularyWordUncheckedCreateWithoutContextsInput>
+  connectOrCreate?: Prisma.VocabularyWordCreateOrConnectWithoutContextsInput
+  connect?: Prisma.VocabularyWordWhereUniqueInput
+}
+
+export type VocabularyWordUpdateOneRequiredWithoutContextsNestedInput = {
+  create?: Prisma.XOR<Prisma.VocabularyWordCreateWithoutContextsInput, Prisma.VocabularyWordUncheckedCreateWithoutContextsInput>
+  connectOrCreate?: Prisma.VocabularyWordCreateOrConnectWithoutContextsInput
+  upsert?: Prisma.VocabularyWordUpsertWithoutContextsInput
+  connect?: Prisma.VocabularyWordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VocabularyWordUpdateToOneWithWhereWithoutContextsInput, Prisma.VocabularyWordUpdateWithoutContextsInput>, Prisma.VocabularyWordUncheckedUpdateWithoutContextsInput>
+}
+
+export type VocabularyWordCreateWithoutContextsInput = {
+  id?: string
+  word: string
+  pronunciation?: string
+  category?: string
+  meaning?: string
+  example?: string
+  exampleTranslation?: string
+  note?: string
+  language?: string
+  check1?: boolean
+  check2?: boolean
+  check3?: boolean
+  displayOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type VocabularyWordUncheckedCreateWithoutContextsInput = {
+  id?: string
+  word: string
+  pronunciation?: string
+  category?: string
+  meaning?: string
+  example?: string
+  exampleTranslation?: string
+  note?: string
+  language?: string
+  check1?: boolean
+  check2?: boolean
+  check3?: boolean
+  displayOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type VocabularyWordCreateOrConnectWithoutContextsInput = {
+  where: Prisma.VocabularyWordWhereUniqueInput
+  create: Prisma.XOR<Prisma.VocabularyWordCreateWithoutContextsInput, Prisma.VocabularyWordUncheckedCreateWithoutContextsInput>
+}
+
+export type VocabularyWordUpsertWithoutContextsInput = {
+  update: Prisma.XOR<Prisma.VocabularyWordUpdateWithoutContextsInput, Prisma.VocabularyWordUncheckedUpdateWithoutContextsInput>
+  create: Prisma.XOR<Prisma.VocabularyWordCreateWithoutContextsInput, Prisma.VocabularyWordUncheckedCreateWithoutContextsInput>
+  where?: Prisma.VocabularyWordWhereInput
+}
+
+export type VocabularyWordUpdateToOneWithWhereWithoutContextsInput = {
+  where?: Prisma.VocabularyWordWhereInput
+  data: Prisma.XOR<Prisma.VocabularyWordUpdateWithoutContextsInput, Prisma.VocabularyWordUncheckedUpdateWithoutContextsInput>
+}
+
+export type VocabularyWordUpdateWithoutContextsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  word?: Prisma.StringFieldUpdateOperationsInput | string
+  pronunciation?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  meaning?: Prisma.StringFieldUpdateOperationsInput | string
+  example?: Prisma.StringFieldUpdateOperationsInput | string
+  exampleTranslation?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type VocabularyWordUncheckedUpdateWithoutContextsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  word?: Prisma.StringFieldUpdateOperationsInput | string
+  pronunciation?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  meaning?: Prisma.StringFieldUpdateOperationsInput | string
+  example?: Prisma.StringFieldUpdateOperationsInput | string
+  exampleTranslation?: Prisma.StringFieldUpdateOperationsInput | string
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  check1?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  check2?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  check3?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type VocabularyWordCountOutputType
+ */
+
+export type VocabularyWordCountOutputType = {
+  contexts: number
+}
+
+export type VocabularyWordCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  contexts?: boolean | VocabularyWordCountOutputTypeCountContextsArgs
+}
+
+/**
+ * VocabularyWordCountOutputType without action
+ */
+export type VocabularyWordCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VocabularyWordCountOutputType
+   */
+  select?: Prisma.VocabularyWordCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * VocabularyWordCountOutputType without action
+ */
+export type VocabularyWordCountOutputTypeCountContextsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WordContextWhereInput
+}
 
 
 export type VocabularyWordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -607,6 +750,8 @@ export type VocabularyWordSelect<ExtArgs extends runtime.Types.Extensions.Intern
   displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  contexts?: boolean | Prisma.VocabularyWord$contextsArgs<ExtArgs>
+  _count?: boolean | Prisma.VocabularyWordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vocabularyWord"]>
 
 export type VocabularyWordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -664,10 +809,18 @@ export type VocabularyWordSelectScalar = {
 }
 
 export type VocabularyWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "pronunciation" | "category" | "meaning" | "example" | "exampleTranslation" | "note" | "language" | "check1" | "check2" | "check3" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["vocabularyWord"]>
+export type VocabularyWordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  contexts?: boolean | Prisma.VocabularyWord$contextsArgs<ExtArgs>
+  _count?: boolean | Prisma.VocabularyWordCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type VocabularyWordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type VocabularyWordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $VocabularyWordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "VocabularyWord"
-  objects: {}
+  objects: {
+    contexts: Prisma.$WordContextPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     word: string
@@ -1078,6 +1231,7 @@ readonly fields: VocabularyWordFieldRefs;
  */
 export interface Prisma__VocabularyWordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  contexts<T extends Prisma.VocabularyWord$contextsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VocabularyWord$contextsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WordContextPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1139,6 +1293,10 @@ export type VocabularyWordFindUniqueArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * Filter, which VocabularyWord to fetch.
    */
   where: Prisma.VocabularyWordWhereUniqueInput
@@ -1157,6 +1315,10 @@ export type VocabularyWordFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * Filter, which VocabularyWord to fetch.
    */
   where: Prisma.VocabularyWordWhereUniqueInput
@@ -1174,6 +1336,10 @@ export type VocabularyWordFindFirstArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the VocabularyWord
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
   /**
    * Filter, which VocabularyWord to fetch.
    */
@@ -1223,6 +1389,10 @@ export type VocabularyWordFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * Filter, which VocabularyWord to fetch.
    */
   where?: Prisma.VocabularyWordWhereInput
@@ -1271,6 +1441,10 @@ export type VocabularyWordFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * Filter, which VocabularyWords to fetch.
    */
   where?: Prisma.VocabularyWordWhereInput
@@ -1313,6 +1487,10 @@ export type VocabularyWordCreateArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the VocabularyWord
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
   /**
    * The data needed to create a VocabularyWord.
    */
@@ -1359,6 +1537,10 @@ export type VocabularyWordUpdateArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the VocabularyWord
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
   /**
    * The data needed to update a VocabularyWord.
    */
@@ -1426,6 +1608,10 @@ export type VocabularyWordUpsertArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * The filter to search for the VocabularyWord to update in case it exists.
    */
   where: Prisma.VocabularyWordWhereUniqueInput
@@ -1452,6 +1638,10 @@ export type VocabularyWordDeleteArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
+  /**
    * Filter which VocabularyWord to delete.
    */
   where: Prisma.VocabularyWordWhereUniqueInput
@@ -1472,6 +1662,30 @@ export type VocabularyWordDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * VocabularyWord.contexts
+ */
+export type VocabularyWord$contextsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WordContext
+   */
+  select?: Prisma.WordContextSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WordContext
+   */
+  omit?: Prisma.WordContextOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WordContextInclude<ExtArgs> | null
+  where?: Prisma.WordContextWhereInput
+  orderBy?: Prisma.WordContextOrderByWithRelationInput | Prisma.WordContextOrderByWithRelationInput[]
+  cursor?: Prisma.WordContextWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WordContextScalarFieldEnum | Prisma.WordContextScalarFieldEnum[]
+}
+
+/**
  * VocabularyWord without action
  */
 export type VocabularyWordDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1483,4 +1697,8 @@ export type VocabularyWordDefaultArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the VocabularyWord
    */
   omit?: Prisma.VocabularyWordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VocabularyWordInclude<ExtArgs> | null
 }

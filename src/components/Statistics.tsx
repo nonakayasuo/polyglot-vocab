@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, CheckCircle, Clock, Languages, Tag } from "lucide-react";
+import { BookOpen, CheckCircle, Languages, Tag } from "lucide-react";
 import { LANGUAGES, type VocabularyStats } from "@/types/vocabulary";
 
 interface Props {
@@ -10,8 +10,6 @@ interface Props {
 export default function Statistics({ stats }: Props) {
   const masteredPercent =
     stats.total > 0 ? Math.round((stats.mastered / stats.total) * 100) : 0;
-  const learningPercent =
-    stats.total > 0 ? Math.round((stats.learning / stats.total) * 100) : 0;
   const notStartedPercent =
     stats.total > 0 ? Math.round((stats.notStarted / stats.total) * 100) : 0;
 
@@ -22,7 +20,7 @@ export default function Statistics({ stats }: Props) {
   return (
     <div className="space-y-6">
       {/* 概要カード */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-card border rounded-2xl p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-primary/20 rounded-lg">
@@ -38,7 +36,7 @@ export default function Statistics({ stats }: Props) {
             <div className="p-2 bg-emerald-500/20 rounded-lg">
               <CheckCircle className="w-5 h-5 text-emerald-400" />
             </div>
-            <span className="text-muted-foreground text-sm">習得済み</span>
+            <span className="text-muted-foreground text-sm">✓ 習得済み</span>
           </div>
           <p className="text-3xl font-bold text-emerald-400">
             {stats.mastered}
@@ -50,23 +48,10 @@ export default function Statistics({ stats }: Props) {
 
         <div className="bg-card border rounded-2xl p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-amber-500/20 rounded-lg">
-              <Clock className="w-5 h-5 text-amber-400" />
-            </div>
-            <span className="text-muted-foreground text-sm">学習中</span>
-          </div>
-          <p className="text-3xl font-bold text-amber-400">{stats.learning}</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            {learningPercent}%
-          </p>
-        </div>
-
-        <div className="bg-card border rounded-2xl p-5">
-          <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-secondary rounded-lg">
               <BookOpen className="w-5 h-5 text-muted-foreground" />
             </div>
-            <span className="text-muted-foreground text-sm">未学習</span>
+            <span className="text-muted-foreground text-sm">□ 未習得</span>
           </div>
           <p className="text-3xl font-bold text-muted-foreground">
             {stats.notStarted}
@@ -89,12 +74,6 @@ export default function Statistics({ stats }: Props) {
               style={{ width: `${masteredPercent}%` }}
             />
           )}
-          {stats.learning > 0 && (
-            <div
-              className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all"
-              style={{ width: `${learningPercent}%` }}
-            />
-          )}
           {stats.notStarted > 0 && (
             <div
               className="h-full bg-muted transition-all"
@@ -108,12 +87,8 @@ export default function Statistics({ stats }: Props) {
             <span className="text-muted-foreground">習得済み</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-amber-500" />
-            <span className="text-muted-foreground">学習中</span>
-          </div>
-          <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-muted" />
-            <span className="text-muted-foreground">未学習</span>
+            <span className="text-muted-foreground">未習得</span>
           </div>
         </div>
       </div>

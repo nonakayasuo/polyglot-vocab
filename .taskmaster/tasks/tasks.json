@@ -196,5 +196,196 @@
       "description": "Default tasks context",
       "updated": "2025-12-20T09:56:00.859Z"
     }
+  },
+  "feature-news-integration": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "News API統合基盤の構築",
+        "description": "News API (newsapi.org) との連携基盤を構築。APIキー管理、レート制限対応、エラーハンドリングを含む。",
+        "details": "- News APIアカウント作成とAPIキー取得\\n- 環境変数でAPIキー管理\\n- APIクライアントモジュール作成 (src/lib/news-api.ts)\\n- レート制限対応（キャッシュ戦略）\\n- エラーハンドリング\\n- 記事取得関数の実装",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "データベーススキーマ拡張",
+        "description": "ニュース記事と読書履歴を保存するためのPrismaスキーマを拡張する",
+        "details": "- Article モデル追加（id, title, description, content, url, source, publishedAt, imageUrl, language）\\n- ReadingHistory モデル追加（userId, articleId, readAt, wordsLearned）\\n- WordContext モデル追加（単語と記事の関連、コンテキスト文）\\n- マイグレーション実行",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "ニュース記事API Routes作成",
+        "description": "記事の取得・キャッシュ・検索のためのAPI Routesを作成",
+        "details": "- GET /api/news - 記事一覧取得（カテゴリ、言語フィルター）\\n- GET /api/news/[id] - 記事詳細取得\\n- GET /api/news/sources - 利用可能なソース一覧\\n- キャッシュ戦略（Redis or SQLite）\\n- ページネーション対応",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          1,
+          2
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "ニュース一覧ページUI",
+        "description": "/news ページで記事一覧を表示するUIを作成",
+        "details": "- カード形式の記事一覧表示\\n- カテゴリフィルター（政治、経済、テクノロジー等）\\n- ソースフィルター（NYT、BBC、Guardian等）\\n- 言語フィルター\\n- 無限スクロールまたはページネーション\\n- ローディング状態・エラー状態",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          3
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "記事詳細リーダービュー",
+        "description": "記事を読むためのリーダービューを作成。単語のハイライトとインタラクション対応",
+        "details": "- 記事タイトル、画像、本文の表示\\n- 読みやすいタイポグラフィ\\n- ダークモード対応\\n- 単語をクリック可能にする準備\\n- ソースへのリンク\\n- 読書進捗インジケーター",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          4
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "単語クリック＆辞書ポップオーバー",
+        "description": "記事内の単語をクリックすると辞書APIから意味を取得してポップオーバー表示",
+        "details": "- 単語クリックイベントのハンドリング\\n- Free Dictionary APIまたはWordnik API連携\\n- ポップオーバーコンポーネント（意味、発音、品詞）\\n- 発音記号と音声再生ボタン\\n- 「単語帳に追加」ボタン",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          5
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "記事から単語帳への追加機能",
+        "description": "ポップオーバーから1クリックで単語を単語帳に追加。記事のコンテキストを例文として保存",
+        "details": "- 単語追加API呼び出し\\n- 記事の文（前後の文脈）を例文として保存\\n- 出典（ソース）を自動設定\\n- 追加成功のフィードバックアニメーション\\n- 既に登録済みの場合の表示",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          6
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "記事の難易度分析",
+        "description": "記事内の単語を分析し、ユーザーの既知語彙に基づいて難易度を計算",
+        "details": "- 記事をトークン化（単語分割）\\n- ユーザーの単語帳と照合\\n- 未知語の割合を計算\\n- 難易度スコア表示（初級/中級/上級）\\n- 未知語のハイライト表示オプション",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          5
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "読書履歴＆統計ダッシュボード",
+        "description": "読んだ記事数、学習した単語数、連続学習日数などの統計を表示",
+        "details": "- 読書履歴の保存（記事閲覧時）\\n- 日別/週別/月別の統計\\n- 読んだ記事数、学習単語数\\n- 連続学習日数（ストリーク）\\n- グラフ表示（recharts使用）",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          7
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "記事ベースフラッシュカード",
+        "description": "読んだ記事から抽出した単語でフラッシュカードを生成し、記事のコンテキストで学習",
+        "details": "- 記事から追加した単語を抽出\\n- 記事のコンテキスト（前後の文）を表示\\n- 記事リンク付きのフラッシュカード\\n- 「この記事で学んだ単語」フィルター",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          7
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "記事の音声読み上げ機能",
+        "description": "記事テキストをTTSで読み上げ、リスニング練習をサポート",
+        "details": "- Web Speech API活用\\n- 段落ごとの読み上げ\\n- 再生/一時停止/停止ボタン\\n- 読み上げ速度調整\\n- 読み上げ中の単語ハイライト",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          5
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "おすすめ記事機能",
+        "description": "ユーザーの語彙レベルと興味に基づいて適切な難易度の記事をおすすめ",
+        "details": "- 難易度スコアに基づくフィルタリング\\n- カテゴリ別おすすめ\\n- 「あなたにおすすめ」セクション\\n- 学習効果の高い記事を優先表示",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          8
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "日次単語レコメンド機能",
+        "description": "ニュース記事から高度かつ頻出の未学習単語を自動抽出し、日次で単語帳に追加をレコメンド",
+        "details": "【機能概要】\n- 毎日のニュース記事を分析\n- 単語の難易度スコア（CEFR B2-C2レベル）を判定\n- 複数記事での出現頻度をカウント\n- ユーザーの単語帳にない単語のみを抽出\n- 「今日のおすすめ単語」として5-10語を提案\n\n【技術要件】\n- 単語頻度データベース（COCA、BNCなど）との照合\n- 難易度判定API（Wordnik、datamuse等）\n- 日次バッチ処理（cron or Vercel Cron）\n- 「今日の単語」ダッシュボードウィジェット\n- ワンクリックで単語帳に追加\n- 記事のコンテキスト（例文）を自動付与\n- プッシュ通知（オプション）\n\n【対象レベル】\n- B2（英検準1級相当）〜 C2（ネイティブレベル）\n- ユーザー設定で範囲を調整可能\n\n【UI】\n- ホームページに「今日のおすすめ単語」セクション\n- 単語カード形式で表示（意味、例文、出現記事、CEFRレベル）\n- 「すべて追加」「スキップ」ボタン\n- レベルフィルター（B2のみ/C1以上/全て）",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          7,
+          8
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "単語難易度・頻度データベース構築",
+        "description": "単語の難易度（CEFRレベル B2-C2）と頻度ランクを判定するためのデータソースを構築",
+        "details": "【データソース候補】\n- CEFR単語リスト（A1-C2レベル分類）\n- COCA（Corpus of Contemporary American English）頻度リスト\n- Academic Word List (AWL) - 学術単語\n- NGSL（New General Service List）- 基本2800語\n\n【実装】\n- 単語レベルJSONデータベース作成\n- 頻度ランク（1-20000位等）の付与\n- API: /api/words/analyze - 単語の難易度・頻度を返す\n- フィルター設定画面: 「B2のみ」「C1以上」「C2含む」など\n\n【判定ロジック】\n- 頻度上位3000語 = 基礎語彙（除外オプション）\n- 頻度3000-20000位 + CEFR B2-C2 = 推薦対象\n- C2レベル = ネイティブレベルの高度な語彙も含む\n- 学術用語（AWL）= 優先推薦\n\n【レベル対応表】\n- B2 ≒ 英検準1級（~8,000語）\n- C1 ≒ 英検1級（~12,000語）\n- C2 ≒ ネイティブレベル（~16,000語+）\n\n【ユーザー設定】\n- デフォルト: B2-C2（全レベル）\n- 設定画面でレベル範囲を調整可能",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-12-25T16:33:23.982Z",
+      "updated": "2025-12-26T01:59:06.460Z",
+      "description": "ニュースAPI連携機能の開発タスク"
+    }
   }
 }
