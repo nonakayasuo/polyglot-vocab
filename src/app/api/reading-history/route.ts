@@ -114,10 +114,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!article) {
-      return NextResponse.json(
-        { error: "Article not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
     // 読書履歴を作成
@@ -188,4 +185,3 @@ async function calculateStreak(): Promise<number> {
 
   return streak;
 }
-

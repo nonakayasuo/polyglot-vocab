@@ -45,7 +45,9 @@ export default function ArticleDetailPage() {
       try {
         // TODO: 記事詳細APIを実装
         // 今はエラーを表示
-        setError("記事詳細ページは開発中です。News APIの制限により、記事の全文は元サイトでご確認ください。");
+        setError(
+          "記事詳細ページは開発中です。News APIの制限により、記事の全文は元サイトでご確認ください。"
+        );
       } catch (err) {
         setError("記事の取得に失敗しました");
       } finally {
@@ -200,9 +202,7 @@ export default function ArticleDetailPage() {
           <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* 記事コンテンツをここに表示 */}
             <div className="p-8">
-              <p className="text-gray-500">
-                記事ID: {articleId}
-              </p>
+              <p className="text-gray-500">記事ID: {articleId}</p>
             </div>
           </article>
         )}
@@ -270,9 +270,7 @@ export default function ArticleDetailPage() {
             ) : (
               <div className="text-center py-4">
                 <p className="text-gray-500">定義が見つかりませんでした</p>
-                <p className="text-gray-400 text-sm mt-1">
-                  「{popover.word}」
-                </p>
+                <p className="text-gray-400 text-sm mt-1">「{popover.word}」</p>
               </div>
             )}
           </div>
@@ -281,4 +279,3 @@ export default function ArticleDetailPage() {
     </div>
   );
 }
-

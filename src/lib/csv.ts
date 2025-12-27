@@ -52,6 +52,21 @@ export function parseCSV(csvText: string): string[][] {
   return rows;
 }
 
+// ヘッダー名から言語を判定
+function detectLanguageFromHeader(headers: string[]): Language {
+  const headerStr = headers.join(",").toLowerCase();
+  if (headerStr.includes("español") || headerStr.includes("spanish")) {
+    return "spanish";
+  }
+  if (headerStr.includes("korean") || headerStr.includes("한국어")) {
+    return "korean";
+  }
+  if (headerStr.includes("chinese") || headerStr.includes("中文")) {
+    return "chinese";
+  }
+  return "english";
+}
+
 // Notionからエクスポートされた既存のCSV形式を読み込む
 export function importFromNotionCSV(csvText: string): VocabularyWord[] {
   const rows = parseCSV(csvText);
@@ -69,7 +84,21 @@ export function importFromNotionCSV(csvText: string): VocabularyWord[] {
     return -1;
   };
 
-  const englishIdx = getIndex(["english", "word", "単語"]);
+  // 言語を自動判定
+  const detectedLanguage = detectLanguageFromHeader(headers);
+
+  // 単語カラムを探す（複数言語対応）
+  const wordIdx = getIndex([
+    "english",
+    "word",
+    "単語",
+    "español",
+    "spanish",
+    "korean",
+    "한국어",
+    "chinese",
+    "中文",
+  ]);
   const categoryIdx = getIndex(["category", "pos", "品詞"]);
   const check1Idx = getIndex(["check 1", "check1"]);
   const check2Idx = getIndex(["check 2", "check2"]);
@@ -88,11 +117,11 @@ export function importFromNotionCSV(csvText: string): VocabularyWord[] {
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    if (!row[englishIdx]) continue;
+    if (wordIdx < 0 || !row[wordIdx]) continue;
 
     const word: VocabularyWord = {
       id: generateId(),
-      word: row[englishIdx] || "",
+      word: row[wordIdx] || "",
       pronunciation: pronunciationIdx >= 0 ? row[pronunciationIdx] || "" : "",
       category: categoryIdx >= 0 ? row[categoryIdx] || "Other" : "Other",
       meaning: japaneseIdx >= 0 ? row[japaneseIdx] || "" : "",
@@ -100,7 +129,7 @@ export function importFromNotionCSV(csvText: string): VocabularyWord[] {
       exampleTranslation:
         exampleTranslationIdx >= 0 ? row[exampleTranslationIdx] || "" : "",
       note: noteIdx >= 0 ? row[noteIdx] || "" : "",
-      language: "english" as Language,
+      language: detectedLanguage,
       check1: check1Idx >= 0 ? row[check1Idx]?.toLowerCase() === "yes" : false,
       check2: check2Idx >= 0 ? row[check2Idx]?.toLowerCase() === "yes" : false,
       check3: check3Idx >= 0 ? row[check3Idx]?.toLowerCase() === "yes" : false,
@@ -178,7 +207,7 @@ export function exportToCSV(words: VocabularyWord[]): string {
 // ファイルダウンロード
 export function downloadCSV(
   words: VocabularyWord[],
-  filename = "vocabulary.csv",
+  filename = "vocabulary.csv"
 ): void {
   const csv = exportToCSV(words);
   const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });

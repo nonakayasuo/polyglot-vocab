@@ -29,7 +29,7 @@ export function saveVocabulary(words: VocabularyWord[]): void {
 }
 
 export function addWord(
-  word: Omit<VocabularyWord, "id" | "createdAt" | "updatedAt">,
+  word: Omit<VocabularyWord, "id" | "createdAt" | "updatedAt">
 ): VocabularyWord {
   const words = getVocabulary();
   const now = new Date().toISOString();
@@ -46,7 +46,7 @@ export function addWord(
 
 export function updateWord(
   id: string,
-  updates: Partial<VocabularyWord>,
+  updates: Partial<VocabularyWord>
 ): VocabularyWord | null {
   const words = getVocabulary();
   const index = words.findIndex((w) => w.id === id);
@@ -119,7 +119,7 @@ export function importWords(words: VocabularyWord[]): number {
   const existingWords = new Set(existing.map((w) => `${w.word}-${w.language}`));
 
   const newWords = words.filter(
-    (w) => !existingWords.has(`${w.word}-${w.language}`),
+    (w) => !existingWords.has(`${w.word}-${w.language}`)
   );
   saveVocabulary([...existing, ...newWords]);
 

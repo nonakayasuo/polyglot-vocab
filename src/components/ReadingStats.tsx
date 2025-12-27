@@ -72,7 +72,9 @@ export default function ReadingStats() {
   const formatReadTime = (seconds: number): string => {
     if (seconds < 60) return `${seconds}秒`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}分`;
-    return `${Math.floor(seconds / 3600)}時間${Math.floor((seconds % 3600) / 60)}分`;
+    return `${Math.floor(seconds / 3600)}時間${Math.floor(
+      (seconds % 3600) / 60
+    )}分`;
   };
 
   if (loading) {
@@ -117,10 +119,10 @@ export default function ReadingStats() {
               {p === "day"
                 ? "今日"
                 : p === "week"
-                  ? "今週"
-                  : p === "month"
-                    ? "今月"
-                    : "全期間"}
+                ? "今週"
+                : p === "month"
+                ? "今月"
+                : "全期間"}
             </button>
           ))}
         </div>
@@ -227,11 +229,12 @@ export default function ReadingStats() {
           <div className="text-center text-gray-500 py-4">
             <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-300" />
             <p className="text-sm">まだ記事を読んでいません</p>
-            <p className="text-xs">News Readerで記事を読んで学習を始めましょう</p>
+            <p className="text-xs">
+              News Readerで記事を読んで学習を始めましょう
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 }
-

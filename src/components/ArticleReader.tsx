@@ -42,7 +42,9 @@ export default function ArticleReader({
       // 前の発話をキャンセル
       window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(paragraphs[paragraphIndex]);
+      const utterance = new SpeechSynthesisUtterance(
+        paragraphs[paragraphIndex]
+      );
       utterance.lang = language;
       utterance.rate = rate;
 
@@ -223,4 +225,3 @@ export default function ArticleReader({
     </div>
   );
 }
-

@@ -27,7 +27,7 @@ function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // 32bit整数に変換
   }
   return Math.abs(hash).toString(36);
@@ -122,12 +122,7 @@ export async function searchArticles(
   options: NewsFilterOptions = {}
 ): Promise<Article[]> {
   const apiKey = getApiKey();
-  const {
-    language = "en",
-    source,
-    pageSize = 20,
-    page = 1,
-  } = options;
+  const { language = "en", source, pageSize = 20, page = 1 } = options;
 
   const params = new URLSearchParams({
     apiKey,
@@ -240,7 +235,12 @@ export async function fetchAvailableSources(): Promise<
     }
 
     return data.sources.map(
-      (source: { id: string; name: string; language: string; country: string }) => ({
+      (source: {
+        id: string;
+        name: string;
+        language: string;
+        country: string;
+      }) => ({
         id: source.id,
         name: source.name,
         language: source.language,
@@ -281,4 +281,3 @@ export async function fetchArticlesWithCache(
 export function clearNewsCache(): void {
   cache.clear();
 }
-

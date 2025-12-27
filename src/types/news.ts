@@ -59,7 +59,11 @@ export type NewsCategory =
   | "sports"
   | "entertainment";
 
-export const NEWS_CATEGORIES: { value: NewsCategory; label: string; icon: string }[] = [
+export const NEWS_CATEGORIES: {
+  value: NewsCategory;
+  label: string;
+  icon: string;
+}[] = [
   { value: "general", label: "総合", icon: "📰" },
   { value: "business", label: "ビジネス", icon: "💼" },
   { value: "technology", label: "テクノロジー", icon: "💻" },
@@ -71,12 +75,22 @@ export const NEWS_CATEGORIES: { value: NewsCategory; label: string; icon: string
 
 // 対応ニュースソース（6メディア）
 export const NEWS_SOURCES = [
-  { id: "the-new-york-times", name: "The New York Times", icon: "📰", language: "en" },
+  {
+    id: "the-new-york-times",
+    name: "The New York Times",
+    icon: "📰",
+    language: "en",
+  },
   { id: "bbc-news", name: "BBC News", icon: "📺", language: "en" },
   { id: "the-guardian-uk", name: "The Guardian", icon: "📰", language: "en" },
   { id: "al-jazeera-english", name: "Al Jazeera", icon: "🌍", language: "en" },
   { id: "reuters", name: "Reuters", icon: "📡", language: "en" },
-  { id: "the-wall-street-journal", name: "The Wall Street Journal", icon: "💼", language: "en" },
+  {
+    id: "the-wall-street-journal",
+    name: "The Wall Street Journal",
+    icon: "💼",
+    language: "en",
+  },
 ] as const;
 
 export type NewsSourceId = (typeof NEWS_SOURCES)[number]["id"];
@@ -96,4 +110,3 @@ export interface ArticleDifficulty {
   unknownWordsRatio: number;
   sampleUnknownWords: string[];
 }
-

@@ -96,7 +96,7 @@ export default function LanguagePage() {
           w.word.toLowerCase().includes(searchLower) ||
           w.meaning.toLowerCase().includes(searchLower) ||
           w.example.toLowerCase().includes(searchLower) ||
-          w.note.toLowerCase().includes(searchLower),
+          w.note.toLowerCase().includes(searchLower)
       );
     }
 
@@ -155,7 +155,7 @@ export default function LanguagePage() {
     }));
     downloadCSV(
       exportWords,
-      `polyglot-vocab-${language}-${new Date().toISOString().split("T")[0]}.csv`,
+      `polyglot-vocab-${language}-${new Date().toISOString().split("T")[0]}.csv`
     );
   };
 

@@ -14,7 +14,9 @@ import {
 import {
   CATEGORIES,
   type FilterOptions,
+  getCategoriesForLanguage,
   LANGUAGES,
+  type Language,
   WORD_SOURCES,
 } from "@/types/vocabulary";
 
@@ -167,7 +169,10 @@ export default function SearchFilter({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">すべての品詞</SelectItem>
-            {CATEGORIES.map((cat) => (
+            {(filters.language === "all"
+              ? CATEGORIES
+              : getCategoriesForLanguage(filters.language as Language)
+            ).map((cat) => (
               <SelectItem key={cat} value={cat}>
                 {cat}
               </SelectItem>

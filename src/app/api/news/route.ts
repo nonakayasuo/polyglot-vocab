@@ -1,8 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import {
-  fetchArticlesWithCache,
-  searchArticles,
-} from "@/lib/news-api";
+import { fetchArticlesWithCache, searchArticles } from "@/lib/news-api";
 import type { NewsCategory } from "@/types/news";
 
 // GET: ニュース記事一覧を取得
@@ -64,4 +61,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

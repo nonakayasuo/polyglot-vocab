@@ -51,6 +51,7 @@ export interface FilterOptions {
   sortOrder: "asc" | "desc";
 }
 
+// 英語のカテゴリ
 export const CATEGORIES: Category[] = [
   "Noun",
   "Verb",
@@ -65,6 +66,67 @@ export const CATEGORIES: Category[] = [
   "Conjunction",
   "Other",
 ];
+
+// スペイン語のカテゴリ
+export const SPANISH_CATEGORIES = [
+  "Sustantivo", // 名詞
+  "Verbo", // 動詞
+  "V: Transitivo", // 他動詞
+  "V: Intransitivo", // 自動詞
+  "V: Pronominal", // 再帰動詞
+  "Adjetivo", // 形容詞
+  "Adverbio", // 副詞
+  "Frase", // フレーズ
+  "Expresión", // 表現・イディオム
+  "Preposición", // 前置詞
+  "Conjunción", // 接続詞
+  "Otro", // その他
+] as const;
+
+// 韓国語のカテゴリ
+export const KOREAN_CATEGORIES = [
+  "명사", // 名詞
+  "동사", // 動詞
+  "형용사", // 形容詞
+  "부사", // 副詞
+  "조사", // 助詞
+  "관형사", // 冠形詞
+  "접속사", // 接続詞
+  "문장", // フレーズ
+  "숙어", // 熟語・イディオム
+  "기타", // その他
+] as const;
+
+// 中国語のカテゴリ
+export const CHINESE_CATEGORIES = [
+  "名词", // 名詞
+  "动词", // 動詞
+  "形容词", // 形容詞
+  "副词", // 副詞
+  "量词", // 量詞
+  "代词", // 代名詞
+  "介词", // 前置詞
+  "连词", // 接続詞
+  "短语", // フレーズ
+  "成语", // 成語・イディオム
+  "其他", // その他
+] as const;
+
+// 言語に応じたカテゴリを取得
+export function getCategoriesForLanguage(
+  language: Language
+): readonly string[] {
+  switch (language) {
+    case "spanish":
+      return SPANISH_CATEGORIES;
+    case "korean":
+      return KOREAN_CATEGORIES;
+    case "chinese":
+      return CHINESE_CATEGORIES;
+    default:
+      return CATEGORIES;
+  }
+}
 
 export const LANGUAGES: { value: Language; label: string; flag: string }[] = [
   { value: "english", label: "English", flag: "🇺🇸" },

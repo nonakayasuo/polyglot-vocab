@@ -25,6 +25,7 @@ import { createWord, updateWordAPI, type VocabularyWordDB } from "@/lib/api";
 import {
   CATEGORIES,
   type Category,
+  getCategoriesForLanguage,
   LANGUAGES,
   type Language,
   WORD_SOURCES,
@@ -64,7 +65,7 @@ export default function WordForm({
 
   // noteフィールドからsourceを抽出するヘルパー関数
   const parseNoteAndSource = (
-    note: string,
+    note: string
   ): { source: WordSource; note: string } => {
     // noteの先頭に[ソース名]の形式があるかチェック
     const sourceMatch = note.match(/^\[([^\]]+)\]\s*/);
@@ -174,12 +175,16 @@ export default function WordForm({
               </Label>
               <Select
                 value={formData.language}
-                onValueChange={(value) =>
+                onValueChange={(value) => {
+                  const newLang = value as Language;
+                  const newCategories = getCategoriesForLanguage(newLang);
                   setFormData((prev) => ({
                     ...prev,
-                    language: value as Language,
-                  }))
-                }
+                    language: newLang,
+                    // 言語変更時に品詞をその言語のデフォルトに設定
+                    category: newCategories[0] || "Noun",
+                  }));
+                }}
                 disabled={saving}
               >
                 <SelectTrigger id="language" className="w-full">
@@ -214,7 +219,7 @@ export default function WordForm({
                   <SelectValue placeholder="品詞を選択" />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((cat) => (
+                  {getCategoriesForLanguage(formData.language).map((cat) => (
                     <SelectItem key={cat} value={cat}>
                       {cat}
                     </SelectItem>
@@ -345,7 +350,7 @@ export default function WordForm({
                       <SelectItem key={source.value} value={source.value}>
                         {source.icon} {source.label}
                       </SelectItem>
-                    ),
+                    )
                   )}
                   {/* 試験ソース */}
                   <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
@@ -356,7 +361,7 @@ export default function WordForm({
                       <SelectItem key={source.value} value={source.value}>
                         {source.icon} {source.label}
                       </SelectItem>
-                    ),
+                    )
                   )}
                 </SelectContent>
               </Select>

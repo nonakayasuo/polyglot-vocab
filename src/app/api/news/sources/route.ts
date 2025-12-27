@@ -37,4 +37,3 @@ export async function fetchDynamicSources() {
     return NEWS_SOURCES;
   }
 }
-

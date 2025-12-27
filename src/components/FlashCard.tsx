@@ -90,7 +90,9 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
           await updateWordAPI(currentWord.id, { check1: true });
           // shuffledWordsのローカル状態も更新（onRefreshは呼ばない - リセットされるため）
           setShuffledWords((prev) =>
-            prev.map((w) => (w.id === currentWord.id ? { ...w, check1: true } : w))
+            prev.map((w) =>
+              w.id === currentWord.id ? { ...w, check1: true } : w
+            )
           );
         } catch (error) {
           console.error("Failed to mark as learned:", error);
@@ -131,7 +133,7 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
           break;
       }
     },
-    [currentWord, goToNext, goToPrevious, markAsKnown, markAsUnknown],
+    [currentWord, goToNext, goToPrevious, markAsKnown, markAsUnknown]
   );
 
   useEffect(() => {
@@ -190,7 +192,8 @@ export default function FlashCard({ words, onComplete, onRefresh }: Props) {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2 text-sm text-gray-500">
           <span>
-            {shuffledWords.length > 0 ? currentIndex + 1 : 0} / {shuffledWords.length}
+            {shuffledWords.length > 0 ? currentIndex + 1 : 0} /{" "}
+            {shuffledWords.length}
           </span>
           <div className="flex gap-4">
             <span className="text-emerald-500">今回 ✓ {sessionKnownCount}</span>

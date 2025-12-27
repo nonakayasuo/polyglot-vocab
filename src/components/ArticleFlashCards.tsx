@@ -217,9 +217,7 @@ export default function ArticleFlashCards({
             >
               <Volume2 className="w-6 h-6" />
             </button>
-            <p className="mt-4 text-sm text-gray-400">
-              クリックして意味を表示
-            </p>
+            <p className="mt-4 text-sm text-gray-400">クリックして意味を表示</p>
           </div>
         ) : (
           // 裏面（意味）
@@ -262,7 +260,9 @@ export default function ArticleFlashCards({
                     className="text-sm text-blue-500 hover:underline flex items-center gap-1"
                   >
                     <BookOpen className="w-4 h-4" />
-                    {showContext ? "コンテキストを隠す" : "記事のコンテキストを見る"}
+                    {showContext
+                      ? "コンテキストを隠す"
+                      : "記事のコンテキストを見る"}
                   </button>
 
                   {showContext && (
@@ -331,4 +331,3 @@ export default function ArticleFlashCards({
     </div>
   );
 }
-

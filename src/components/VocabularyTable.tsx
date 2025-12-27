@@ -51,6 +51,7 @@ import {
   CATEGORIES,
   type Category,
   type FilterOptions,
+  getCategoriesForLanguage,
   getSourceInfo,
   type Language,
   WORD_SOURCES,
@@ -281,7 +282,9 @@ function SourceBadge({ source }: { source: string }) {
   const content = (
     <span
       className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${style} ${
-        sourceInfo?.url ? "cursor-pointer hover:opacity-80 transition-opacity" : ""
+        sourceInfo?.url
+          ? "cursor-pointer hover:opacity-80 transition-opacity"
+          : ""
       }`}
     >
       {sourceInfo?.icon && <span>{sourceInfo.icon}</span>}
@@ -331,19 +334,17 @@ const highlightWord = (example: string, word: string) => {
   });
 };
 
-// インライン編集可能なセル
+// インライン編集可能なセル（自動改行対応）
 function EditableCell({
   value,
   onChange,
   placeholder,
   className = "",
-  multiline = false,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-  multiline?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -364,9 +365,6 @@ function EditableCell({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !multiline) {
-      handleBlur();
-    }
     if (e.key === "Escape") {
       setEditValue(value);
       setIsEditing(false);
@@ -374,30 +372,21 @@ function EditableCell({
   };
 
   if (isEditing) {
-    if (multiline) {
-      return (
-        <textarea
-          ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={`w-full px-2 py-1 text-sm border border-blue-400 rounded outline-none resize-none bg-white ${className}`}
-          rows={2}
-        />
-      );
-    }
     return (
-      <input
-        ref={inputRef as React.RefObject<HTMLInputElement>}
-        type="text"
+      <textarea
+        ref={inputRef as React.RefObject<HTMLTextAreaElement>}
         value={editValue}
         onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            setEditValue(value);
+            setIsEditing(false);
+          }
+        }}
         placeholder={placeholder}
-        className={`w-full px-2 py-1 text-sm border border-blue-400 rounded outline-none bg-white ${className}`}
+        className={`w-full px-2 py-1 text-sm border border-blue-400 rounded outline-none resize-y bg-white min-h-[60px]`}
+        rows={3}
       />
     );
   }
@@ -409,11 +398,11 @@ function EditableCell({
         setEditValue(value);
         setIsEditing(true);
       }}
-      className={`px-2 py-1 rounded cursor-text hover:bg-gray-100 min-h-[28px] text-left w-full overflow-hidden ${className} ${
+      className={`px-2 py-1 rounded cursor-text hover:bg-gray-100 min-h-[28px] text-left w-full ${
         !value ? "text-gray-300" : ""
       }`}
     >
-      <span className="block overflow-hidden text-ellipsis">
+      <span className="block whitespace-pre-wrap break-words">
         {value || placeholder || "-"}
       </span>
     </button>
@@ -528,9 +517,13 @@ function ExampleCell({
       >
         {currentText ? (
           showTranslation ? (
-            <span className="text-blue-700">{currentText}</span>
+            <span className="text-blue-700 whitespace-pre-wrap break-words">
+              {currentText}
+            </span>
           ) : (
-            highlightWord(currentText, word.word)
+            <span className="whitespace-pre-wrap break-words">
+              {highlightWord(currentText, word.word)}
+            </span>
           )
         ) : (
           <span className="text-gray-300">
@@ -546,11 +539,14 @@ function ExampleCell({
 function CategoryCell({
   value,
   onChange,
+  language,
 }: {
   value: string;
   onChange: (value: string) => void;
+  language: Language;
 }) {
   const [isEditing, setIsEditing] = useState(false);
+  const categories = getCategoriesForLanguage(language);
 
   if (isEditing) {
     return (
@@ -563,7 +559,7 @@ function CategoryCell({
         onBlur={() => setIsEditing(false)}
         className="text-xs px-2 py-1 border border-blue-400 rounded outline-none bg-white"
       >
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <option key={cat} value={cat}>
             {cat}
           </option>
@@ -819,10 +815,11 @@ const SortableRow = memo(function SortableRow({
         <CategoryCell
           value={word.category}
           onChange={(v) => onUpdateField("category", v)}
+          language={word.language as Language}
         />
       </TableCell>
 
-      {/* 意味（インライン編集可能、省略表示） */}
+      {/* 意味（インライン編集可能、展開/折りたたみ対応） */}
       <TableCell
         style={{ width: columnWidths.meaning, maxWidth: columnWidths.meaning }}
       >
@@ -830,7 +827,7 @@ const SortableRow = memo(function SortableRow({
           value={word.meaning}
           onChange={(v) => onUpdateField("meaning", v)}
           placeholder="意味"
-          className="text-gray-700 text-sm line-clamp-2"
+          className="text-gray-700 text-sm"
         />
       </TableCell>
 
@@ -855,11 +852,13 @@ const SortableRow = memo(function SortableRow({
             source={parseNoteSource(word.note).source}
             onChange={(newSource) => {
               const { text } = parseNoteSource(word.note);
-              const newNote = newSource ? `[${newSource}] ${text}`.trim() : text;
+              const newNote = newSource
+                ? `[${newSource}] ${text}`.trim()
+                : text;
               onUpdateField("note", newNote);
             }}
           />
-          {/* メモテキスト（インライン編集可能） */}
+          {/* メモテキスト（インライン編集可能、展開/折りたたみ対応） */}
           <EditableCell
             value={parseNoteSource(word.note).text}
             onChange={(v) => {
@@ -868,7 +867,7 @@ const SortableRow = memo(function SortableRow({
               onUpdateField("note", newNote);
             }}
             placeholder="メモ"
-            className="text-gray-500 text-xs line-clamp-2"
+            className="text-gray-500 text-xs"
           />
         </div>
       </TableCell>
@@ -944,10 +943,12 @@ function NewWordRow({
   const [isAdding, setIsAdding] = useState(false);
   const [saving, setSaving] = useState(false);
   const rowRef = useRef<HTMLTableRowElement>(null);
+  const defaultCategory =
+    getCategoriesForLanguage(defaultLanguage)[0] || "Noun";
   const [newWord, setNewWord] = useState({
     word: "",
     pronunciation: "",
-    category: "Noun" as Category,
+    category: defaultCategory as Category,
     meaning: "",
     example: "",
     exampleTranslation: "",
@@ -973,7 +974,7 @@ function NewWordRow({
       setNewWord({
         word: "",
         pronunciation: "",
-        category: "Noun",
+        category: defaultCategory as Category,
         meaning: "",
         example: "",
         exampleTranslation: "",
@@ -1060,7 +1061,7 @@ function NewWordRow({
           disabled={saving}
           className="text-xs px-2 py-1 border border-gray-200 rounded outline-none bg-white"
         >
-          {CATEGORIES.map((cat) => (
+          {getCategoriesForLanguage(defaultLanguage).map((cat) => (
             <option key={cat} value={cat}>
               {cat}
             </option>

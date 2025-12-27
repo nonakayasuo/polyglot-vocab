@@ -37,10 +37,7 @@ export async function POST(request: NextRequest) {
     const { text, language = "english" } = body;
 
     if (!text) {
-      return NextResponse.json(
-        { error: "text is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
 
     // ユーザーの既知語彙を取得
@@ -65,4 +62,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

@@ -219,7 +219,9 @@ export default function DailyRecommendations({ onWordAdded }: Props) {
                     </span>
                   )}
                   <span
-                    className={`px-2 py-0.5 text-xs rounded font-medium ${getCefrColor(rec.cefrLevel)}`}
+                    className={`px-2 py-0.5 text-xs rounded font-medium ${getCefrColor(
+                      rec.cefrLevel
+                    )}`}
                   >
                     {rec.cefrLevel}
                   </span>
@@ -275,4 +277,3 @@ export default function DailyRecommendations({ onWordAdded }: Props) {
     </div>
   );
 }
-

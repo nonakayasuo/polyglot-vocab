@@ -42,13 +42,18 @@ export async function GET(request: NextRequest) {
       });
     } catch (error) {
       console.error("Failed to fetch news:", error);
-      return NextResponse.json({ recommendations: [], error: "Failed to fetch news" });
+      return NextResponse.json({
+        recommendations: [],
+        error: "Failed to fetch news",
+      });
     }
 
     // 記事を分析し、難易度でフィルタリング
     const analyzedArticles = articles
       .map((article) => {
-        const text = `${article.title} ${article.description || ""} ${article.content || ""}`;
+        const text = `${article.title} ${article.description || ""} ${
+          article.content || ""
+        }`;
         const analysis = analyzeTextDifficulty(text, knownWords);
         return {
           article,
@@ -64,7 +69,9 @@ export async function GET(request: NextRequest) {
       })
       .sort((a, b) => {
         // 未知語が多い記事を優先（学習効果が高い）
-        return b.analysis.advancedWords.length - a.analysis.advancedWords.length;
+        return (
+          b.analysis.advancedWords.length - a.analysis.advancedWords.length
+        );
       })
       .slice(0, limit);
 
@@ -83,7 +90,9 @@ export async function GET(request: NextRequest) {
           level: item.analysis.level,
           totalWords: item.analysis.totalWords,
           advancedWordsCount: item.analysis.advancedWords.length,
-          topAdvancedWords: item.analysis.advancedWords.slice(0, 5).map((w) => w.word),
+          topAdvancedWords: item.analysis.advancedWords
+            .slice(0, 5)
+            .map((w) => w.word),
         },
       })),
       userKnownWordsCount: knownWords.size,
@@ -96,4 +105,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

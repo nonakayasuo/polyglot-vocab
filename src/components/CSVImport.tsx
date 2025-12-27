@@ -182,9 +182,10 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
             </h4>
             <ul className="text-xs text-gray-500 space-y-1">
               <li>• Notionからエクスポートした単語帳CSV</li>
+              <li>• 対応言語: English, Español, Korean, Chinese</li>
               <li>
-                • ヘッダー行: English, Category, Check 1-3, Japanese, Example,
-                Note, Pronunciation
+                • ヘッダー例: English/Español, Category, Check 1-3, Japanese,
+                Example, Note, Pronunciation
               </li>
               <li>• 既存の単語と重複する場合はスキップされます</li>
               <li>• データはSQLiteデータベースに永続保存されます</li>

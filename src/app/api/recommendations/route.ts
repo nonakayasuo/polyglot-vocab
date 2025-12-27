@@ -21,16 +21,17 @@ export async function GET(request: NextRequest) {
     today.setHours(0, 0, 0, 0);
 
     // 既存の日次レコメンドをチェック
-    const existingRecommendations = await prisma.dailyWordRecommendation.findMany({
-      where: {
-        date: {
-          gte: today,
+    const existingRecommendations =
+      await prisma.dailyWordRecommendation.findMany({
+        where: {
+          date: {
+            gte: today,
+          },
+          isAdded: false,
+          isSkipped: false,
         },
-        isAdded: false,
-        isSkipped: false,
-      },
-      take: limit,
-    });
+        take: limit,
+      });
 
     if (existingRecommendations.length >= limit) {
       return NextResponse.json({
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
       // フォールバック: 静的な単語リストから選択
       const allAdvanced = getAllAdvancedWords();
       const unknownAdvanced = allAdvanced.filter((w) => !knownWords.has(w));
-      
+
       // ランダムに選択
       const shuffled = unknownAdvanced.sort(() => Math.random() - 0.5);
       advancedWords = shuffled.slice(0, limit * 2).map((word) => ({
@@ -219,4 +220,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

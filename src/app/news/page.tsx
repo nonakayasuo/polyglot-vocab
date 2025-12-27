@@ -118,7 +118,9 @@ export default function NewsPage() {
               disabled={loading}
               className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`w-5 h-5 ${loading ? "animate-spin" : ""}`}
+              />
             </button>
           </div>
         </div>
@@ -251,7 +253,9 @@ function ArticleCard({ article }: { article: Article }) {
         {/* ソース・日付 */}
         <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
           <span className="font-medium text-blue-600">{article.source}</span>
-          <span>{new Date(article.publishedAt).toLocaleDateString("ja-JP")}</span>
+          <span>
+            {new Date(article.publishedAt).toLocaleDateString("ja-JP")}
+          </span>
         </div>
 
         {/* タイトル */}
@@ -286,4 +290,3 @@ function ArticleCard({ article }: { article: Article }) {
     </article>
   );
 }
-
