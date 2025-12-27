@@ -612,7 +612,7 @@
         "description": "複数ニュースソースを統合する共通インターフェースを設計",
         "details": "ニュースソースの抽象化レイヤー設計。共通Article型定義。キャッシュ戦略実装。エラーハンドリングとリトライ。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           11
         ],
@@ -625,7 +625,7 @@
         "description": "BBC Learning Englishからのコンテンツ取得を実装",
         "details": "BBC Learning English APIまたはRSSフィードからの記事取得。教育コンテンツの難易度タグ付け。定期更新スケジュール設定。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           12
         ],
@@ -638,7 +638,7 @@
         "description": "CNNとNHK Worldからのニュース取得を実装",
         "details": "各ニュースソースのAPI/RSS連携。記事のパースと正規化。言語検出と分類。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           12
         ],
@@ -651,7 +651,7 @@
         "description": "記事の語彙・文法複雑度からCEFRレベルを判定",
         "details": "語彙頻度分析、平均文長計算、複雑な文法構造の検出。CEFR難易度スコア算出。難しい単語のハイライト情報生成。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           12
         ],
@@ -664,7 +664,7 @@
         "description": "ユーザーのCEFRレベルに基づいた記事フィルタリングを実装",
         "details": "ユーザーレベルに適した記事のフィルタリング。カテゴリ別レコメンデーション。既読記事の除外。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           9,
           15
@@ -678,7 +678,7 @@
         "description": "単語ハイライト、ワンタップ追加、ミニクイズを実装",
         "details": "記事内の単語タップで意味表示。ワンタップで単語帳に追加（記事コンテキスト保持）。記事読了後のミニクイズ。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           15
         ],
@@ -904,7 +904,7 @@
     ],
     "metadata": {
       "created": "2025-12-27T03:55:14.032Z",
-      "updated": "2025-12-27T09:10:31.816Z",
+      "updated": "2025-12-27T09:37:56.871Z",
       "description": "NewsLingua商用化 - 2026年前期リリース"
     }
   }

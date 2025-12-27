@@ -188,7 +188,7 @@ export default function CSVImport({ onImport, onClose, open }: Props) {
                 Example, Note, Pronunciation
               </li>
               <li>• 既存の単語と重複する場合はスキップされます</li>
-              <li>• データはSQLiteデータベースに永続保存されます</li>
+              <li>• データはデータベースに永続保存されます</li>
             </ul>
           </div>
         </div>

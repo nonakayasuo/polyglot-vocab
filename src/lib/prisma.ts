@@ -1,19 +1,23 @@
-import path from "node:path";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@/generated/prisma";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// Prisma 7: SQLite adapter configuration
-const databaseUrl =
-  process.env.DATABASE_URL ?? `file:${path.join(process.cwd(), "dev.db")}`;
+function createPrismaClient(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL;
 
-const adapter = new PrismaBetterSqlite3({
-  url: databaseUrl,
-});
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set");
+  }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
+  // Neon serverless adapter with connection string
+  const adapter = new PrismaNeon({ connectionString });
+
+  return new PrismaClient({ adapter });
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

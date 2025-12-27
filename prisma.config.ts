@@ -9,9 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    // アプリケーション用 (pooler経由)
-    url: process.env["DATABASE_URL"]!,
-    // マイグレーション用 (直接接続)
-    directUrl: process.env["DIRECT_URL"],
+    // マイグレーション時はDIRECT_URLを優先（Neon poolerをバイパス）
+    url: process.env["DIRECT_URL"] || process.env["DATABASE_URL"]!,
   },
 });

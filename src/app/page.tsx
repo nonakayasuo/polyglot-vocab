@@ -103,12 +103,11 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-2">
-              <Languages className="w-5 h-5 text-gray-900" />
+              <Newspaper className="w-5 h-5 text-blue-600" />
               <h1 className="text-lg font-semibold text-gray-900">
-                Vocabulary Book
+                NewsLingua
               </h1>
             </div>
-            <div className="text-xs text-gray-500">SQLite Database</div>
           </div>
         </div>
       </header>
@@ -118,10 +117,10 @@ export default function Home() {
         {/* タイトル */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            📚 Vocabulary Book
+            📰 ニュースで学ぶ語彙
           </h2>
           <p className="text-gray-500">
-            言語を選択して、単語の追加・学習を始めましょう
+            ニュースを読みながら、実践的な語彙力を身につけよう
           </p>
         </div>
 

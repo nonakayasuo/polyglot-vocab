@@ -105,8 +105,100 @@ export interface CachedArticle extends Article {
 export interface ArticleDifficulty {
   score: number; // 0-100
   level: "beginner" | "intermediate" | "advanced" | "native";
+  cefrLevel?: string; // A1, A2, B1, B2, C1, C2
   unknownWordsCount: number;
   totalWordsCount: number;
   unknownWordsRatio: number;
   sampleUnknownWords: string[];
+}
+
+// ========================================
+// ニュースプロバイダー抽象化
+// ========================================
+
+// プロバイダー識別子
+export type NewsProviderId =
+  | "newsapi"
+  | "bbc"
+  | "cnn"
+  | "nhk-world"
+  | "guardian"
+  | "reuters";
+
+// プロバイダー情報
+export interface NewsProviderInfo {
+  id: NewsProviderId;
+  name: string;
+  description: string;
+  languages: string[];
+  categories: NewsCategory[];
+  requiresApiKey: boolean;
+  rateLimit?: {
+    requestsPerDay: number;
+    requestsPerMinute?: number;
+  };
+}
+
+// プロバイダー設定
+export interface NewsProviderConfig {
+  enabled: boolean;
+  apiKey?: string;
+  baseUrl?: string;
+  timeout?: number; // ミリ秒
+  retryCount?: number;
+}
+
+// 記事取得リクエスト
+export interface FetchArticlesRequest {
+  language?: string;
+  category?: NewsCategory;
+  query?: string;
+  pageSize?: number;
+  page?: number;
+  fromDate?: Date;
+  toDate?: Date;
+}
+
+// 記事取得レスポンス
+export interface FetchArticlesResponse {
+  articles: Article[];
+  totalResults: number;
+  page: number;
+  pageSize: number;
+  provider: NewsProviderId;
+  fetchedAt: Date;
+}
+
+// プロバイダーインターフェース
+export interface NewsProvider {
+  readonly info: NewsProviderInfo;
+
+  // 記事を取得
+  fetchArticles(request: FetchArticlesRequest): Promise<FetchArticlesResponse>;
+
+  // 記事を検索
+  searchArticles(
+    query: string,
+    request?: FetchArticlesRequest
+  ): Promise<FetchArticlesResponse>;
+
+  // プロバイダーが利用可能かチェック
+  isAvailable(): Promise<boolean>;
+}
+
+// アグリゲーター設定
+export interface NewsAggregatorConfig {
+  providers: Map<NewsProviderId, NewsProviderConfig>;
+  defaultLanguage: string;
+  cacheEnabled: boolean;
+  cacheTtlMinutes: number;
+}
+
+// キャッシュエントリ
+export interface NewsCacheEntry {
+  key: string;
+  articles: Article[];
+  provider: NewsProviderId;
+  fetchedAt: Date;
+  expiresAt: Date;
 }
