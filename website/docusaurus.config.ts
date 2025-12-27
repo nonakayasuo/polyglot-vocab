@@ -72,11 +72,6 @@ const config: Config = {
           label: "ドキュメント",
         },
         {
-          to: "/docs/api",
-          label: "API",
-          position: "left",
-        },
-        {
           href: "https://github.com/newslingua/newslingua",
           label: "GitHub",
           position: "right",
@@ -90,29 +85,8 @@ const config: Config = {
           title: "ドキュメント",
           items: [
             {
-              label: "はじめに",
+              label: "ドキュメント",
               to: "/docs",
-            },
-            {
-              label: "アーキテクチャ",
-              to: "/docs/architecture",
-            },
-            {
-              label: "API仕様",
-              to: "/docs/api",
-            },
-          ],
-        },
-        {
-          title: "開発",
-          items: [
-            {
-              label: "ロードマップ",
-              to: "/docs/roadmap",
-            },
-            {
-              label: "MCP統合",
-              to: "/docs/mcp-integration",
             },
           ],
         },

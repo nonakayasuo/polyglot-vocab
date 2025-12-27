@@ -73,9 +73,10 @@ AI駆動のパーソナライズ学習と、BBC・CNN・NHK World等のリアル
 
 - Node.js 20+
 - pnpm 9+
+- Flutter 3.x（モバイルアプリ開発用）
 - Neonアカウント（PostgreSQL）
 
-### インストール
+### Web版インストール
 
 ```bash
 # リポジトリをクローン
@@ -98,6 +99,43 @@ pnpm dev
 ```
 
 ブラウザで http://localhost:3000 を開きます。
+
+### モバイルアプリ（Flutter）セットアップ
+
+```bash
+# Flutterをインストール（まだの場合）
+brew install --cask flutter
+
+# Flutterの設定確認
+flutter doctor
+
+# モバイルディレクトリに移動
+cd mobile
+
+# 依存関係をインストール
+flutter pub get
+
+# Chrome（Web）で起動
+flutter run -d chrome
+
+# またはiOSシミュレータで起動
+flutter run -d ios
+
+# またはAndroidエミュレータで起動
+flutter run -d android
+```
+
+### 開発時の起動手順
+
+```bash
+# ターミナル1: Web版（API）を起動
+cd /path/to/news-lingua
+pnpm dev
+
+# ターミナル2: モバイルアプリを起動
+cd /path/to/news-lingua/mobile
+flutter run -d chrome
+```
 
 ---
 

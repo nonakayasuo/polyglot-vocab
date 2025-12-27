@@ -123,18 +123,25 @@ export async function GET(request: NextRequest) {
       // 現時点ではNews APIの制限により実装困難
     }
 
-    return NextResponse.json({
-      articles,
-      total: articles.length,
-      page,
-      pageSize,
-      userSettings: userSettings
-        ? {
-            preferredCategories: userSettings.preferredCategories,
-            blockedCategories: userSettings.blockedCategories,
-          }
-        : null,
-    });
+    return NextResponse.json(
+      {
+        articles,
+        total: articles.length,
+        page,
+        pageSize,
+        userSettings: userSettings
+          ? {
+              preferredCategories: userSettings.preferredCategories,
+              blockedCategories: userSettings.blockedCategories,
+            }
+          : null,
+      },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (error) {
     console.error("Failed to fetch news:", error);
 
@@ -154,4 +161,17 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+// OPTIONS: CORSプリフライトリクエスト対応
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Max-Age": "86400",
+    },
+  });
 }

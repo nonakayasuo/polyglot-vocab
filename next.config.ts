@@ -7,6 +7,29 @@ const nextConfig: NextConfig = {
   // セキュリティヘッダー
   async headers() {
     return [
+      // CORS設定（APIルート用 - Flutter Web開発用）
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+          {
+            key: "Access-Control-Max-Age",
+            value: "86400",
+          },
+        ],
+      },
+      // 一般的なセキュリティヘッダー
       {
         source: "/:path*",
         headers: [
