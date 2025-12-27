@@ -50,6 +50,7 @@ export type UserMinAggregateOutputType = {
   slangLevel: string | null
   weeklyXp: number | null
   totalXp: number | null
+  notificationSettings: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -66,6 +67,7 @@ export type UserMaxAggregateOutputType = {
   slangLevel: string | null
   weeklyXp: number | null
   totalXp: number | null
+  notificationSettings: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -82,6 +84,7 @@ export type UserCountAggregateOutputType = {
   slangLevel: number
   weeklyXp: number
   totalXp: number
+  notificationSettings: number
   _all: number
 }
 
@@ -110,6 +113,7 @@ export type UserMinAggregateInputType = {
   slangLevel?: true
   weeklyXp?: true
   totalXp?: true
+  notificationSettings?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -126,6 +130,7 @@ export type UserMaxAggregateInputType = {
   slangLevel?: true
   weeklyXp?: true
   totalXp?: true
+  notificationSettings?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -142,6 +147,7 @@ export type UserCountAggregateInputType = {
   slangLevel?: true
   weeklyXp?: true
   totalXp?: true
+  notificationSettings?: true
   _all?: true
 }
 
@@ -245,6 +251,7 @@ export type UserGroupByOutputType = {
   slangLevel: string | null
   weeklyXp: number
   totalXp: number
+  notificationSettings: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -284,6 +291,7 @@ export type UserWhereInput = {
   slangLevel?: Prisma.StringNullableFilter<"User"> | string | null
   weeklyXp?: Prisma.IntFilter<"User"> | number
   totalXp?: Prisma.IntFilter<"User"> | number
+  notificationSettings?: Prisma.StringNullableFilter<"User"> | string | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   levelAssessments?: Prisma.LevelAssessmentListRelationFilter
@@ -306,6 +314,7 @@ export type UserOrderByWithRelationInput = {
   slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
+  notificationSettings?: Prisma.SortOrderInput | Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   levelAssessments?: Prisma.LevelAssessmentOrderByRelationAggregateInput
@@ -331,6 +340,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   slangLevel?: Prisma.StringNullableFilter<"User"> | string | null
   weeklyXp?: Prisma.IntFilter<"User"> | number
   totalXp?: Prisma.IntFilter<"User"> | number
+  notificationSettings?: Prisma.StringNullableFilter<"User"> | string | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   levelAssessments?: Prisma.LevelAssessmentListRelationFilter
@@ -353,6 +363,7 @@ export type UserOrderByWithAggregationInput = {
   slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
+  notificationSettings?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -377,6 +388,7 @@ export type UserScalarWhereWithAggregatesInput = {
   slangLevel?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   weeklyXp?: Prisma.IntWithAggregatesFilter<"User"> | number
   totalXp?: Prisma.IntWithAggregatesFilter<"User"> | number
+  notificationSettings?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -393,6 +405,7 @@ export type UserCreateInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
@@ -415,6 +428,7 @@ export type UserUncheckedCreateInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
@@ -437,6 +451,7 @@ export type UserUpdateInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
@@ -459,6 +474,7 @@ export type UserUncheckedUpdateInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
@@ -481,6 +497,7 @@ export type UserCreateManyInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -497,6 +514,7 @@ export type UserUpdateManyMutationInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -513,6 +531,7 @@ export type UserUncheckedUpdateManyInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -529,6 +548,7 @@ export type UserCountOrderByAggregateInput = {
   slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
+  notificationSettings?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -550,6 +570,7 @@ export type UserMaxOrderByAggregateInput = {
   slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
+  notificationSettings?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -566,6 +587,7 @@ export type UserMinOrderByAggregateInput = {
   slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
+  notificationSettings?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -676,6 +698,7 @@ export type UserCreateWithoutContentSettingsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
@@ -697,6 +720,7 @@ export type UserUncheckedCreateWithoutContentSettingsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
@@ -734,6 +758,7 @@ export type UserUpdateWithoutContentSettingsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
@@ -755,6 +780,7 @@ export type UserUncheckedUpdateWithoutContentSettingsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
@@ -776,6 +802,7 @@ export type UserCreateWithoutLevelAssessmentsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
@@ -797,6 +824,7 @@ export type UserUncheckedCreateWithoutLevelAssessmentsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
@@ -834,6 +862,7 @@ export type UserUpdateWithoutLevelAssessmentsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
@@ -855,6 +884,7 @@ export type UserUncheckedUpdateWithoutLevelAssessmentsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
@@ -876,6 +906,7 @@ export type UserCreateWithoutSessionsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
@@ -897,6 +928,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
@@ -934,6 +966,7 @@ export type UserUpdateWithoutSessionsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
@@ -955,6 +988,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
@@ -976,6 +1010,7 @@ export type UserCreateWithoutAccountsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
@@ -997,6 +1032,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
@@ -1034,6 +1070,7 @@ export type UserUpdateWithoutAccountsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
@@ -1055,6 +1092,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
@@ -1076,6 +1114,7 @@ export type UserCreateWithoutStreakInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
@@ -1097,6 +1136,7 @@ export type UserUncheckedCreateWithoutStreakInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
@@ -1134,6 +1174,7 @@ export type UserUpdateWithoutStreakInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
@@ -1155,6 +1196,7 @@ export type UserUncheckedUpdateWithoutStreakInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
@@ -1176,6 +1218,7 @@ export type UserCreateWithoutAchievementsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
@@ -1197,6 +1240,7 @@ export type UserUncheckedCreateWithoutAchievementsInput = {
   slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
+  notificationSettings?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
@@ -1234,6 +1278,7 @@ export type UserUpdateWithoutAchievementsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
@@ -1255,6 +1300,7 @@ export type UserUncheckedUpdateWithoutAchievementsInput = {
   slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  notificationSettings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
@@ -1334,6 +1380,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
+  notificationSettings?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   levelAssessments?: boolean | Prisma.User$levelAssessmentsArgs<ExtArgs>
@@ -1357,6 +1404,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
+  notificationSettings?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1373,6 +1421,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
+  notificationSettings?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1389,9 +1438,10 @@ export type UserSelectScalar = {
   slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
+  notificationSettings?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "cefrLevel" | "learningLanguage" | "nativeLanguage" | "slangLevel" | "weeklyXp" | "totalXp", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "cefrLevel" | "learningLanguage" | "nativeLanguage" | "slangLevel" | "weeklyXp" | "totalXp" | "notificationSettings", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1428,6 +1478,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     slangLevel: string | null
     weeklyXp: number
     totalXp: number
+    notificationSettings: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1870,6 +1921,7 @@ export interface UserFieldRefs {
   readonly slangLevel: Prisma.FieldRef<"User", 'String'>
   readonly weeklyXp: Prisma.FieldRef<"User", 'Int'>
   readonly totalXp: Prisma.FieldRef<"User", 'Int'>
+  readonly notificationSettings: Prisma.FieldRef<"User", 'String'>
 }
     
 

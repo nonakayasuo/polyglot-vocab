@@ -3,8 +3,11 @@
 import { Loader2, Lock, Mail, Newspaper, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signUp } from "@/lib/auth-client";
+
+// サインアップが有効かどうかをチェック
+const isSignUpEnabled = process.env.NEXT_PUBLIC_ENABLE_SIGNUP !== "false";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -14,6 +17,22 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // サインアップが無効の場合はサインインページにリダイレクト
+  useEffect(() => {
+    if (!isSignUpEnabled) {
+      router.replace("/signin");
+    }
+  }, [router]);
+
+  // サインアップが無効の場合は何も表示しない
+  if (!isSignUpEnabled) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

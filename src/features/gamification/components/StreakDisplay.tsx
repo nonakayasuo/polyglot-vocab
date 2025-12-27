@@ -1,7 +1,7 @@
 "use client";
 
 import { Flame, Snowflake, TrendingUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 interface StreakData {
   currentStreak: number;
@@ -19,13 +19,34 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
   const [streak, setStreak] = useState<StreakData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // ストリークを更新する関数
+  const updateStreak = useCallback(async () => {
+    try {
+      const response = await fetch("/api/gamification/streak", {
+        method: "POST",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setStreak(data);
+      }
+    } catch (error) {
+      console.error("Failed to update streak:", error);
+    }
+  }, []);
+
   useEffect(() => {
-    async function fetchStreak() {
+    async function fetchAndUpdateStreak() {
       try {
+        // まずストリークを取得
         const response = await fetch("/api/gamification/streak");
         if (response.ok) {
           const data = await response.json();
           setStreak(data);
+
+          // 今日まだアクティブでなく、ログインしている場合は自動的に更新
+          if (!data.isActiveToday && data.currentStreak !== undefined) {
+            await updateStreak();
+          }
         }
       } catch (error) {
         console.error("Failed to fetch streak:", error);
@@ -34,8 +55,8 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
       }
     }
 
-    fetchStreak();
-  }, []);
+    fetchAndUpdateStreak();
+  }, [updateStreak]);
 
   if (loading) {
     return (
@@ -109,7 +130,7 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
           <div className="flex-1">
             <div
               className={`text-6xl font-bold bg-gradient-to-r ${getStreakColor(
-                displayStreak.currentStreak,
+                displayStreak.currentStreak
               )} bg-clip-text text-transparent`}
             >
               {displayStreak.currentStreak}
@@ -133,7 +154,7 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
         <p className="mt-4 text-sm text-slate-300">
           {getStreakMessage(
             displayStreak.currentStreak,
-            displayStreak.isActiveToday ?? false,
+            displayStreak.isActiveToday ?? false
           )}
         </p>
 

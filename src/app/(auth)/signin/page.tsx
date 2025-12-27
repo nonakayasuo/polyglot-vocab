@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
 
+// サインアップが有効かどうかをチェック
+const isSignUpEnabled = process.env.NEXT_PUBLIC_ENABLE_SIGNUP !== "false";
+
 export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -144,16 +147,18 @@ export default function SignInPage() {
         </div>
       </div>
 
-      {/* Sign Up Link */}
-      <p className="text-center text-slate-400">
-        アカウントをお持ちでない方は{" "}
-        <Link
-          href="/signup"
-          className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-        >
-          新規登録
-        </Link>
-      </p>
+      {/* Sign Up Link - 環境変数で制御 */}
+      {isSignUpEnabled && (
+        <p className="text-center text-slate-400">
+          アカウントをお持ちでない方は{" "}
+          <Link
+            href="/signup"
+            className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+          >
+            新規登録
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

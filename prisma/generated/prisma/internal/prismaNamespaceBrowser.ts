@@ -209,7 +209,8 @@ export const UserScalarFieldEnum = {
   nativeLanguage: 'nativeLanguage',
   slangLevel: 'slangLevel',
   weeklyXp: 'weeklyXp',
-  totalXp: 'totalXp'
+  totalXp: 'totalXp',
+  notificationSettings: 'notificationSettings'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
