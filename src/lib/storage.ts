@@ -6,7 +6,7 @@ import type {
   VocabularyWord,
 } from "@/types/vocabulary";
 
-const STORAGE_KEY = "polyglot-vocab-data";
+const STORAGE_KEY = "newslingua-data";
 
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

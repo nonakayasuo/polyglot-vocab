@@ -40,13 +40,28 @@ interface InteractiveTextProps {
 // CEFRレベルに応じたスタイル
 // ========================================
 
-const LEVEL_STYLES: Record<CEFRLevel, { bg: string; border: string; text: string }> = {
+const LEVEL_STYLES: Record<
+  CEFRLevel,
+  { bg: string; border: string; text: string }
+> = {
   A1: { bg: "bg-green-50", border: "border-green-200", text: "text-green-700" },
   A2: { bg: "bg-lime-50", border: "border-lime-200", text: "text-lime-700" },
-  B1: { bg: "bg-yellow-50", border: "border-yellow-200", text: "text-yellow-700" },
-  B2: { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-700" },
+  B1: {
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
+    text: "text-yellow-700",
+  },
+  B2: {
+    bg: "bg-orange-50",
+    border: "border-orange-200",
+    text: "text-orange-700",
+  },
   C1: { bg: "bg-red-50", border: "border-red-200", text: "text-red-700" },
-  C2: { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-700" },
+  C2: {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    text: "text-purple-700",
+  },
 };
 
 const LEVEL_LABELS: Record<CEFRLevel, string> = {
@@ -126,14 +141,10 @@ export function InteractiveText({
               : null
           );
         } else {
-          setPopover((prev) =>
-            prev ? { ...prev, loading: false } : null
-          );
+          setPopover((prev) => (prev ? { ...prev, loading: false } : null));
         }
       } catch {
-        setPopover((prev) =>
-          prev ? { ...prev, loading: false } : null
-        );
+        setPopover((prev) => (prev ? { ...prev, loading: false } : null));
       }
     },
     []
@@ -160,7 +171,9 @@ export function InteractiveText({
           meaning: popover.definition?.definition || "",
           example: popover.definition?.examples?.[0] || "",
           exampleTranslation: "",
-          note: articleSource ? `[${articleSource}] Article ID: ${articleId}` : "",
+          note: articleSource
+            ? `[${articleSource}] Article ID: ${articleId}`
+            : "",
           language,
           check1: false,
           check2: false,
@@ -266,7 +279,10 @@ export function InteractiveText({
           <div
             className="fixed z-50 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 min-w-[300px] max-w-[400px]"
             style={{
-              left: `${Math.min(Math.max(popover.x, 200), window.innerWidth - 220)}px`,
+              left: `${Math.min(
+                Math.max(popover.x, 200),
+                window.innerWidth - 220
+              )}px`,
               top: `${popover.y}px`,
               transform: "translateX(-50%)",
             }}
@@ -293,7 +309,9 @@ export function InteractiveText({
                   </h3>
                   <button
                     type="button"
-                    onClick={() => speak(popover.definition?.word || popover.word, "english")}
+                    onClick={() =>
+                      speak(popover.definition?.word || popover.word, "english")
+                    }
                     className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <Volume2 className="w-4 h-4" />
@@ -335,14 +353,15 @@ export function InteractiveText({
                 )}
 
                 {/* 例文 */}
-                {popover.definition?.examples && popover.definition.examples.length > 0 && (
-                  <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                    <p className="text-xs text-gray-500 mb-1">Example:</p>
-                    <p className="text-sm text-gray-700 italic">
-                      "{popover.definition.examples[0]}"
-                    </p>
-                  </div>
-                )}
+                {popover.definition?.examples &&
+                  popover.definition.examples.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <p className="text-xs text-gray-500 mb-1">Example:</p>
+                      <p className="text-sm text-gray-700 italic">
+                        "{popover.definition.examples[0]}"
+                      </p>
+                    </div>
+                  )}
 
                 {/* 追加ボタン */}
                 <button
@@ -412,4 +431,3 @@ function mapPartOfSpeech(pos?: string): string {
   };
   return map[pos.toLowerCase()] || "Other";
 }
-

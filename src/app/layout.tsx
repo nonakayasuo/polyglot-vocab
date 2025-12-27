@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Polyglot Vocab - 多言語単語帳",
-  description: "英語、スペイン語、韓国語、中国語に対応した多言語単語帳アプリ",
+  title: "NewsLingua - ニュースで学ぶ語学プラットフォーム",
+  description:
+    "BBC、CNN、NHK Worldなどのニュースで英語・スペイン語・韓国語・中国語を学ぶ",
 };
 
 export default function RootLayout({

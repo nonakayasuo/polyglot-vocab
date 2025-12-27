@@ -1,4 +1,4 @@
-# Polyglot Vocab - API設計書
+# NewsLingua - API設計書
 
 ## 概要
 
@@ -355,7 +355,7 @@ Content-Type: application/json
 ### 接続
 
 ```javascript
-const ws = new WebSocket('wss://api.polyglot-vocab.com/ws');
+const ws = new WebSocket('wss://api.newslingua.com/ws');
 
 ws.onopen = () => {
   ws.send(JSON.stringify({
@@ -450,9 +450,9 @@ X-RateLimit-Reset: 1703680800
 ### JavaScript SDK
 
 ```typescript
-import { PolyglotVocab } from '@polyglot-vocab/sdk';
+import { NewsLingua } from '@newslingua/sdk';
 
-const client = new PolyglotVocab({
+const client = new NewsLingua({
   apiKey: 'your_api_key',
 });
 
@@ -479,9 +479,9 @@ const explanation = await client.ai.explain({
 ### Python SDK
 
 ```python
-from polyglot_vocab import PolyglotVocab
+from newslingua import NewsLingua
 
-client = PolyglotVocab(api_key="your_api_key")
+client = NewsLingua(api_key="your_api_key")
 
 # 単語一覧取得
 words = client.words.list(language="en", status="learning")

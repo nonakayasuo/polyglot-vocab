@@ -83,9 +83,7 @@ export function ReadingQuiz({
   if (questions.length === 0) {
     return (
       <div className="bg-gray-50 rounded-xl p-6 text-center">
-        <p className="text-gray-500">
-          単語を追加するとクイズが表示されます
-        </p>
+        <p className="text-gray-500">単語を追加するとクイズが表示されます</p>
       </div>
     );
   }
@@ -108,9 +106,7 @@ export function ReadingQuiz({
               : "text-orange-400"
           }`}
         />
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          クイズ完了！
-        </h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">クイズ完了！</h3>
         <p className="text-4xl font-bold text-blue-600 mb-2">
           {correctCount}/{questions.length}
         </p>
@@ -312,4 +308,3 @@ function generateOptions(word: string): string[] {
   ];
   return dummyOptions;
 }
-

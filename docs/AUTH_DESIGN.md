@@ -1,4 +1,4 @@
-# Polyglot Vocab - 認証設計書
+# NewsLingua - 認証設計書
 
 ## 概要
 
@@ -260,7 +260,7 @@ export const auth = betterAuth({
   plugins: [
     // MFA
     twoFactor({
-      issuer: "Polyglot Vocab",
+      issuer: "NewsLingua",
     }),
     
     // 組織（企業向け）

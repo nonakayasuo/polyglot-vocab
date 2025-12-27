@@ -155,7 +155,7 @@ export default function LanguagePage() {
     }));
     downloadCSV(
       exportWords,
-      `polyglot-vocab-${language}-${new Date().toISOString().split("T")[0]}.csv`
+      `newslingua-${language}-${new Date().toISOString().split("T")[0]}.csv`
     );
   };
 
