@@ -64,21 +64,29 @@ export default function LanguagePage() {
     sortOrder: "asc",
   });
 
-  const loadData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const [wordsData, statsData] = await Promise.all([
-        fetchWords(language),
-        fetchStats(language) as Promise<LanguageStats>,
-      ]);
-      setWords(wordsData);
-      setStats(statsData);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [language]);
+  // showLoading: true = 初期ロード時、false = バックグラウンド更新（単語追加時など）
+  const loadData = useCallback(
+    async (showLoading = true) => {
+      try {
+        if (showLoading) {
+          setLoading(true);
+        }
+        const [wordsData, statsData] = await Promise.all([
+          fetchWords(language),
+          fetchStats(language) as Promise<LanguageStats>,
+        ]);
+        setWords(wordsData);
+        setStats(statsData);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      } finally {
+        if (showLoading) {
+          setLoading(false);
+        }
+      }
+    },
+    [language]
+  );
 
   useEffect(() => {
     loadData();
@@ -96,7 +104,7 @@ export default function LanguagePage() {
           w.word.toLowerCase().includes(searchLower) ||
           w.meaning.toLowerCase().includes(searchLower) ||
           w.example.toLowerCase().includes(searchLower) ||
-          w.note.toLowerCase().includes(searchLower),
+          w.note.toLowerCase().includes(searchLower)
       );
     }
 
@@ -155,7 +163,7 @@ export default function LanguagePage() {
     }));
     downloadCSV(
       exportWords,
-      `newslingua-${language}-${new Date().toISOString().split("T")[0]}.csv`,
+      `newslingua-${language}-${new Date().toISOString().split("T")[0]}.csv`
     );
   };
 
@@ -292,7 +300,7 @@ export default function LanguagePage() {
                 filters={filters}
                 onFiltersChange={setFilters}
                 onEdit={handleEdit}
-                onRefresh={loadData}
+                onRefresh={() => loadData(false)}
                 onAddNew={() => {
                   setEditingWord(null);
                   setShowWordForm(true);
@@ -312,7 +320,7 @@ export default function LanguagePage() {
                   language: w.language as Language,
                 }))}
                 onComplete={() => setView("list")}
-                onRefresh={loadData}
+                onRefresh={() => loadData(false)}
               />
             ) : (
               <div className="text-center py-16">
@@ -356,13 +364,13 @@ export default function LanguagePage() {
           setShowWordForm(false);
           setEditingWord(null);
         }}
-        onSave={loadData}
+        onSave={() => loadData(false)}
         open={showWordForm}
         defaultLanguage={language}
       />
 
       <CSVImport
-        onImport={loadData}
+        onImport={() => loadData(false)}
         onClose={() => setShowImport(false)}
         open={showImport}
       />
