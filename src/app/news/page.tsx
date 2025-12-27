@@ -73,7 +73,7 @@ export default function NewsPage() {
     } catch (err) {
       console.error("Failed to fetch news:", err);
       setError(
-        err instanceof Error ? err.message : "ニュースの取得に失敗しました"
+        err instanceof Error ? err.message : "ニュースの取得に失敗しました",
       );
     } finally {
       setLoading(false);
@@ -144,7 +144,7 @@ export default function NewsPage() {
 
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-slate-400" />
-              
+
               {/* カテゴリ */}
               <Select
                 value={category}
@@ -206,7 +206,9 @@ export default function NewsPage() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
               <Newspaper className="w-8 h-8 text-red-500" />
             </div>
-            <p className="text-red-600 dark:text-red-400 font-medium mb-2">{error}</p>
+            <p className="text-red-600 dark:text-red-400 font-medium mb-2">
+              {error}
+            </p>
             <p className="text-red-500/70 dark:text-red-400/70 text-sm">
               NEWS_API_KEY を .env ファイルに設定してください。
               <br />
@@ -249,11 +251,7 @@ export default function NewsPage() {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {articles.map((article, index) => (
-                <ArticleCard 
-                  key={article.id} 
-                  article={article} 
-                  index={index}
-                />
+                <ArticleCard key={article.id} article={article} index={index} />
               ))}
             </div>
           </>
@@ -266,7 +264,7 @@ export default function NewsPage() {
 // 記事カードコンポーネント
 function ArticleCard({ article, index }: { article: Article; index: number }) {
   return (
-    <article 
+    <article
       className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 transition-all duration-500 hover:-translate-y-2"
       style={{ animationDelay: `${index * 50}ms` }}
     >
@@ -288,7 +286,7 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
             <Newspaper className="w-16 h-16 text-blue-200 dark:text-blue-800" />
           </div>
         )}
-        
+
         {/* ソースバッジ */}
         <div className="absolute top-3 left-3">
           <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur text-blue-600 dark:text-blue-400 rounded-full shadow-lg">
@@ -296,11 +294,11 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
           </span>
         </div>
 
-        {/* 難易度バッジ（あれば） */}
-        {article.difficulty && (
+        {/* カテゴリバッジ（あれば） */}
+        {article.category && (
           <div className="absolute top-3 right-3">
             <span className="px-2 py-1 text-xs font-medium bg-amber-500/90 text-white rounded-full shadow-lg">
-              {article.difficulty}
+              {article.category}
             </span>
           </div>
         )}
@@ -335,7 +333,9 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
           >
             <Sparkles className="w-4 h-4" />
             記事を読む
-            <span className="group-hover/link:translate-x-1 transition-transform">→</span>
+            <span className="group-hover/link:translate-x-1 transition-transform">
+              →
+            </span>
           </Link>
           <a
             href={article.url}

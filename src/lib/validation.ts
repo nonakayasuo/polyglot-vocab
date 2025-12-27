@@ -58,7 +58,7 @@ export function isValidUrl(url: string): boolean {
 export function validateLength(
   value: string,
   min: number,
-  max: number
+  max: number,
 ): { valid: boolean; error?: string } {
   if (value.length < min) {
     return { valid: false, error: `最小${min}文字以上必要です` };
@@ -149,16 +149,17 @@ export function isValidUUID(id: string): boolean {
  */
 export function validatePagination(
   page: unknown,
-  limit: unknown
+  limit: unknown,
 ): { page: number; limit: number } {
   const parsedPage = Number(page);
   const parsedLimit = Number(limit);
 
   return {
     page: Number.isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage,
-    limit: Number.isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 100
-      ? 20
-      : parsedLimit,
+    limit:
+      Number.isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 100
+        ? 20
+        : parsedLimit,
   };
 }
 
@@ -167,8 +168,7 @@ export function validatePagination(
  */
 export function createValidationError(
   field: string,
-  message: string
+  message: string,
 ): { error: string; field: string } {
   return { error: message, field };
 }
-

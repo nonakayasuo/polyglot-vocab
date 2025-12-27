@@ -19,18 +19,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  Check,
-  GripVertical,
-  Languages,
-  Plus,
-  Trash2,
-  Volume2,
-  X,
-} from "lucide-react";
+import { GripVertical, Languages, Plus, Trash2, Volume2 } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -48,7 +39,6 @@ import {
 } from "@/lib/api";
 import { speak } from "@/lib/tts";
 import {
-  CATEGORIES,
   type Category,
   type FilterOptions,
   getCategoriesForLanguage,
@@ -123,7 +113,7 @@ function ResizableHeader({
       startXRef.current = e.clientX;
       startWidthRef.current = width;
     },
-    [width]
+    [width],
   );
 
   useEffect(() => {
@@ -162,7 +152,6 @@ function ResizableHeader({
       {children}
       {/* リサイズハンドル */}
       {/* biome-ignore lint/a11y/useSemanticElements: リサイズハンドルにはhrは不適切 */}
-      {/* biome-ignore lint/a11y/useAriaPropsForRole: 列幅リサイズ用のカスタムコントロール */}
       <div
         role="separator"
         aria-orientation="vertical"
@@ -316,7 +305,7 @@ const highlightWord = (example: string, word: string) => {
   const wordLower = word.toLowerCase();
   const regex = new RegExp(
     `\\b(${word}|${wordLower}|${word}s|${word}ed|${word}ing|${word}d)\\b`,
-    "gi"
+    "gi",
   );
 
   const parts = example.split(regex);
@@ -339,7 +328,7 @@ function EditableCell({
   value,
   onChange,
   placeholder,
-  className = "",
+  className: _className = "",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -364,7 +353,7 @@ function EditableCell({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const _handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setEditValue(value);
       setIsEditing(false);
@@ -420,7 +409,7 @@ function ExampleCell({
   const [showTranslation, setShowTranslation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editField, setEditField] = useState<"example" | "exampleTranslation">(
-    "example"
+    "example",
   );
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -493,15 +482,15 @@ function ExampleCell({
           showTranslation
             ? "text-blue-500 bg-blue-50"
             : hasTranslation
-            ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
-            : "text-gray-300 hover:text-blue-400"
+              ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+              : "text-gray-300 hover:text-blue-400"
         }`}
         title={
           showTranslation
             ? "原文を表示"
             : hasTranslation
-            ? "日本語訳を表示"
-            : "日本語訳を追加"
+              ? "日本語訳を表示"
+              : "日本語訳を追加"
         }
       >
         <Languages className="w-4 h-4" />
@@ -616,7 +605,6 @@ function SourceCell({
         }}
         onBlur={() => setIsEditing(false)}
         className="text-xs px-2 py-1 border border-blue-400 rounded outline-none bg-white w-full"
-        autoFocus
       >
         <option value="">選択なし</option>
         <optgroup label="📰 ニュースメディア">
@@ -720,7 +708,7 @@ const SortableRow = memo(function SortableRow({
   columnWidths: typeof DEFAULT_COLUMN_WIDTHS;
   onUpdateField: (
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => void;
   onDelete: () => void;
   onAddBelow: () => void;
@@ -741,7 +729,7 @@ const SortableRow = memo(function SortableRow({
       opacity: isDragging ? 0.5 : 1,
       zIndex: isDragging ? 1000 : undefined,
     }),
-    [transform, transition, isDragging]
+    [transform, transition, isDragging],
   );
 
   return (
@@ -900,7 +888,7 @@ const SortableRowWrapper = memo(function SortableRowWrapper({
   onUpdateField: (
     id: string,
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => void;
   onDelete: (id: string) => void;
   onAddBelow: (afterId: string) => void;
@@ -910,7 +898,7 @@ const SortableRowWrapper = memo(function SortableRowWrapper({
     (field: keyof VocabularyWordDB, value: string | boolean) => {
       onUpdateField(word.id, field, value);
     },
-    [onUpdateField, word.id]
+    [onUpdateField, word.id],
   );
 
   const handleDelete = useCallback(() => {
@@ -987,7 +975,7 @@ function NewWordRow({
     } finally {
       setSaving(false);
     }
-  }, [newWord, defaultLanguage, onSave]);
+  }, [newWord, defaultLanguage, onSave, defaultCategory]);
 
   // 行外をクリックしたら保存
   const handleBlur = useCallback(
@@ -1001,7 +989,7 @@ function NewWordRow({
         handleSave();
       }, 100);
     },
-    [handleSave]
+    [handleSave],
   );
 
   if (!isAdding) {
@@ -1032,7 +1020,6 @@ function NewWordRow({
           onChange={(e) => setNewWord({ ...newWord, word: e.target.value })}
           placeholder="単語を入力..."
           disabled={saving}
-          autoFocus
           className="w-full px-2 py-1 text-sm border border-blue-400 rounded outline-none bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSave();
@@ -1108,11 +1095,11 @@ function NewWordRow({
 
 export default function VocabularyTable({
   words,
-  filters,
-  onFiltersChange,
-  onEdit,
+  filters: _filters,
+  onFiltersChange: _onFiltersChange,
+  onEdit: _onEdit,
   onRefresh,
-  onAddNew,
+  onAddNew: _onAddNew,
   defaultLanguage = "english",
 }: Props) {
   const [columnWidths, setColumnWidths] = useState(DEFAULT_COLUMN_WIDTHS);
@@ -1127,7 +1114,7 @@ export default function VocabularyTable({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // 親からwordsが変わったらローカル状態を更新
@@ -1149,18 +1136,18 @@ export default function VocabularyTable({
         return newWidths;
       });
     },
-    []
+    [],
   );
 
   // オプティミスティック更新：ローカル状態を即座に更新し、APIは非同期で実行
   const handleUpdateField = async (
     id: string,
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     // ローカル状態を即座に更新
     setLocalWords((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w))
+      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w)),
     );
 
     // APIを非同期で実行（エラー時はリフレッシュ）
@@ -1187,7 +1174,7 @@ export default function VocabularyTable({
         }
       }
     },
-    [onRefresh]
+    [onRefresh],
   );
 
   // ドラッグ終了時のハンドラ
@@ -1220,7 +1207,7 @@ export default function VocabularyTable({
   // ソート可能なアイテムIDリスト（メモ化）
   const sortableItems = useMemo(
     () => localWords.map((w) => w.id),
-    [localWords]
+    [localWords],
   );
 
   // 指定した行の下に新しい行を追加
@@ -1260,7 +1247,7 @@ export default function VocabularyTable({
         onRefresh();
       }
     },
-    [defaultLanguage, localWords, onRefresh]
+    [defaultLanguage, localWords, onRefresh],
   );
 
   return (

@@ -8,7 +8,8 @@ export async function GET() {
     name: plan.name,
     nameJa: plan.nameJa,
     price: plan.price,
-    priceFormatted: plan.price === 0 ? "無料" : `¥${plan.price.toLocaleString()}/月`,
+    priceFormatted:
+      plan.price === 0 ? "無料" : `¥${plan.price.toLocaleString()}/月`,
     features: plan.featuresJa,
   }));
 
@@ -18,4 +19,3 @@ export async function GET() {
     billingCycle: "monthly",
   });
 }
-

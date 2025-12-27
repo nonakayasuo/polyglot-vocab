@@ -39,7 +39,9 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
 
   if (loading) {
     return (
-      <div className={`animate-pulse ${compact ? "w-16 h-8" : "w-full h-24"} bg-gray-100 rounded-xl`} />
+      <div
+        className={`animate-pulse ${compact ? "w-16 h-8" : "w-full h-24"} bg-gray-100 rounded-xl`}
+      />
     );
   }
 
@@ -68,7 +70,8 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
   };
 
   const getStreakMessage = (count: number, isActiveToday: boolean) => {
-    if (!isActiveToday && count > 0) return "今日も学習してストリークを維持しよう！";
+    if (!isActiveToday && count > 0)
+      return "今日も学習してストリークを維持しよう！";
     if (count >= 100) return "🏆 伝説のストリーク！";
     if (count >= 30) return "🌟 素晴らしい！1ヶ月達成！";
     if (count >= 7) return "⚡ 1週間継続中！";
@@ -102,7 +105,9 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
         <div className="flex items-end gap-6">
           {/* メインストリーク表示 */}
           <div className="flex-1">
-            <div className={`text-6xl font-bold bg-gradient-to-r ${getStreakColor(displayStreak.currentStreak)} bg-clip-text text-transparent`}>
+            <div
+              className={`text-6xl font-bold bg-gradient-to-r ${getStreakColor(displayStreak.currentStreak)} bg-clip-text text-transparent`}
+            >
               {displayStreak.currentStreak}
             </div>
             <p className="text-sm text-slate-400 mt-1">連続日数</p>
@@ -122,13 +127,17 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
 
         {/* メッセージ */}
         <p className="mt-4 text-sm text-slate-300">
-          {getStreakMessage(displayStreak.currentStreak, displayStreak.isActiveToday ?? false)}
+          {getStreakMessage(
+            displayStreak.currentStreak,
+            displayStreak.isActiveToday ?? false,
+          )}
         </p>
 
         {/* 今日のステータス */}
         <div className="mt-4 flex items-center gap-2">
           {[...Array(7)].map((_, i) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: 週の7日間を表す固定配列
               key={i}
               className={`flex-1 h-2 rounded-full transition-all duration-500 ${
                 i < displayStreak.currentStreak % 7
@@ -144,4 +153,3 @@ export function StreakDisplay({ compact = false }: StreakDisplayProps) {
     </div>
   );
 }
-

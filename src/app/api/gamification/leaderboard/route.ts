@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "@/lib/session";
 
@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get("type") || "weekly"; // "weekly" | "all-time"
-    const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 50);
+    const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 50);
 
     const session = await getServerSession();
     const currentUserId = session?.user?.id;
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to get leaderboard:", error);
     return NextResponse.json(
       { error: "Failed to get leaderboard" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
     console.error("Failed to reset weekly XP:", error);
     return NextResponse.json(
       { error: "Failed to reset weekly XP" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

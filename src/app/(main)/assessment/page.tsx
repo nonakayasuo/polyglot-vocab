@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   BookOpen,
   Brain,
@@ -10,6 +8,9 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type Language =
   | "english"
@@ -32,8 +33,8 @@ export default function AssessmentPage() {
   const router = useRouter();
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("english");
 
-  const [testType, setTestType] = useState<"vocabulary" | "reading" | "both">(
-    "both"
+  const [testType, _setTestType] = useState<"vocabulary" | "reading" | "both">(
+    "both",
   );
 
   const handleStartTest = () => {
@@ -73,10 +74,11 @@ export default function AssessmentPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {LANGUAGES.map((lang) => (
-              <button
+              <Button
                 key={lang.value}
+                variant="ghost"
                 onClick={() => setSelectedLanguage(lang.value)}
-                className={`p-4 rounded-xl border-2 transition-all ${
+                className={`h-auto p-4 rounded-xl border-2 transition-all flex flex-col items-center ${
                   selectedLanguage === lang.value
                     ? "border-emerald-500 bg-emerald-500/10"
                     : "border-slate-600 bg-slate-700/30 hover:border-slate-500"
@@ -84,7 +86,7 @@ export default function AssessmentPage() {
               >
                 <span className="text-3xl mb-2 block">{lang.flag}</span>
                 <span className="text-white font-medium">{lang.label}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -130,14 +132,14 @@ export default function AssessmentPage() {
 
         {/* Start Button */}
         <div className="text-center">
-          <button
+          <Button
             onClick={handleStartTest}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-emerald-500/25"
+            className="inline-flex items-center gap-3 px-8 py-4 h-auto bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-emerald-500/25"
           >
             <Sparkles className="w-5 h-5" />
             診断を開始する
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </Button>
           <p className="mt-4 text-sm text-slate-500">所要時間: 約15〜25分</p>
         </div>
       </div>

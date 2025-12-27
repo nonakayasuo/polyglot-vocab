@@ -1,34 +1,28 @@
-import { NextRequest, NextResponse } from "next/server";
-import { stripe, PLANS, type PlanType } from "@/lib/stripe";
-import { getServerSession } from "@/lib/session";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "@/lib/session";
+import { PLANS, type PlanType, stripe } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession();
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { plan } = await request.json() as { plan: PlanType };
+    const { plan } = (await request.json()) as { plan: PlanType };
 
     if (!plan || !PLANS[plan] || plan === "free") {
-      return NextResponse.json(
-        { error: "Invalid plan" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
     const selectedPlan = PLANS[plan];
-    
+
     if (!selectedPlan.priceId) {
       return NextResponse.json(
         { error: "Price ID not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -38,10 +32,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Stripeチェックアウトセッション作成
@@ -78,8 +69,7 @@ export async function POST(request: NextRequest) {
     console.error("Failed to create checkout session:", error);
     return NextResponse.json(
       { error: "Failed to create checkout session" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

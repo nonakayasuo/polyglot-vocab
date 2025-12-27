@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Volume2,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface StatsData {
@@ -36,7 +37,7 @@ export default function ReadingStats() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [period, setPeriod] = useState<"day" | "week" | "month" | "all">(
-    "week"
+    "week",
   );
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function ReadingStats() {
 
       try {
         const response = await fetch(
-          `/api/reading-history?period=${period}&limit=10`
+          `/api/reading-history?period=${period}&limit=10`,
         );
         const data = await response.json();
 
@@ -59,7 +60,7 @@ export default function ReadingStats() {
       } catch (err) {
         console.error("Failed to fetch reading stats:", err);
         setError(
-          err instanceof Error ? err.message : "統計の取得に失敗しました"
+          err instanceof Error ? err.message : "統計の取得に失敗しました",
         );
       } finally {
         setLoading(false);
@@ -73,7 +74,7 @@ export default function ReadingStats() {
     if (seconds < 60) return `${seconds}秒`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}分`;
     return `${Math.floor(seconds / 3600)}時間${Math.floor(
-      (seconds % 3600) / 60
+      (seconds % 3600) / 60,
     )}分`;
   };
 
@@ -119,10 +120,10 @@ export default function ReadingStats() {
               {p === "day"
                 ? "今日"
                 : p === "week"
-                ? "今週"
-                : p === "month"
-                ? "今月"
-                : "全期間"}
+                  ? "今週"
+                  : p === "month"
+                    ? "今月"
+                    : "全期間"}
             </button>
           ))}
         </div>
@@ -191,9 +192,11 @@ export default function ReadingStats() {
                 className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 {item.article.imageUrl && (
-                  <img
+                  <Image
                     src={item.article.imageUrl}
                     alt=""
+                    width={48}
+                    height={48}
                     className="w-12 h-12 object-cover rounded"
                   />
                 )}

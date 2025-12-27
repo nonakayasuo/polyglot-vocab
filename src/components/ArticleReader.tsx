@@ -43,7 +43,7 @@ export default function ArticleReader({
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(
-        paragraphs[paragraphIndex]
+        paragraphs[paragraphIndex],
       );
       utterance.lang = language;
       utterance.rate = rate;
@@ -69,7 +69,7 @@ export default function ArticleReader({
         if (event.name === "word") {
           const word = paragraphs[paragraphIndex].slice(
             event.charIndex,
-            event.charIndex + event.charLength
+            event.charIndex + event.charLength,
           );
           setCurrentWord(word);
           onWordHighlight?.(word, event.charIndex);
@@ -79,7 +79,7 @@ export default function ArticleReader({
       utteranceRef.current = utterance;
       window.speechSynthesis.speak(utterance);
     },
-    [paragraphs, language, rate, onWordHighlight]
+    [paragraphs, language, rate, onWordHighlight],
   );
 
   const handlePlay = useCallback(() => {

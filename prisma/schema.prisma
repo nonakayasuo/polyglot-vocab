@@ -95,26 +95,6 @@ model WordContext {
   @@index([articleId])
 }
 
-// 日次おすすめ単語
-
-model DailyWordRecommendation {
-  id            String   @id @default(cuid())
-  date          DateTime @default(now()) // 推薦日
-  word          String
-  definition    String   @default("")
-  pronunciation String   @default("")
-  partOfSpeech  String   @default("")
-  cefrLevel     String   @default("") // B2, C1, C2
-  frequencyRank Int? // 頻度ランク
-  articleId     String? // 出典記事
-  sentence      String   @default("") // 例文
-  isAdded       Boolean  @default(false) // 単語帳に追加済みか
-  isSkipped     Boolean  @default(false) // スキップされたか
-
-  @@index([date])
-  @@index([word])
-}
-
 // ベクトル埋め込み（pgvector使用、意味検索用）
 model WordEmbedding {
   id        String                   @id @default(cuid())

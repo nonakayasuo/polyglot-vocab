@@ -55,7 +55,6 @@ export const ModelName = {
   Article: 'Article',
   ReadingHistory: 'ReadingHistory',
   WordContext: 'WordContext',
-  DailyWordRecommendation: 'DailyWordRecommendation',
   WordEmbedding: 'WordEmbedding',
   ArticleEmbedding: 'ArticleEmbedding',
   User: 'User',
@@ -150,24 +149,6 @@ export const WordContextScalarFieldEnum = {
 } as const
 
 export type WordContextScalarFieldEnum = (typeof WordContextScalarFieldEnum)[keyof typeof WordContextScalarFieldEnum]
-
-
-export const DailyWordRecommendationScalarFieldEnum = {
-  id: 'id',
-  date: 'date',
-  word: 'word',
-  definition: 'definition',
-  pronunciation: 'pronunciation',
-  partOfSpeech: 'partOfSpeech',
-  cefrLevel: 'cefrLevel',
-  frequencyRank: 'frequencyRank',
-  articleId: 'articleId',
-  sentence: 'sentence',
-  isAdded: 'isAdded',
-  isSkipped: 'isSkipped'
-} as const
-
-export type DailyWordRecommendationScalarFieldEnum = (typeof DailyWordRecommendationScalarFieldEnum)[keyof typeof DailyWordRecommendationScalarFieldEnum]
 
 
 export const WordEmbeddingScalarFieldEnum = {

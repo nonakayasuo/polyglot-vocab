@@ -27,7 +27,7 @@ export async function GET() {
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+    const _yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
     const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
     const lastMonth = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
@@ -57,20 +57,16 @@ export async function GET() {
       prisma.vocabularyWord.count({ where: { createdAt: { gte: today } } }),
     ]);
 
-    // サブスクリプション統計
-    const subscriptionStats = await prisma.user.groupBy({
-      by: ["subscriptionStatus"],
-      _count: true,
-    });
-
-    // 言語レベル分布
-    const languageLevelStats = await prisma.user.groupBy({
-      by: ["languageLevel"],
+    // CEFRレベル分布
+    const cefrLevelStats = await prisma.user.groupBy({
+      by: ["cefrLevel"],
       _count: true,
     });
 
     // 過去7日間の新規ユーザー数（日別）
-    const dailyNewUsers = await prisma.$queryRaw<{ date: Date; count: bigint }[]>`
+    const dailyNewUsers = await prisma.$queryRaw<
+      { date: Date; count: bigint }[]
+    >`
       SELECT 
         DATE("createdAt") as date,
         COUNT(*) as count
@@ -81,7 +77,9 @@ export async function GET() {
     `;
 
     // 過去7日間のアクティビティ（日別）
-    const dailyActivities = await prisma.$queryRaw<{ date: Date; count: bigint }[]>`
+    const dailyActivities = await prisma.$queryRaw<
+      { date: Date; count: bigint }[]
+    >`
       SELECT 
         DATE("createdAt") as date,
         COUNT(*) as count
@@ -105,16 +103,14 @@ export async function GET() {
         activeUsersToday: activeUsersToday.length,
         wordsToday,
       },
-      subscriptions: subscriptionStats.reduce((acc, item) => {
-        const key = item.subscriptionStatus || "free";
-        acc[key] = item._count;
-        return acc;
-      }, {} as Record<string, number>),
-      languageLevels: languageLevelStats.reduce((acc, item) => {
-        const key = item.languageLevel || "unknown";
-        acc[key] = item._count;
-        return acc;
-      }, {} as Record<string, number>),
+      cefrLevels: cefrLevelStats.reduce(
+        (acc, item) => {
+          const key = item.cefrLevel || "未設定";
+          acc[key] = item._count;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
       charts: {
         dailyNewUsers: dailyNewUsers.map((d) => ({
           date: d.date,
@@ -128,10 +124,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Failed to get admin stats:", error);
-    return NextResponse.json(
-      { error: "Failed to get stats" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to get stats" }, { status: 500 });
   }
 }
-

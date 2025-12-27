@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
+  Brain,
   CheckCircle,
-  XCircle,
   ChevronRight,
   Loader2,
-  Brain,
+  XCircle,
 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // サンプルの語彙問題（後でAPIから取得）
 const SAMPLE_QUESTIONS = {
@@ -79,7 +80,7 @@ function VocabularyTestContent() {
     { questionId: string; isCorrect: boolean; time: number }[]
   >([]);
   const [startTime, setStartTime] = useState<number>(Date.now());
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
 
   const questions =
     SAMPLE_QUESTIONS[language as keyof typeof SAMPLE_QUESTIONS] ||
@@ -87,10 +88,13 @@ function VocabularyTestContent() {
   const currentQuestion = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
-  const handleOptionSelect = (index: number) => {
-    if (questionState !== "answering") return;
-    setSelectedOption(index);
-  };
+  const handleOptionSelect = useCallback(
+    (index: number) => {
+      if (questionState !== "answering") return;
+      setSelectedOption(index);
+    },
+    [questionState],
+  );
 
   const handleSubmit = useCallback(() => {
     if (selectedOption === null || questionState !== "answering") return;
@@ -105,7 +109,7 @@ function VocabularyTestContent() {
     setQuestionState(isCorrect ? "correct" : "incorrect");
   }, [selectedOption, questionState, currentQuestion, startTime]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       setSelectedOption(null);
@@ -118,17 +122,24 @@ function VocabularyTestContent() {
         (questionState === "correct" ? 1 : 0);
       const score = Math.round((correctCount / questions.length) * 100);
       router.push(
-        `/assessment/result?type=vocabulary&score=${score}&lang=${language}`
+        `/assessment/result?type=vocabulary&score=${score}&lang=${language}`,
       );
     }
-  };
+  }, [
+    currentIndex,
+    questions.length,
+    answers,
+    questionState,
+    router,
+    language,
+  ]);
 
   // キーボードショートカット
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (questionState === "answering") {
         if (e.key >= "1" && e.key <= "4") {
-          handleOptionSelect(parseInt(e.key) - 1);
+          handleOptionSelect(parseInt(e.key, 10) - 1);
         } else if (e.key === "Enter" && selectedOption !== null) {
           handleSubmit();
         }
@@ -139,7 +150,13 @@ function VocabularyTestContent() {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [questionState, selectedOption, handleSubmit]);
+  }, [
+    questionState,
+    selectedOption,
+    handleSubmit,
+    handleNext,
+    handleOptionSelect,
+  ]);
 
   if (isLoading) {
     return (
@@ -190,44 +207,45 @@ function VocabularyTestContent() {
 
           {/* Options */}
           <div className="space-y-3">
-            {currentQuestion.options.map((option, index) => {
+            {currentQuestion.options.map((option, optionIndex) => {
               let optionClass =
                 "border-slate-600 bg-slate-700/30 hover:border-slate-500";
 
               if (questionState !== "answering") {
-                if (index === currentQuestion.correctIndex) {
+                if (optionIndex === currentQuestion.correctIndex) {
                   optionClass = "border-emerald-500 bg-emerald-500/20";
                 } else if (
-                  index === selectedOption &&
+                  optionIndex === selectedOption &&
                   !questionState.includes("correct")
                 ) {
                   optionClass = "border-red-500 bg-red-500/20";
                 }
-              } else if (selectedOption === index) {
+              } else if (selectedOption === optionIndex) {
                 optionClass = "border-emerald-500 bg-emerald-500/10";
               }
 
               return (
-                <button
-                  key={index}
-                  onClick={() => handleOptionSelect(index)}
+                <Button
+                  key={`${currentQuestion.word}-${option}`}
+                  variant="ghost"
+                  onClick={() => handleOptionSelect(optionIndex)}
                   disabled={questionState !== "answering"}
-                  className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${optionClass}`}
+                  className={`w-full h-auto p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 justify-start ${optionClass}`}
                 >
                   <span className="w-8 h-8 rounded-lg bg-slate-600/50 flex items-center justify-center text-slate-300 font-medium">
-                    {index + 1}
+                    {optionIndex + 1}
                   </span>
                   <span className="text-white flex-1">{option}</span>
                   {questionState !== "answering" &&
-                    index === currentQuestion.correctIndex && (
+                    optionIndex === currentQuestion.correctIndex && (
                       <CheckCircle className="w-5 h-5 text-emerald-400" />
                     )}
                   {questionState !== "answering" &&
-                    index === selectedOption &&
-                    index !== currentQuestion.correctIndex && (
+                    optionIndex === selectedOption &&
+                    optionIndex !== currentQuestion.correctIndex && (
                       <XCircle className="w-5 h-5 text-red-400" />
                     )}
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -264,17 +282,17 @@ function VocabularyTestContent() {
         {/* Action Button */}
         <div className="flex justify-end">
           {questionState === "answering" ? (
-            <button
+            <Button
               onClick={handleSubmit}
               disabled={selectedOption === null}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 h-auto bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               回答する
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               onClick={handleNext}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all"
+              className="px-6 py-3 h-auto bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all"
             >
               {currentIndex < questions.length - 1 ? (
                 <>
@@ -284,7 +302,7 @@ function VocabularyTestContent() {
               ) : (
                 "結果を見る"
               )}
-            </button>
+            </Button>
           )}
         </div>
 

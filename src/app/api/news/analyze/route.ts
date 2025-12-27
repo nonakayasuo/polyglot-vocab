@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     console.error("Article analysis error:", error);
     return NextResponse.json(
       { error: "Failed to analyze article" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

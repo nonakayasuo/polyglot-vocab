@@ -1,14 +1,14 @@
+import {
+  BarChart3,
+  FileText,
+  Home,
+  Settings,
+  Shield,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/session";
-import Link from "next/link";
-import { 
-  BarChart3, 
-  Home, 
-  Users, 
-  Settings, 
-  FileText,
-  Shield
-} from "lucide-react";
 
 // 管理者のメールアドレスリスト（環境変数から取得も可能）
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",") || [];
@@ -33,13 +33,13 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession();
-  
+
   if (!session) {
     redirect("/signin");
   }
 
   const admin = await isAdmin();
-  
+
   if (!admin) {
     redirect("/");
   }
@@ -95,10 +95,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* メインコンテンツ */}
-      <main className="ml-64 min-h-screen">
-        {children}
-      </main>
+      <main className="ml-64 min-h-screen">{children}</main>
     </div>
   );
 }
-

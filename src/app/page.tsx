@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import DailyRecommendations from "@/components/DailyRecommendations";
 import { StreakDisplay } from "@/components/gamification";
 import ReadingStats from "@/components/ReadingStats";
 import {
@@ -166,11 +165,11 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-amber-400" />
-                <span className="text-sm text-slate-300">今日も学習しましょう！</span>
+                <span className="text-sm text-slate-300">
+                  今日も学習しましょう！
+                </span>
               </div>
-              <h2 className="text-3xl font-bold mb-2">
-                📰 ニュースで学ぶ
-              </h2>
+              <h2 className="text-3xl font-bold mb-2">📰 ニュースで学ぶ</h2>
               <p className="text-slate-400 mb-6">
                 世界のニュースを読みながら、実践的な語彙力を身につけよう
               </p>
@@ -219,7 +218,9 @@ export default function Home() {
           <StatCard
             icon={<Flame className="w-5 h-5" />}
             label="学習中"
-            value={totalStats.total - totalStats.mastered - totalStats.notStarted}
+            value={
+              totalStats.total - totalStats.mastered - totalStats.notStarted
+            }
             color="amber"
           />
           <StatCard
@@ -253,7 +254,7 @@ export default function Home() {
                 >
                   {/* 背景グラデーション */}
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 opacity-50" />
-                  
+
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-4xl">{lang.flag}</span>
@@ -284,11 +285,6 @@ export default function Home() {
               );
             })}
           </div>
-        </section>
-
-        {/* 今日のおすすめ単語 */}
-        <section className="mb-8">
-          <DailyRecommendations onWordAdded={loadData} />
         </section>
 
         {/* 読書統計 */}
@@ -361,9 +357,12 @@ function StatCard({
 }) {
   const colorStyles = {
     blue: "from-blue-500/10 to-blue-500/5 border-blue-200/50 dark:border-blue-800/50",
-    emerald: "from-emerald-500/10 to-emerald-500/5 border-emerald-200/50 dark:border-emerald-800/50",
-    amber: "from-amber-500/10 to-amber-500/5 border-amber-200/50 dark:border-amber-800/50",
-    slate: "from-slate-500/10 to-slate-500/5 border-slate-200/50 dark:border-slate-800/50",
+    emerald:
+      "from-emerald-500/10 to-emerald-500/5 border-emerald-200/50 dark:border-emerald-800/50",
+    amber:
+      "from-amber-500/10 to-amber-500/5 border-amber-200/50 dark:border-amber-800/50",
+    slate:
+      "from-slate-500/10 to-slate-500/5 border-slate-200/50 dark:border-slate-800/50",
   };
 
   const iconColors = {
@@ -374,7 +373,9 @@ function StatCard({
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${colorStyles[color]} border p-4`}>
+    <div
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${colorStyles[color]} border p-4`}
+    >
       <div className={`mb-2 ${iconColors[color]}`}>{icon}</div>
       <p className="text-2xl font-bold text-slate-900 dark:text-white">
         {value.toLocaleString()}

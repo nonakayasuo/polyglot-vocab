@@ -44,7 +44,7 @@ interface RateLimitResult {
  */
 export function checkRateLimit(
   key: string,
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): RateLimitResult {
   const now = Date.now();
   const entry = rateLimitStore.get(key);
@@ -132,7 +132,6 @@ export function createRateLimitResponse(reset: number) {
         "Content-Type": "application/json",
         "Retry-After": retryAfter.toString(),
       },
-    }
+    },
   );
 }
-

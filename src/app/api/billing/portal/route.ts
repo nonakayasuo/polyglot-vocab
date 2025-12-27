@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
-import { getServerSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "@/lib/session";
+import { stripe } from "@/lib/stripe";
 
 export async function POST() {
   try {
     const session = await getServerSession();
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
@@ -20,10 +17,7 @@ export async function POST() {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Stripeカスタマーを検索
@@ -35,7 +29,7 @@ export async function POST() {
     if (customers.data.length === 0) {
       return NextResponse.json(
         { error: "No subscription found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -54,8 +48,7 @@ export async function POST() {
     console.error("Failed to create portal session:", error);
     return NextResponse.json(
       { error: "Failed to create portal session" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

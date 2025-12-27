@@ -38,11 +38,6 @@ export type ReadingHistory = Prisma.ReadingHistoryModel
  */
 export type WordContext = Prisma.WordContextModel
 /**
- * Model DailyWordRecommendation
- * 
- */
-export type DailyWordRecommendation = Prisma.DailyWordRecommendationModel
-/**
  * Model WordEmbedding
  * 
  */

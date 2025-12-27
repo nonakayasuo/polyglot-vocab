@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
-  CheckCircle,
-  XCircle,
-  ChevronRight,
-  Loader2,
   BookOpen,
+  CheckCircle,
+  ChevronRight,
   Clock,
+  Loader2,
+  XCircle,
 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // サンプルの読解問題（後でAPIから取得）
 const SAMPLE_READING_QUESTIONS = {
@@ -119,7 +120,7 @@ function ReadingTestContent() {
   const currentQuestion = currentArticle.questions[currentQuestionIndex];
   const totalQuestions = articles.reduce(
     (sum, a) => sum + a.questions.length,
-    0
+    0,
   );
   const answeredQuestions = answers.length;
   const progress = (answeredQuestions / totalQuestions) * 100;
@@ -152,7 +153,7 @@ function ReadingTestContent() {
         (selectedOption === currentQuestion.correctIndex ? 1 : 0);
       const score = Math.round((correctCount / totalQuestions) * 100);
       router.push(
-        `/assessment/result?type=reading&score=${score}&lang=${language}`
+        `/assessment/result?type=reading&score=${score}&lang=${language}`,
       );
       return;
     }
@@ -230,43 +231,45 @@ function ReadingTestContent() {
 
           {/* Options */}
           <div className="space-y-3">
-            {currentQuestion.options.map((option, index) => {
+            {currentQuestion.options.map((option, optionIndex) => {
               let optionClass =
                 "border-slate-600 bg-slate-700/30 hover:border-slate-500";
 
               if (showResult) {
-                if (index === currentQuestion.correctIndex) {
+                if (optionIndex === currentQuestion.correctIndex) {
                   optionClass = "border-emerald-500 bg-emerald-500/20";
                 } else if (
-                  index === selectedOption &&
-                  index !== currentQuestion.correctIndex
+                  optionIndex === selectedOption &&
+                  optionIndex !== currentQuestion.correctIndex
                 ) {
                   optionClass = "border-red-500 bg-red-500/20";
                 }
-              } else if (selectedOption === index) {
+              } else if (selectedOption === optionIndex) {
                 optionClass = "border-blue-500 bg-blue-500/10";
               }
 
               return (
-                <button
-                  key={index}
-                  onClick={() => handleOptionSelect(index)}
+                <Button
+                  key={`${currentQuestion.question}-${option}`}
+                  variant="ghost"
+                  onClick={() => handleOptionSelect(optionIndex)}
                   disabled={showResult}
-                  className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${optionClass}`}
+                  className={`w-full h-auto p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 justify-start ${optionClass}`}
                 >
                   <span className="w-8 h-8 rounded-lg bg-slate-600/50 flex items-center justify-center text-slate-300 font-medium">
-                    {String.fromCharCode(65 + index)}
+                    {String.fromCharCode(65 + optionIndex)}
                   </span>
                   <span className="text-white flex-1">{option}</span>
-                  {showResult && index === currentQuestion.correctIndex && (
-                    <CheckCircle className="w-5 h-5 text-emerald-400" />
-                  )}
                   {showResult &&
-                    index === selectedOption &&
-                    index !== currentQuestion.correctIndex && (
+                    optionIndex === currentQuestion.correctIndex && (
+                      <CheckCircle className="w-5 h-5 text-emerald-400" />
+                    )}
+                  {showResult &&
+                    optionIndex === selectedOption &&
+                    optionIndex !== currentQuestion.correctIndex && (
                       <XCircle className="w-5 h-5 text-red-400" />
                     )}
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -275,17 +278,17 @@ function ReadingTestContent() {
         {/* Action Button */}
         <div className="flex justify-end">
           {!showResult ? (
-            <button
+            <Button
               onClick={handleSubmit}
               disabled={selectedOption === null}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 h-auto bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               回答する
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               onClick={handleNext}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all"
+              className="px-6 py-3 h-auto bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium rounded-xl flex items-center gap-2 transition-all"
             >
               {currentQuestionIndex < currentArticle.questions.length - 1 ||
               currentArticleIndex < articles.length - 1 ? (
@@ -296,7 +299,7 @@ function ReadingTestContent() {
               ) : (
                 "結果を見る"
               )}
-            </button>
+            </Button>
           )}
         </div>
       </div>

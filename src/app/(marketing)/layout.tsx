@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "NewsLingua - Learn Languages with Real-World News",
@@ -36,4 +36,3 @@ export default function MarketingLayout({
 }) {
   return <>{children}</>;
 }
-

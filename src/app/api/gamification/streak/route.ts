@@ -48,7 +48,7 @@ export async function GET() {
     console.error("Failed to get streak:", error);
     return NextResponse.json(
       { error: "Failed to get streak" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -86,7 +86,7 @@ export async function POST() {
       lastActive.setHours(0, 0, 0, 0);
 
       const daysDiff = Math.floor(
-        (today.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24)
+        (today.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24),
       );
 
       let newStreak = streak.currentStreak;
@@ -156,7 +156,7 @@ export async function POST() {
     console.error("Failed to update streak:", error);
     return NextResponse.json(
       { error: "Failed to update streak" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

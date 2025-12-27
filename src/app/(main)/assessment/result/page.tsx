@@ -1,18 +1,19 @@
 "use client";
 
-import { Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import {
-  Trophy,
-  Target,
   BookOpen,
-  TrendingUp,
-  RefreshCw,
   Home,
-  Sparkles,
   Loader2,
+  RefreshCw,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Trophy,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
 
 const CEFR_LEVELS = [
   { level: "A1", label: "入門", color: "bg-emerald-500", minScore: 0 },
@@ -170,27 +171,32 @@ function AssessmentResultContent() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
+          <Button
             onClick={handleRetake}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 h-auto bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-all"
           >
             <RefreshCw className="w-5 h-5" />
             もう一度テスト
-          </button>
-          <Link
-            href="/news"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl transition-all"
+          </Button>
+          <Button
+            asChild
+            className="h-auto px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium rounded-xl transition-all"
           >
-            <BookOpen className="w-5 h-5" />
-            ニュースで学習開始
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-600 hover:bg-slate-700/50 text-white font-medium rounded-xl transition-all"
+            <Link href="/news">
+              <BookOpen className="w-5 h-5" />
+              ニュースで学習開始
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto px-6 py-3 border-slate-600 hover:bg-slate-700/50 text-white font-medium rounded-xl transition-all"
           >
-            <Home className="w-5 h-5" />
-            ホームへ
-          </Link>
+            <Link href="/">
+              <Home className="w-5 h-5" />
+              ホームへ
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

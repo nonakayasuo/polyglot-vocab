@@ -1,16 +1,11 @@
 "use client";
 
+import { ChevronLeft, ChevronRight, Crown, Search, Star } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { 
-  Search, 
-  ChevronLeft, 
-  ChevronRight,
-  Crown,
-  Star
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface User {
   id: string;
@@ -161,14 +156,17 @@ export default function AdminUsersPage() {
                   <div className="flex items-center">
                     <div className="h-10 w-10 flex-shrink-0">
                       {user.image ? (
-                        <img
+                        <Image
                           className="h-10 w-10 rounded-full"
                           src={user.image}
-                          alt=""
+                          alt={user.name || "User avatar"}
+                          width={40}
+                          height={40}
                         />
                       ) : (
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
-                          {user.name?.[0]?.toUpperCase() || user.email[0]?.toUpperCase()}
+                          {user.name?.[0]?.toUpperCase() ||
+                            user.email[0]?.toUpperCase()}
                         </div>
                       )}
                     </div>
@@ -241,4 +239,3 @@ export default function AdminUsersPage() {
     </div>
   );
 }
-

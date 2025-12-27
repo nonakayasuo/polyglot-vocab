@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
-import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
 
 // Webhookシークレットで署名を検証
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   if (!webhookSecret || !signature) {
     return NextResponse.json(
       { error: "Missing webhook secret or signature" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -23,10 +23,7 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
-    return NextResponse.json(
-      { error: "Invalid signature" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   try {
@@ -64,7 +61,7 @@ export async function POST(request: NextRequest) {
     console.error("Webhook handler error:", error);
     return NextResponse.json(
       { error: "Webhook handler failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -79,7 +76,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   // サブスクリプション情報を取得
-  const subscriptionId = session.subscription as string;
+  const _subscriptionId = session.subscription as string;
 
   await prisma.user.update({
     where: { id: userId },
@@ -130,4 +127,3 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   // メール通知などを送信
 }
-

@@ -37,7 +37,7 @@ export interface VocabularyStats {
 
 // 単語一覧を取得
 export async function fetchWords(
-  language?: Language
+  language?: Language,
 ): Promise<VocabularyWordDB[]> {
   const url = language ? `/api/words?language=${language}` : "/api/words";
   const res = await fetch(url);
@@ -50,7 +50,7 @@ export async function createWord(
   data: Omit<
     VocabularyWordDB,
     "id" | "createdAt" | "updatedAt" | "displayOrder"
-  >
+  >,
 ): Promise<VocabularyWordDB> {
   const res = await fetch("/api/words", {
     method: "POST",
@@ -64,7 +64,7 @@ export async function createWord(
 // 単語を更新
 export async function updateWordAPI(
   id: string,
-  data: Partial<VocabularyWordDB>
+  data: Partial<VocabularyWordDB>,
 ): Promise<VocabularyWordDB> {
   const res = await fetch(`/api/words/${id}`, {
     method: "PATCH",
@@ -85,7 +85,7 @@ export async function deleteWordAPI(id: string): Promise<void> {
 
 // 複数の単語を一括削除
 export async function deleteWordsAPI(
-  ids: string[]
+  ids: string[],
 ): Promise<{ deleted: number }> {
   const res = await fetch("/api/words/bulk", {
     method: "DELETE",
@@ -100,7 +100,7 @@ export async function deleteWordsAPI(
 export async function importWordsAPI(
   words: Array<
     Omit<VocabularyWordDB, "id" | "createdAt" | "updatedAt" | "displayOrder">
-  >
+  >,
 ): Promise<{ imported: number }> {
   const res = await fetch("/api/words/bulk", {
     method: "POST",
@@ -113,7 +113,7 @@ export async function importWordsAPI(
 
 // 統計情報を取得
 export async function fetchStats(
-  language?: Language
+  language?: Language,
 ): Promise<VocabularyStats | LanguageStats> {
   const url = language ? `/api/stats?language=${language}` : "/api/stats";
   const res = await fetch(url);
@@ -123,7 +123,7 @@ export async function fetchStats(
 
 // 単語の順序を更新
 export async function reorderWordsAPI(
-  orderedIds: string[]
+  orderedIds: string[],
 ): Promise<{ updated: number }> {
   const res = await fetch("/api/words/bulk", {
     method: "PATCH",

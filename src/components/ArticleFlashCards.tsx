@@ -62,7 +62,7 @@ export default function ArticleFlashCards({
 
       try {
         const response = await fetch(
-          `/api/words?language=${language}&withContext=true`
+          `/api/words?language=${language}&withContext=true`,
         );
         const data = await response.json();
 
@@ -72,7 +72,7 @@ export default function ArticleFlashCards({
 
         // コンテキストがある単語のみフィルター
         const wordsWithContext = data.filter(
-          (w: Word) => w.contexts && w.contexts.length > 0
+          (w: Word) => w.contexts && w.contexts.length > 0,
         );
 
         // シャッフル
@@ -81,7 +81,7 @@ export default function ArticleFlashCards({
       } catch (err) {
         console.error("Failed to fetch words:", err);
         setError(
-          err instanceof Error ? err.message : "単語の取得に失敗しました"
+          err instanceof Error ? err.message : "単語の取得に失敗しました",
         );
       } finally {
         setLoading(false);
@@ -93,7 +93,7 @@ export default function ArticleFlashCards({
 
   const currentWord = useMemo(
     () => words[currentIndex] || null,
-    [words, currentIndex]
+    [words, currentIndex],
   );
 
   const goToNext = useCallback(() => {
@@ -187,12 +187,10 @@ export default function ArticleFlashCards({
       </div>
 
       {/* カード */}
-      <div
-        className="relative min-h-[300px] bg-white rounded-2xl shadow-lg border border-gray-200 cursor-pointer transition-transform hover:scale-[1.02]"
+      <button
+        type="button"
+        className="relative min-h-[300px] w-full bg-white rounded-2xl shadow-lg border border-gray-200 cursor-pointer transition-transform hover:scale-[1.02] text-left"
         onClick={() => setIsFlipped(!isFlipped)}
-        onKeyDown={(e) => e.key === "Enter" && setIsFlipped(!isFlipped)}
-        role="button"
-        tabIndex={0}
       >
         {!isFlipped ? (
           // 表面（単語）
@@ -300,7 +298,7 @@ export default function ArticleFlashCards({
             </div>
           </div>
         )}
-      </div>
+      </button>
 
       {/* ナビゲーション */}
       <div className="flex items-center justify-center gap-4 mt-6">

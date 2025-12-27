@@ -1,32 +1,28 @@
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  BookOpen,
+  Newspaper,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import { 
-  Users, 
-  BookOpen, 
-  Newspaper, 
-  TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight
-} from "lucide-react";
 
 async function getStats() {
-  const [
-    totalUsers,
-    totalWords,
-    totalArticles,
-    recentActivity,
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.vocabularyWord.count(),
-    prisma.article.count(),
-    prisma.learningActivity.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24時間以内
+  const [totalUsers, totalWords, totalArticles, recentActivity] =
+    await Promise.all([
+      prisma.user.count(),
+      prisma.vocabularyWord.count(),
+      prisma.article.count(),
+      prisma.learningActivity.count({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24時間以内
+          },
         },
-      },
-    }),
-  ]);
+      }),
+    ]);
 
   // 昨日の統計と比較（簡略化）
   const yesterdayUsers = await prisma.user.count({
@@ -45,9 +41,10 @@ async function getStats() {
     totalArticles,
     recentActivity,
     newUsersToday,
-    growthRate: yesterdayUsers > 0 
-      ? ((newUsersToday / yesterdayUsers) * 100).toFixed(1) 
-      : "0",
+    growthRate:
+      yesterdayUsers > 0
+        ? ((newUsersToday / yesterdayUsers) * 100).toFixed(1)
+        : "0",
   };
 }
 
@@ -84,8 +81,8 @@ function StatCard({
                   changeType === "positive"
                     ? "text-green-600"
                     : changeType === "negative"
-                    ? "text-red-600"
-                    : "text-gray-500"
+                      ? "text-red-600"
+                      : "text-gray-500"
                 }`}
               >
                 {change}
@@ -123,16 +120,8 @@ async function Dashboard() {
           change={`+${stats.newUsersToday} 今日`}
           changeType={stats.newUsersToday > 0 ? "positive" : "neutral"}
         />
-        <StatCard
-          title="登録単語数"
-          value={stats.totalWords}
-          icon={BookOpen}
-        />
-        <StatCard
-          title="記事数"
-          value={stats.totalArticles}
-          icon={Newspaper}
-        />
+        <StatCard title="登録単語数" value={stats.totalWords} icon={BookOpen} />
+        <StatCard title="記事数" value={stats.totalArticles} icon={Newspaper} />
         <StatCard
           title="24時間のアクティビティ"
           value={stats.recentActivity}
@@ -179,4 +168,3 @@ export default function AdminPage() {
     </Suspense>
   );
 }
-

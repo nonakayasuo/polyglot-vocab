@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "@/lib/session";
 
@@ -51,13 +51,12 @@ export async function GET(request: NextRequest) {
           email: true,
           image: true,
           createdAt: true,
-          level: true,
+          cefrLevel: true,
           totalXp: true,
-          subscriptionStatus: true,
+          weeklyXp: true,
           _count: {
             select: {
-              vocabularyWords: true,
-              readingHistories: true,
+              achievements: true,
             },
           },
         },
@@ -75,11 +74,10 @@ export async function GET(request: NextRequest) {
         email: user.email,
         image: user.image,
         createdAt: user.createdAt,
-        level: user.level,
+        cefrLevel: user.cefrLevel,
         totalXp: user.totalXp,
-        subscriptionStatus: user.subscriptionStatus,
-        wordCount: user._count.vocabularyWords,
-        readingCount: user._count.readingHistories,
+        weeklyXp: user.weeklyXp,
+        achievementCount: user._count.achievements,
       })),
       pagination: {
         page,
@@ -90,10 +88,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Failed to get users:", error);
-    return NextResponse.json(
-      { error: "Failed to get users" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to get users" }, { status: 500 });
   }
 }
-

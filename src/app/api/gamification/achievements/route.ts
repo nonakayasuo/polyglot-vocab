@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
+import { getServerSession } from "@/lib/session";
 
 export async function GET() {
   try {
-    const session = await getSession();
+    const session = await getServerSession();
 
     // すべての達成可能なバッジを取得
     const achievements = await prisma.achievement.findMany({
@@ -79,7 +79,7 @@ export async function GET() {
     console.error("Failed to get achievements:", error);
     return NextResponse.json(
       { error: "Failed to get achievements" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -87,7 +87,7 @@ export async function GET() {
 // バッジ獲得チェック（学習アクティビティ時に呼ばれる）
 export async function POST() {
   try {
-    const session = await getSession();
+    const session = await getServerSession();
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -113,7 +113,7 @@ export async function POST() {
     const earnedIds = new Set(existingAchievements.map((a) => a.achievementId));
 
     // 達成条件をチェック
-    const progressMap: Record<string, number> = {
+    const _progressMap: Record<string, number> = {
       vocabulary: wordCount,
       mastery: masteredCount,
       reading: articleCount,
@@ -185,7 +185,7 @@ export async function POST() {
     console.error("Failed to check achievements:", error);
     return NextResponse.json(
       { error: "Failed to check achievements" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

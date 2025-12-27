@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Loader2, Lock, LogIn, Mail, Newspaper } from "lucide-react";
 import Link from "next/link";
-import { Loader2, Mail, Lock, LogIn, Newspaper } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
 
 export default function SignInPage() {

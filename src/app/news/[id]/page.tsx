@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  ArrowLeft,
-  BookOpen,
-  ExternalLink,
-  Loader2,
-  Plus,
-  Volume2,
-} from "lucide-react";
-import Image from "next/image";
+import { ArrowLeft, BookOpen, Loader2, Plus, Volume2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import type { Article } from "@/types/news";
 import { speak } from "@/lib/tts";
+import type { Article } from "@/types/news";
 
 // 単語ポップオーバーの状態
 interface WordPopover {
@@ -33,7 +25,7 @@ export default function ArticleDetailPage() {
   const params = useParams();
   const articleId = params.id as string;
 
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, _setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [popover, setPopover] = useState<WordPopover | null>(null);
@@ -46,9 +38,9 @@ export default function ArticleDetailPage() {
         // TODO: 記事詳細APIを実装
         // 今はエラーを表示
         setError(
-          "記事詳細ページは開発中です。News APIの制限により、記事の全文は元サイトでご確認ください。"
+          "記事詳細ページは開発中です。News APIの制限により、記事の全文は元サイトでご確認ください。",
         );
-      } catch (err) {
+      } catch (_err) {
         setError("記事の取得に失敗しました");
       } finally {
         setLoading(false);
@@ -56,10 +48,10 @@ export default function ArticleDetailPage() {
     };
 
     fetchArticle();
-  }, [articleId]);
+  }, []);
 
   // 単語クリック時の処理
-  const handleWordClick = useCallback(
+  const _handleWordClick = useCallback(
     async (event: React.MouseEvent<HTMLSpanElement>, word: string) => {
       const rect = event.currentTarget.getBoundingClientRect();
       const cleanWord = word.replace(/[^a-zA-Z]/g, "").toLowerCase();
@@ -76,7 +68,7 @@ export default function ArticleDetailPage() {
       try {
         // Free Dictionary API で定義を取得
         const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`,
         );
 
         if (response.ok) {
@@ -96,20 +88,20 @@ export default function ArticleDetailPage() {
                     definition: meaning?.definitions?.[0]?.definition,
                   },
                 }
-              : null
+              : null,
           );
         } else {
           setPopover((prev) =>
-            prev ? { ...prev, loading: false, definition: undefined } : null
+            prev ? { ...prev, loading: false, definition: undefined } : null,
           );
         }
-      } catch (err) {
+      } catch (_err) {
         setPopover((prev) =>
-          prev ? { ...prev, loading: false, definition: undefined } : null
+          prev ? { ...prev, loading: false, definition: undefined } : null,
         );
       }
     },
-    []
+    [],
   );
 
   // ポップオーバーを閉じる
@@ -212,7 +204,12 @@ export default function ArticleDetailPage() {
       {popover && (
         <>
           {/* 背景クリックで閉じる */}
-          <div className="fixed inset-0 z-40" onClick={closePopover} />
+          <button
+            type="button"
+            className="fixed inset-0 z-40 cursor-default"
+            onClick={closePopover}
+            aria-label="閉じる"
+          />
 
           {/* ポップオーバー本体 */}
           <div
@@ -235,7 +232,10 @@ export default function ArticleDetailPage() {
                   </h3>
                   <button
                     type="button"
-                    onClick={() => speak(popover.definition!.word, "english")}
+                    onClick={() =>
+                      popover.definition?.word &&
+                      speak(popover.definition.word, "english")
+                    }
                     className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <Volume2 className="w-5 h-5" />

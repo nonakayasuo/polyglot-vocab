@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { fetchArticlesWithCache, searchArticles } from "@/lib/news-api";
-import type { NewsCategory } from "@/types/news";
+import type { Article, NewsCategory } from "@/types/news";
 
 // GET: ニュース記事一覧を取得
 export async function GET(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const page = Number.parseInt(searchParams.get("page") || "1", 10);
 
   try {
-    let articles;
+    let articles: Article[] = [];
 
     if (query) {
       // 検索クエリがある場合
@@ -51,13 +51,13 @@ export async function GET(request: NextRequest) {
           error: "News API is not configured",
           message: "Please set NEWS_API_KEY in your environment variables",
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to fetch news articles" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

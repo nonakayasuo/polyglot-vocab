@@ -101,6 +101,42 @@ pnpm dev
 
 ---
 
+## 🧹 開発コマンド
+
+### Biome（リント・フォーマット）
+
+```bash
+# リントを実行
+pnpm lint
+
+# リントを実行＆自動修正
+pnpm lint:fix
+
+# フォーマットを実行
+pnpm format
+
+# リント＆フォーマットを同時にチェック
+pnpm check
+
+# リント＆フォーマットを自動修正
+pnpm check:fix
+```
+
+### その他
+
+```bash
+# 開発サーバーを起動
+pnpm dev
+
+# 本番ビルド
+pnpm build
+
+# 本番サーバーを起動
+pnpm start
+```
+
+---
+
 ## 🛠️ 技術スタック
 
 ### フロントエンド

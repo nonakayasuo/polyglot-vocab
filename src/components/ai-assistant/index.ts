@@ -1,2 +1,3 @@
-export { default as ChatPanel } from "./ChatPanel";
-export { default as WordTooltip } from "./WordTooltip";
+// Re-export from features module for backward compatibility
+export * from "../../features/ai-assistant/components/ChatPanel";
+export * from "../../features/ai-assistant/components/WordTooltip";

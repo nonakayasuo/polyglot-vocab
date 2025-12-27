@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { fetchTopHeadlines } from "@/lib/news-api";
 import { prisma } from "@/lib/prisma";
 import { analyzeTextDifficulty } from "@/lib/word-difficulty";
-import { fetchTopHeadlines } from "@/lib/news-api";
 import type { Article } from "@/types/news";
 
 // GET: おすすめ記事を取得
@@ -11,11 +11,11 @@ export async function GET(request: NextRequest) {
   const limit = Number.parseInt(searchParams.get("limit") || "10", 10);
   const minDifficulty = Number.parseInt(
     searchParams.get("minDifficulty") || "0",
-    10
+    10,
   );
   const maxDifficulty = Number.parseInt(
     searchParams.get("maxDifficulty") || "100",
-    10
+    10,
   );
 
   try {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const readArticles = await prisma.readingHistory.findMany({
       select: { articleId: true },
     });
-    const readArticleIds = new Set(readArticles.map((r) => r.articleId));
+    const _readArticleIds = new Set(readArticles.map((r) => r.articleId));
 
     // ニュース記事を取得
     let articles: Article[] = [];
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to get recommended articles:", error);
     return NextResponse.json(
       { error: "Failed to get recommended articles" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

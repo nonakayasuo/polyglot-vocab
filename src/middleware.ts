@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
+import { type NextRequest, NextResponse } from "next/server";
 
 // 認証が必要なルート
 const protectedRoutes = ["/dashboard", "/settings", "/profile", "/admin"];
@@ -10,8 +10,8 @@ const authRoutes = ["/signin", "/signup", "/forgot-password"];
 // レート制限対象のAPIパス
 const rateLimitedPaths = [
   { path: "/api/words/analyze", limit: 10, window: 60000 }, // AI分析
-  { path: "/api/news/analyze", limit: 10, window: 60000 },  // ニュース分析
-  { path: "/api/auth", limit: 5, window: 300000 },          // 認証
+  { path: "/api/news/analyze", limit: 10, window: 60000 }, // ニュース分析
+  { path: "/api/auth", limit: 5, window: 300000 }, // 認証
 ];
 
 // シンプルなインメモリレート制限（Edge対応）
@@ -20,7 +20,7 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 function checkRateLimit(
   key: string,
   limit: number,
-  window: number
+  window: number,
 ): { success: boolean; remaining: number } {
   const now = Date.now();
   const entry = rateLimitMap.get(key);
@@ -53,7 +53,7 @@ export function middleware(request: NextRequest) {
   // APIレート制限チェック
   if (pathname.startsWith("/api/")) {
     const rateLimitConfig = rateLimitedPaths.find((cfg) =>
-      pathname.startsWith(cfg.path)
+      pathname.startsWith(cfg.path),
     );
 
     if (rateLimitConfig) {
@@ -61,7 +61,7 @@ export function middleware(request: NextRequest) {
       const result = checkRateLimit(
         key,
         rateLimitConfig.limit,
-        rateLimitConfig.window
+        rateLimitConfig.window,
       );
 
       if (!result.success) {
@@ -73,7 +73,7 @@ export function middleware(request: NextRequest) {
               "Content-Type": "application/json",
               "X-RateLimit-Remaining": "0",
             },
-          }
+          },
         );
       }
     }
@@ -84,7 +84,7 @@ export function middleware(request: NextRequest) {
 
   // 保護されたルートへのアクセス
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   if (isProtectedRoute && !sessionCookie) {

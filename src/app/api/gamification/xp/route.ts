@@ -16,7 +16,7 @@ function calculateLevel(totalXp: number): {
   while (totalXp >= totalNeeded + xpNeeded) {
     totalNeeded += xpNeeded;
     level++;
-    xpNeeded = Math.floor(level * 100 * Math.pow(1.3, level - 1));
+    xpNeeded = Math.floor(level * 100 * 1.3 ** (level - 1));
   }
 
   return {

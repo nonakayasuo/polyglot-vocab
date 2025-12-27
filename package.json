@@ -5,7 +5,10 @@
   "type": "module",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "prisma"
+      "prisma",
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild"
     ]
   },
   "scripts": {
@@ -16,7 +19,9 @@
     "lint:fix": "biome lint --write ./src",
     "format": "biome format --write ./src",
     "check": "biome check ./src",
-    "check:fix": "biome check --write ./src"
+    "check:fix": "biome check --write ./src",
+    "docs": "pnpm --filter website start",
+    "docs:build": "pnpm --filter website build"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

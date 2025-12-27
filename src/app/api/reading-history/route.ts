@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to fetch reading history:", error);
     return NextResponse.json(
       { error: "Failed to fetch reading history" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     if (!articleId) {
       return NextResponse.json(
         { error: "articleId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     console.error("Failed to record reading history:", error);
     return NextResponse.json(
       { error: "Failed to record reading history" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

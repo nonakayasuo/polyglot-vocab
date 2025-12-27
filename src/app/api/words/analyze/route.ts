@@ -1,10 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import {
   analyzeTextDifficulty,
-  extractAdvancedWords,
   getWordDifficulty,
 } from "@/lib/word-difficulty";
-import { prisma } from "@/lib/prisma";
 
 // GET: 単語の難易度を分析
 export async function GET(request: NextRequest) {
@@ -14,7 +13,7 @@ export async function GET(request: NextRequest) {
   if (!word) {
     return NextResponse.json(
       { error: "word parameter is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -23,7 +22,7 @@ export async function GET(request: NextRequest) {
   if (!difficulty) {
     return NextResponse.json(
       { error: "Word not found in difficulty database", word },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -58,7 +57,7 @@ export async function POST(request: NextRequest) {
     console.error("Failed to analyze text:", error);
     return NextResponse.json(
       { error: "Failed to analyze text" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

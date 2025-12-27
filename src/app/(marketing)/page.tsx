@@ -1,16 +1,16 @@
 import {
   BookOpen,
+  Brain,
   ChevronRight,
   Globe,
   Newspaper,
   Sparkles,
-  Trophy,
-  Zap,
-  Brain,
+  Star,
   Target,
   TrendingUp,
+  Trophy,
   Users,
-  Star,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -31,13 +31,22 @@ export default function LandingPage() {
             </div>
 
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm text-gray-400 hover:text-white transition">
+              <a
+                href="#features"
+                className="text-sm text-gray-400 hover:text-white transition"
+              >
                 Features
               </a>
-              <a href="#pricing" className="text-sm text-gray-400 hover:text-white transition">
+              <a
+                href="#pricing"
+                className="text-sm text-gray-400 hover:text-white transition"
+              >
                 Pricing
               </a>
-              <a href="#faq" className="text-sm text-gray-400 hover:text-white transition">
+              <a
+                href="#faq"
+                className="text-sm text-gray-400 hover:text-white transition"
+              >
                 FAQ
               </a>
             </div>
@@ -180,9 +189,7 @@ export default function LandingPage() {
       {/* 対応言語 */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-[#0d0d15]">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            4言語に対応
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">4言語に対応</h2>
           <p className="text-lg text-gray-400 mb-12">
             英語、スペイン語、韓国語、中国語の学習をサポート
           </p>
@@ -260,7 +267,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-cyan-500/10 via-blue-600/10 to-purple-500/10 border border-white/10 p-12 text-center">
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
-            
+
             <div className="relative">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 今すぐ学習を始めよう
@@ -292,13 +299,19 @@ export default function LandingPage() {
               News<span className="text-cyan-400">Lingua</span>
             </span>
           </div>
-          
+
           <div className="flex items-center gap-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition">利用規約</a>
-            <a href="#" className="hover:text-white transition">プライバシーポリシー</a>
-            <a href="#" className="hover:text-white transition">お問い合わせ</a>
+            <Link href="/terms" className="hover:text-white transition">
+              利用規約
+            </Link>
+            <Link href="/privacy" className="hover:text-white transition">
+              プライバシーポリシー
+            </Link>
+            <Link href="/contact" className="hover:text-white transition">
+              お問い合わせ
+            </Link>
           </div>
-          
+
           <p className="text-sm text-gray-600">
             © 2024 NewsLingua. All rights reserved.
           </p>
@@ -321,7 +334,9 @@ function FeatureCard({
 }) {
   return (
     <div className="group relative p-6 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300">
-      <div className={`inline-flex p-3 mb-4 rounded-xl bg-gradient-to-br ${gradient}`}>
+      <div
+        className={`inline-flex p-3 mb-4 rounded-xl bg-gradient-to-br ${gradient}`}
+      >
         {icon}
       </div>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
@@ -378,18 +393,25 @@ function PricingCard({
           Most Popular
         </div>
       )}
-      
+
       <h3 className="text-xl font-semibold mb-2">{name}</h3>
       <div className="mb-6">
         <span className="text-4xl font-bold">{price}</span>
         <span className="text-gray-500">{period}</span>
       </div>
-      
+
       <ul className="space-y-3 mb-8">
-        {features.map((feature, i) => (
-          <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
+        {features.map((feature) => (
+          <li
+            key={feature}
+            className="flex items-center gap-2 text-sm text-gray-300"
+          >
             <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-              <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-3 h-3 text-green-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -401,7 +423,7 @@ function PricingCard({
           </li>
         ))}
       </ul>
-      
+
       <Link
         href={href}
         className={`block w-full py-3 text-center font-medium rounded-xl transition ${
@@ -415,4 +437,3 @@ function PricingCard({
     </div>
   );
 }
-

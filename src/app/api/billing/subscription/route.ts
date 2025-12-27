@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "@/lib/session";
 import { PLANS } from "@/lib/stripe";
 
 export async function GET() {
   try {
     const session = await getServerSession();
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
@@ -25,10 +22,7 @@ export async function GET() {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // 現在のプラン情報（デフォルトはfree）
@@ -51,8 +45,7 @@ export async function GET() {
     console.error("Failed to get subscription:", error);
     return NextResponse.json(
       { error: "Failed to get subscription" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

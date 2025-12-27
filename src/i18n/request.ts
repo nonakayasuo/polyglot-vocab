@@ -1,6 +1,6 @@
-import { getRequestConfig } from "next-intl/server";
 import { cookies } from "next/headers";
-import { defaultLocale, locales, type Locale } from "./config";
+import { getRequestConfig } from "next-intl/server";
+import { defaultLocale, type Locale, locales } from "./config";
 
 export default getRequestConfig(async () => {
   // Cookieからロケールを取得、なければデフォルト

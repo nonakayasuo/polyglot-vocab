@@ -388,7 +388,6 @@ export const ModelName = {
   Article: 'Article',
   ReadingHistory: 'ReadingHistory',
   WordContext: 'WordContext',
-  DailyWordRecommendation: 'DailyWordRecommendation',
   WordEmbedding: 'WordEmbedding',
   ArticleEmbedding: 'ArticleEmbedding',
   User: 'User',
@@ -419,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "vocabularyWord" | "article" | "readingHistory" | "wordContext" | "dailyWordRecommendation" | "wordEmbedding" | "articleEmbedding" | "user" | "levelAssessment" | "vocabularyQuestion" | "vocabularyTestResponse" | "readingQuestion" | "readingTestResponse" | "session" | "account" | "verification" | "userStreak" | "achievement" | "userAchievement" | "learningActivity"
+    modelProps: "vocabularyWord" | "article" | "readingHistory" | "wordContext" | "wordEmbedding" | "articleEmbedding" | "user" | "levelAssessment" | "vocabularyQuestion" | "vocabularyTestResponse" | "readingQuestion" | "readingTestResponse" | "session" | "account" | "verification" | "userStreak" | "achievement" | "userAchievement" | "learningActivity"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -716,80 +715,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.WordContextCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.WordContextCountAggregateOutputType> | number
-        }
-      }
-    }
-    DailyWordRecommendation: {
-      payload: Prisma.$DailyWordRecommendationPayload<ExtArgs>
-      fields: Prisma.DailyWordRecommendationFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.DailyWordRecommendationFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.DailyWordRecommendationFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        findFirst: {
-          args: Prisma.DailyWordRecommendationFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.DailyWordRecommendationFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        findMany: {
-          args: Prisma.DailyWordRecommendationFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
-        }
-        create: {
-          args: Prisma.DailyWordRecommendationCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        createMany: {
-          args: Prisma.DailyWordRecommendationCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.DailyWordRecommendationCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
-        }
-        delete: {
-          args: Prisma.DailyWordRecommendationDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        update: {
-          args: Prisma.DailyWordRecommendationUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        deleteMany: {
-          args: Prisma.DailyWordRecommendationDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.DailyWordRecommendationUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.DailyWordRecommendationUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>[]
-        }
-        upsert: {
-          args: Prisma.DailyWordRecommendationUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyWordRecommendationPayload>
-        }
-        aggregate: {
-          args: Prisma.DailyWordRecommendationAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyWordRecommendation>
-        }
-        groupBy: {
-          args: Prisma.DailyWordRecommendationGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DailyWordRecommendationGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.DailyWordRecommendationCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DailyWordRecommendationCountAggregateOutputType> | number
         }
       }
     }
@@ -1973,24 +1898,6 @@ export const WordContextScalarFieldEnum = {
 export type WordContextScalarFieldEnum = (typeof WordContextScalarFieldEnum)[keyof typeof WordContextScalarFieldEnum]
 
 
-export const DailyWordRecommendationScalarFieldEnum = {
-  id: 'id',
-  date: 'date',
-  word: 'word',
-  definition: 'definition',
-  pronunciation: 'pronunciation',
-  partOfSpeech: 'partOfSpeech',
-  cefrLevel: 'cefrLevel',
-  frequencyRank: 'frequencyRank',
-  articleId: 'articleId',
-  sentence: 'sentence',
-  isAdded: 'isAdded',
-  isSkipped: 'isSkipped'
-} as const
-
-export type DailyWordRecommendationScalarFieldEnum = (typeof DailyWordRecommendationScalarFieldEnum)[keyof typeof DailyWordRecommendationScalarFieldEnum]
-
-
 export const WordEmbeddingScalarFieldEnum = {
   id: 'id',
   word: 'word',
@@ -2401,7 +2308,6 @@ export type GlobalOmitConfig = {
   article?: Prisma.ArticleOmit
   readingHistory?: Prisma.ReadingHistoryOmit
   wordContext?: Prisma.WordContextOmit
-  dailyWordRecommendation?: Prisma.DailyWordRecommendationOmit
   wordEmbedding?: Prisma.WordEmbeddingOmit
   articleEmbedding?: Prisma.ArticleEmbeddingOmit
   user?: Prisma.UserOmit
