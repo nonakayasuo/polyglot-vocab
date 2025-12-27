@@ -58,6 +58,7 @@ export const ModelName = {
   WordEmbedding: 'WordEmbedding',
   ArticleEmbedding: 'ArticleEmbedding',
   User: 'User',
+  UserContentSettings: 'UserContentSettings',
   LevelAssessment: 'LevelAssessment',
   VocabularyQuestion: 'VocabularyQuestion',
   VocabularyTestResponse: 'VocabularyTestResponse',
@@ -69,7 +70,23 @@ export const ModelName = {
   UserStreak: 'UserStreak',
   Achievement: 'Achievement',
   UserAchievement: 'UserAchievement',
-  LearningActivity: 'LearningActivity'
+  LearningActivity: 'LearningActivity',
+  SlangDictionary: 'SlangDictionary',
+  BuzzWord: 'BuzzWord',
+  SlangQuestion: 'SlangQuestion',
+  SlangTestResponse: 'SlangTestResponse',
+  NewsTimeline: 'NewsTimeline',
+  MultiPerspective: 'MultiPerspective',
+  BackgroundContext: 'BackgroundContext',
+  LearningGroup: 'LearningGroup',
+  GroupMember: 'GroupMember',
+  GroupDiscussion: 'GroupDiscussion',
+  ArticleComment: 'ArticleComment',
+  DiscussionComment: 'DiscussionComment',
+  UserSlangEntry: 'UserSlangEntry',
+  SlangEntryVote: 'SlangEntryVote',
+  Notification: 'Notification',
+  ActivityFeed: 'ActivityFeed'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -103,7 +120,10 @@ export const VocabularyWordScalarFieldEnum = {
   check3: 'check3',
   displayOrder: 'displayOrder',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  register: 'register',
+  tpoAdvice: 'tpoAdvice',
+  synonyms: 'synonyms'
 } as const
 
 export type VocabularyWordScalarFieldEnum = (typeof VocabularyWordScalarFieldEnum)[keyof typeof VocabularyWordScalarFieldEnum]
@@ -122,7 +142,12 @@ export const ArticleScalarFieldEnum = {
   language: 'language',
   category: 'category',
   publishedAt: 'publishedAt',
-  cachedAt: 'cachedAt'
+  cachedAt: 'cachedAt',
+  contentType: 'contentType',
+  cefrLevel: 'cefrLevel',
+  slangLevel: 'slangLevel',
+  isAdultContent: 'isAdultContent',
+  tags: 'tags'
 } as const
 
 export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
@@ -182,11 +207,30 @@ export const UserScalarFieldEnum = {
   cefrLevel: 'cefrLevel',
   learningLanguage: 'learningLanguage',
   nativeLanguage: 'nativeLanguage',
+  slangLevel: 'slangLevel',
   weeklyXp: 'weeklyXp',
   totalXp: 'totalXp'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserContentSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  dateOfBirth: 'dateOfBirth',
+  ageVerified: 'ageVerified',
+  ageVerifiedAt: 'ageVerifiedAt',
+  adultContentEnabled: 'adultContentEnabled',
+  preferredCategories: 'preferredCategories',
+  blockedCategories: 'blockedCategories',
+  showSlang: 'showSlang',
+  showTaboo: 'showTaboo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserContentSettingsScalarFieldEnum = (typeof UserContentSettingsScalarFieldEnum)[keyof typeof UserContentSettingsScalarFieldEnum]
 
 
 export const LevelAssessmentScalarFieldEnum = {
@@ -200,7 +244,10 @@ export const LevelAssessmentScalarFieldEnum = {
   strengths: 'strengths',
   weaknesses: 'weaknesses',
   recommendations: 'recommendations',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  slangScore: 'slangScore',
+  slangLevel: 'slangLevel',
+  registerScore: 'registerScore'
 } as const
 
 export type LevelAssessmentScalarFieldEnum = (typeof LevelAssessmentScalarFieldEnum)[keyof typeof LevelAssessmentScalarFieldEnum]
@@ -368,6 +415,256 @@ export const LearningActivityScalarFieldEnum = {
 } as const
 
 export type LearningActivityScalarFieldEnum = (typeof LearningActivityScalarFieldEnum)[keyof typeof LearningActivityScalarFieldEnum]
+
+
+export const SlangDictionaryScalarFieldEnum = {
+  id: 'id',
+  word: 'word',
+  language: 'language',
+  meaning: 'meaning',
+  meaningJa: 'meaningJa',
+  register: 'register',
+  usageContext: 'usageContext',
+  examples: 'examples',
+  tpoAdvice: 'tpoAdvice',
+  synonyms: 'synonyms',
+  popularity: 'popularity',
+  isActive: 'isActive',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlangDictionaryScalarFieldEnum = (typeof SlangDictionaryScalarFieldEnum)[keyof typeof SlangDictionaryScalarFieldEnum]
+
+
+export const BuzzWordScalarFieldEnum = {
+  id: 'id',
+  word: 'word',
+  language: 'language',
+  meaning: 'meaning',
+  meaningJa: 'meaningJa',
+  source: 'source',
+  trendScore: 'trendScore',
+  category: 'category',
+  examples: 'examples',
+  firstSeen: 'firstSeen',
+  lastSeen: 'lastSeen',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BuzzWordScalarFieldEnum = (typeof BuzzWordScalarFieldEnum)[keyof typeof BuzzWordScalarFieldEnum]
+
+
+export const SlangQuestionScalarFieldEnum = {
+  id: 'id',
+  language: 'language',
+  difficulty: 'difficulty',
+  questionType: 'questionType',
+  word: 'word',
+  question: 'question',
+  options: 'options',
+  correctIndex: 'correctIndex',
+  explanation: 'explanation',
+  register: 'register',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlangQuestionScalarFieldEnum = (typeof SlangQuestionScalarFieldEnum)[keyof typeof SlangQuestionScalarFieldEnum]
+
+
+export const SlangTestResponseScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  questionId: 'questionId',
+  selectedIdx: 'selectedIdx',
+  isCorrect: 'isCorrect',
+  responseTime: 'responseTime',
+  createdAt: 'createdAt'
+} as const
+
+export type SlangTestResponseScalarFieldEnum = (typeof SlangTestResponseScalarFieldEnum)[keyof typeof SlangTestResponseScalarFieldEnum]
+
+
+export const NewsTimelineScalarFieldEnum = {
+  id: 'id',
+  topicId: 'topicId',
+  topicName: 'topicName',
+  language: 'language',
+  articleIds: 'articleIds',
+  summary: 'summary',
+  keywords: 'keywords',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NewsTimelineScalarFieldEnum = (typeof NewsTimelineScalarFieldEnum)[keyof typeof NewsTimelineScalarFieldEnum]
+
+
+export const MultiPerspectiveScalarFieldEnum = {
+  id: 'id',
+  topicId: 'topicId',
+  language: 'language',
+  sources: 'sources',
+  articleIds: 'articleIds',
+  comparison: 'comparison',
+  biasNotes: 'biasNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MultiPerspectiveScalarFieldEnum = (typeof MultiPerspectiveScalarFieldEnum)[keyof typeof MultiPerspectiveScalarFieldEnum]
+
+
+export const BackgroundContextScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  language: 'language',
+  historical: 'historical',
+  cultural: 'cultural',
+  political: 'political',
+  keyTerms: 'keyTerms',
+  relatedTopics: 'relatedTopics',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BackgroundContextScalarFieldEnum = (typeof BackgroundContextScalarFieldEnum)[keyof typeof BackgroundContextScalarFieldEnum]
+
+
+export const LearningGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  ownerId: 'ownerId',
+  isPrivate: 'isPrivate',
+  maxMembers: 'maxMembers',
+  language: 'language',
+  level: 'level',
+  tags: 'tags',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LearningGroupScalarFieldEnum = (typeof LearningGroupScalarFieldEnum)[keyof typeof LearningGroupScalarFieldEnum]
+
+
+export const GroupMemberScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  role: 'role',
+  joinedAt: 'joinedAt'
+} as const
+
+export type GroupMemberScalarFieldEnum = (typeof GroupMemberScalarFieldEnum)[keyof typeof GroupMemberScalarFieldEnum]
+
+
+export const GroupDiscussionScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  articleId: 'articleId',
+  title: 'title',
+  content: 'content',
+  authorId: 'authorId',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupDiscussionScalarFieldEnum = (typeof GroupDiscussionScalarFieldEnum)[keyof typeof GroupDiscussionScalarFieldEnum]
+
+
+export const ArticleCommentScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  userId: 'userId',
+  content: 'content',
+  parentId: 'parentId',
+  likesCount: 'likesCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArticleCommentScalarFieldEnum = (typeof ArticleCommentScalarFieldEnum)[keyof typeof ArticleCommentScalarFieldEnum]
+
+
+export const DiscussionCommentScalarFieldEnum = {
+  id: 'id',
+  discussionId: 'discussionId',
+  userId: 'userId',
+  content: 'content',
+  parentId: 'parentId',
+  likesCount: 'likesCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DiscussionCommentScalarFieldEnum = (typeof DiscussionCommentScalarFieldEnum)[keyof typeof DiscussionCommentScalarFieldEnum]
+
+
+export const UserSlangEntryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  word: 'word',
+  language: 'language',
+  meaning: 'meaning',
+  meaningJa: 'meaningJa',
+  example: 'example',
+  register: 'register',
+  source: 'source',
+  upvotes: 'upvotes',
+  downvotes: 'downvotes',
+  isApproved: 'isApproved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserSlangEntryScalarFieldEnum = (typeof UserSlangEntryScalarFieldEnum)[keyof typeof UserSlangEntryScalarFieldEnum]
+
+
+export const SlangEntryVoteScalarFieldEnum = {
+  id: 'id',
+  entryId: 'entryId',
+  userId: 'userId',
+  voteType: 'voteType',
+  createdAt: 'createdAt'
+} as const
+
+export type SlangEntryVoteScalarFieldEnum = (typeof SlangEntryVoteScalarFieldEnum)[keyof typeof SlangEntryVoteScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  data: 'data',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const ActivityFeedScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  activityType: 'activityType',
+  title: 'title',
+  description: 'description',
+  metadata: 'metadata',
+  isPublic: 'isPublic',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityFeedScalarFieldEnum = (typeof ActivityFeedScalarFieldEnum)[keyof typeof ActivityFeedScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -30,12 +30,16 @@ export type LevelAssessmentAvgAggregateOutputType = {
   vocabularyScore: number | null
   readingScore: number | null
   overallScore: number | null
+  slangScore: number | null
+  registerScore: number | null
 }
 
 export type LevelAssessmentSumAggregateOutputType = {
   vocabularyScore: number | null
   readingScore: number | null
   overallScore: number | null
+  slangScore: number | null
+  registerScore: number | null
 }
 
 export type LevelAssessmentMinAggregateOutputType = {
@@ -50,6 +54,9 @@ export type LevelAssessmentMinAggregateOutputType = {
   weaknesses: string | null
   recommendations: string | null
   completedAt: Date | null
+  slangScore: number | null
+  slangLevel: string | null
+  registerScore: number | null
 }
 
 export type LevelAssessmentMaxAggregateOutputType = {
@@ -64,6 +71,9 @@ export type LevelAssessmentMaxAggregateOutputType = {
   weaknesses: string | null
   recommendations: string | null
   completedAt: Date | null
+  slangScore: number | null
+  slangLevel: string | null
+  registerScore: number | null
 }
 
 export type LevelAssessmentCountAggregateOutputType = {
@@ -78,6 +88,9 @@ export type LevelAssessmentCountAggregateOutputType = {
   weaknesses: number
   recommendations: number
   completedAt: number
+  slangScore: number
+  slangLevel: number
+  registerScore: number
   _all: number
 }
 
@@ -86,12 +99,16 @@ export type LevelAssessmentAvgAggregateInputType = {
   vocabularyScore?: true
   readingScore?: true
   overallScore?: true
+  slangScore?: true
+  registerScore?: true
 }
 
 export type LevelAssessmentSumAggregateInputType = {
   vocabularyScore?: true
   readingScore?: true
   overallScore?: true
+  slangScore?: true
+  registerScore?: true
 }
 
 export type LevelAssessmentMinAggregateInputType = {
@@ -106,6 +123,9 @@ export type LevelAssessmentMinAggregateInputType = {
   weaknesses?: true
   recommendations?: true
   completedAt?: true
+  slangScore?: true
+  slangLevel?: true
+  registerScore?: true
 }
 
 export type LevelAssessmentMaxAggregateInputType = {
@@ -120,6 +140,9 @@ export type LevelAssessmentMaxAggregateInputType = {
   weaknesses?: true
   recommendations?: true
   completedAt?: true
+  slangScore?: true
+  slangLevel?: true
+  registerScore?: true
 }
 
 export type LevelAssessmentCountAggregateInputType = {
@@ -134,6 +157,9 @@ export type LevelAssessmentCountAggregateInputType = {
   weaknesses?: true
   recommendations?: true
   completedAt?: true
+  slangScore?: true
+  slangLevel?: true
+  registerScore?: true
   _all?: true
 }
 
@@ -235,6 +261,9 @@ export type LevelAssessmentGroupByOutputType = {
   weaknesses: string
   recommendations: string
   completedAt: Date
+  slangScore: number | null
+  slangLevel: string | null
+  registerScore: number | null
   _count: LevelAssessmentCountAggregateOutputType | null
   _avg: LevelAssessmentAvgAggregateOutputType | null
   _sum: LevelAssessmentSumAggregateOutputType | null
@@ -272,9 +301,13 @@ export type LevelAssessmentWhereInput = {
   weaknesses?: Prisma.StringFilter<"LevelAssessment"> | string
   recommendations?: Prisma.StringFilter<"LevelAssessment"> | string
   completedAt?: Prisma.DateTimeFilter<"LevelAssessment"> | Date | string
+  slangScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
+  slangLevel?: Prisma.StringNullableFilter<"LevelAssessment"> | string | null
+  registerScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vocabularyResponses?: Prisma.VocabularyTestResponseListRelationFilter
   readingResponses?: Prisma.ReadingTestResponseListRelationFilter
+  slangResponses?: Prisma.SlangTestResponseListRelationFilter
 }
 
 export type LevelAssessmentOrderByWithRelationInput = {
@@ -289,9 +322,13 @@ export type LevelAssessmentOrderByWithRelationInput = {
   weaknesses?: Prisma.SortOrder
   recommendations?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  registerScore?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   vocabularyResponses?: Prisma.VocabularyTestResponseOrderByRelationAggregateInput
   readingResponses?: Prisma.ReadingTestResponseOrderByRelationAggregateInput
+  slangResponses?: Prisma.SlangTestResponseOrderByRelationAggregateInput
 }
 
 export type LevelAssessmentWhereUniqueInput = Prisma.AtLeast<{
@@ -309,9 +346,13 @@ export type LevelAssessmentWhereUniqueInput = Prisma.AtLeast<{
   weaknesses?: Prisma.StringFilter<"LevelAssessment"> | string
   recommendations?: Prisma.StringFilter<"LevelAssessment"> | string
   completedAt?: Prisma.DateTimeFilter<"LevelAssessment"> | Date | string
+  slangScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
+  slangLevel?: Prisma.StringNullableFilter<"LevelAssessment"> | string | null
+  registerScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vocabularyResponses?: Prisma.VocabularyTestResponseListRelationFilter
   readingResponses?: Prisma.ReadingTestResponseListRelationFilter
+  slangResponses?: Prisma.SlangTestResponseListRelationFilter
 }, "id">
 
 export type LevelAssessmentOrderByWithAggregationInput = {
@@ -326,6 +367,9 @@ export type LevelAssessmentOrderByWithAggregationInput = {
   weaknesses?: Prisma.SortOrder
   recommendations?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  registerScore?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LevelAssessmentCountOrderByAggregateInput
   _avg?: Prisma.LevelAssessmentAvgOrderByAggregateInput
   _max?: Prisma.LevelAssessmentMaxOrderByAggregateInput
@@ -348,6 +392,9 @@ export type LevelAssessmentScalarWhereWithAggregatesInput = {
   weaknesses?: Prisma.StringWithAggregatesFilter<"LevelAssessment"> | string
   recommendations?: Prisma.StringWithAggregatesFilter<"LevelAssessment"> | string
   completedAt?: Prisma.DateTimeWithAggregatesFilter<"LevelAssessment"> | Date | string
+  slangScore?: Prisma.FloatNullableWithAggregatesFilter<"LevelAssessment"> | number | null
+  slangLevel?: Prisma.StringNullableWithAggregatesFilter<"LevelAssessment"> | string | null
+  registerScore?: Prisma.FloatNullableWithAggregatesFilter<"LevelAssessment"> | number | null
 }
 
 export type LevelAssessmentCreateInput = {
@@ -361,9 +408,13 @@ export type LevelAssessmentCreateInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   user: Prisma.UserCreateNestedOneWithoutLevelAssessmentsInput
   vocabularyResponses?: Prisma.VocabularyTestResponseCreateNestedManyWithoutAssessmentInput
   readingResponses?: Prisma.ReadingTestResponseCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentUncheckedCreateInput = {
@@ -378,8 +429,12 @@ export type LevelAssessmentUncheckedCreateInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
   readingResponses?: Prisma.ReadingTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentUpdateInput = {
@@ -393,9 +448,13 @@ export type LevelAssessmentUpdateInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutLevelAssessmentsNestedInput
   vocabularyResponses?: Prisma.VocabularyTestResponseUpdateManyWithoutAssessmentNestedInput
   readingResponses?: Prisma.ReadingTestResponseUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentUncheckedUpdateInput = {
@@ -410,8 +469,12 @@ export type LevelAssessmentUncheckedUpdateInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
   readingResponses?: Prisma.ReadingTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentCreateManyInput = {
@@ -426,6 +489,9 @@ export type LevelAssessmentCreateManyInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
 }
 
 export type LevelAssessmentUpdateManyMutationInput = {
@@ -439,6 +505,9 @@ export type LevelAssessmentUpdateManyMutationInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type LevelAssessmentUncheckedUpdateManyInput = {
@@ -453,6 +522,9 @@ export type LevelAssessmentUncheckedUpdateManyInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type LevelAssessmentListRelationFilter = {
@@ -477,12 +549,17 @@ export type LevelAssessmentCountOrderByAggregateInput = {
   weaknesses?: Prisma.SortOrder
   recommendations?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  registerScore?: Prisma.SortOrder
 }
 
 export type LevelAssessmentAvgOrderByAggregateInput = {
   vocabularyScore?: Prisma.SortOrder
   readingScore?: Prisma.SortOrder
   overallScore?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrder
+  registerScore?: Prisma.SortOrder
 }
 
 export type LevelAssessmentMaxOrderByAggregateInput = {
@@ -497,6 +574,9 @@ export type LevelAssessmentMaxOrderByAggregateInput = {
   weaknesses?: Prisma.SortOrder
   recommendations?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  registerScore?: Prisma.SortOrder
 }
 
 export type LevelAssessmentMinOrderByAggregateInput = {
@@ -511,12 +591,17 @@ export type LevelAssessmentMinOrderByAggregateInput = {
   weaknesses?: Prisma.SortOrder
   recommendations?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  registerScore?: Prisma.SortOrder
 }
 
 export type LevelAssessmentSumOrderByAggregateInput = {
   vocabularyScore?: Prisma.SortOrder
   readingScore?: Prisma.SortOrder
   overallScore?: Prisma.SortOrder
+  slangScore?: Prisma.SortOrder
+  registerScore?: Prisma.SortOrder
 }
 
 export type LevelAssessmentScalarRelationFilter = {
@@ -566,8 +651,8 @@ export type LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.LevelAssessmentScalarWhereInput | Prisma.LevelAssessmentScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -602,6 +687,20 @@ export type LevelAssessmentUpdateOneRequiredWithoutReadingResponsesNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.LevelAssessmentUpdateToOneWithWhereWithoutReadingResponsesInput, Prisma.LevelAssessmentUpdateWithoutReadingResponsesInput>, Prisma.LevelAssessmentUncheckedUpdateWithoutReadingResponsesInput>
 }
 
+export type LevelAssessmentCreateNestedOneWithoutSlangResponsesInput = {
+  create?: Prisma.XOR<Prisma.LevelAssessmentCreateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedCreateWithoutSlangResponsesInput>
+  connectOrCreate?: Prisma.LevelAssessmentCreateOrConnectWithoutSlangResponsesInput
+  connect?: Prisma.LevelAssessmentWhereUniqueInput
+}
+
+export type LevelAssessmentUpdateOneRequiredWithoutSlangResponsesNestedInput = {
+  create?: Prisma.XOR<Prisma.LevelAssessmentCreateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedCreateWithoutSlangResponsesInput>
+  connectOrCreate?: Prisma.LevelAssessmentCreateOrConnectWithoutSlangResponsesInput
+  upsert?: Prisma.LevelAssessmentUpsertWithoutSlangResponsesInput
+  connect?: Prisma.LevelAssessmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LevelAssessmentUpdateToOneWithWhereWithoutSlangResponsesInput, Prisma.LevelAssessmentUpdateWithoutSlangResponsesInput>, Prisma.LevelAssessmentUncheckedUpdateWithoutSlangResponsesInput>
+}
+
 export type LevelAssessmentCreateWithoutUserInput = {
   id?: string
   language?: string
@@ -613,8 +712,12 @@ export type LevelAssessmentCreateWithoutUserInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseCreateNestedManyWithoutAssessmentInput
   readingResponses?: Prisma.ReadingTestResponseCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentUncheckedCreateWithoutUserInput = {
@@ -628,8 +731,12 @@ export type LevelAssessmentUncheckedCreateWithoutUserInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
   readingResponses?: Prisma.ReadingTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentCreateOrConnectWithoutUserInput = {
@@ -673,6 +780,9 @@ export type LevelAssessmentScalarWhereInput = {
   weaknesses?: Prisma.StringFilter<"LevelAssessment"> | string
   recommendations?: Prisma.StringFilter<"LevelAssessment"> | string
   completedAt?: Prisma.DateTimeFilter<"LevelAssessment"> | Date | string
+  slangScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
+  slangLevel?: Prisma.StringNullableFilter<"LevelAssessment"> | string | null
+  registerScore?: Prisma.FloatNullableFilter<"LevelAssessment"> | number | null
 }
 
 export type LevelAssessmentCreateWithoutVocabularyResponsesInput = {
@@ -686,8 +796,12 @@ export type LevelAssessmentCreateWithoutVocabularyResponsesInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   user: Prisma.UserCreateNestedOneWithoutLevelAssessmentsInput
   readingResponses?: Prisma.ReadingTestResponseCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentUncheckedCreateWithoutVocabularyResponsesInput = {
@@ -702,7 +816,11 @@ export type LevelAssessmentUncheckedCreateWithoutVocabularyResponsesInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   readingResponses?: Prisma.ReadingTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentCreateOrConnectWithoutVocabularyResponsesInput = {
@@ -732,8 +850,12 @@ export type LevelAssessmentUpdateWithoutVocabularyResponsesInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutLevelAssessmentsNestedInput
   readingResponses?: Prisma.ReadingTestResponseUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentUncheckedUpdateWithoutVocabularyResponsesInput = {
@@ -748,7 +870,11 @@ export type LevelAssessmentUncheckedUpdateWithoutVocabularyResponsesInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   readingResponses?: Prisma.ReadingTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentCreateWithoutReadingResponsesInput = {
@@ -762,8 +888,12 @@ export type LevelAssessmentCreateWithoutReadingResponsesInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   user: Prisma.UserCreateNestedOneWithoutLevelAssessmentsInput
   vocabularyResponses?: Prisma.VocabularyTestResponseCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentUncheckedCreateWithoutReadingResponsesInput = {
@@ -778,7 +908,11 @@ export type LevelAssessmentUncheckedCreateWithoutReadingResponsesInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
 }
 
 export type LevelAssessmentCreateOrConnectWithoutReadingResponsesInput = {
@@ -808,8 +942,12 @@ export type LevelAssessmentUpdateWithoutReadingResponsesInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutLevelAssessmentsNestedInput
   vocabularyResponses?: Prisma.VocabularyTestResponseUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentUncheckedUpdateWithoutReadingResponsesInput = {
@@ -824,7 +962,103 @@ export type LevelAssessmentUncheckedUpdateWithoutReadingResponsesInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+}
+
+export type LevelAssessmentCreateWithoutSlangResponsesInput = {
+  id?: string
+  language?: string
+  cefrLevel: string
+  vocabularyScore: number
+  readingScore: number
+  overallScore: number
+  strengths?: string
+  weaknesses?: string
+  recommendations?: string
+  completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
+  user: Prisma.UserCreateNestedOneWithoutLevelAssessmentsInput
+  vocabularyResponses?: Prisma.VocabularyTestResponseCreateNestedManyWithoutAssessmentInput
+  readingResponses?: Prisma.ReadingTestResponseCreateNestedManyWithoutAssessmentInput
+}
+
+export type LevelAssessmentUncheckedCreateWithoutSlangResponsesInput = {
+  id?: string
+  userId: string
+  language?: string
+  cefrLevel: string
+  vocabularyScore: number
+  readingScore: number
+  overallScore: number
+  strengths?: string
+  weaknesses?: string
+  recommendations?: string
+  completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
+  vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+  readingResponses?: Prisma.ReadingTestResponseUncheckedCreateNestedManyWithoutAssessmentInput
+}
+
+export type LevelAssessmentCreateOrConnectWithoutSlangResponsesInput = {
+  where: Prisma.LevelAssessmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.LevelAssessmentCreateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedCreateWithoutSlangResponsesInput>
+}
+
+export type LevelAssessmentUpsertWithoutSlangResponsesInput = {
+  update: Prisma.XOR<Prisma.LevelAssessmentUpdateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedUpdateWithoutSlangResponsesInput>
+  create: Prisma.XOR<Prisma.LevelAssessmentCreateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedCreateWithoutSlangResponsesInput>
+  where?: Prisma.LevelAssessmentWhereInput
+}
+
+export type LevelAssessmentUpdateToOneWithWhereWithoutSlangResponsesInput = {
+  where?: Prisma.LevelAssessmentWhereInput
+  data: Prisma.XOR<Prisma.LevelAssessmentUpdateWithoutSlangResponsesInput, Prisma.LevelAssessmentUncheckedUpdateWithoutSlangResponsesInput>
+}
+
+export type LevelAssessmentUpdateWithoutSlangResponsesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.StringFieldUpdateOperationsInput | string
+  vocabularyScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  readingScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  overallScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  strengths?: Prisma.StringFieldUpdateOperationsInput | string
+  weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
+  recommendations?: Prisma.StringFieldUpdateOperationsInput | string
+  completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutLevelAssessmentsNestedInput
+  vocabularyResponses?: Prisma.VocabularyTestResponseUpdateManyWithoutAssessmentNestedInput
+  readingResponses?: Prisma.ReadingTestResponseUpdateManyWithoutAssessmentNestedInput
+}
+
+export type LevelAssessmentUncheckedUpdateWithoutSlangResponsesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.StringFieldUpdateOperationsInput | string
+  vocabularyScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  readingScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  overallScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  strengths?: Prisma.StringFieldUpdateOperationsInput | string
+  weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
+  recommendations?: Prisma.StringFieldUpdateOperationsInput | string
+  completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+  readingResponses?: Prisma.ReadingTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentCreateManyUserInput = {
@@ -838,6 +1072,9 @@ export type LevelAssessmentCreateManyUserInput = {
   weaknesses?: string
   recommendations?: string
   completedAt?: Date | string
+  slangScore?: number | null
+  slangLevel?: string | null
+  registerScore?: number | null
 }
 
 export type LevelAssessmentUpdateWithoutUserInput = {
@@ -851,8 +1088,12 @@ export type LevelAssessmentUpdateWithoutUserInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUpdateManyWithoutAssessmentNestedInput
   readingResponses?: Prisma.ReadingTestResponseUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentUncheckedUpdateWithoutUserInput = {
@@ -866,8 +1107,12 @@ export type LevelAssessmentUncheckedUpdateWithoutUserInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vocabularyResponses?: Prisma.VocabularyTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
   readingResponses?: Prisma.ReadingTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
+  slangResponses?: Prisma.SlangTestResponseUncheckedUpdateManyWithoutAssessmentNestedInput
 }
 
 export type LevelAssessmentUncheckedUpdateManyWithoutUserInput = {
@@ -881,6 +1126,9 @@ export type LevelAssessmentUncheckedUpdateManyWithoutUserInput = {
   weaknesses?: Prisma.StringFieldUpdateOperationsInput | string
   recommendations?: Prisma.StringFieldUpdateOperationsInput | string
   completedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slangScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registerScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -891,11 +1139,13 @@ export type LevelAssessmentUncheckedUpdateManyWithoutUserInput = {
 export type LevelAssessmentCountOutputType = {
   vocabularyResponses: number
   readingResponses: number
+  slangResponses: number
 }
 
 export type LevelAssessmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vocabularyResponses?: boolean | LevelAssessmentCountOutputTypeCountVocabularyResponsesArgs
   readingResponses?: boolean | LevelAssessmentCountOutputTypeCountReadingResponsesArgs
+  slangResponses?: boolean | LevelAssessmentCountOutputTypeCountSlangResponsesArgs
 }
 
 /**
@@ -922,6 +1172,13 @@ export type LevelAssessmentCountOutputTypeCountReadingResponsesArgs<ExtArgs exte
   where?: Prisma.ReadingTestResponseWhereInput
 }
 
+/**
+ * LevelAssessmentCountOutputType without action
+ */
+export type LevelAssessmentCountOutputTypeCountSlangResponsesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SlangTestResponseWhereInput
+}
+
 
 export type LevelAssessmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -935,9 +1192,13 @@ export type LevelAssessmentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   weaknesses?: boolean
   recommendations?: boolean
   completedAt?: boolean
+  slangScore?: boolean
+  slangLevel?: boolean
+  registerScore?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vocabularyResponses?: boolean | Prisma.LevelAssessment$vocabularyResponsesArgs<ExtArgs>
   readingResponses?: boolean | Prisma.LevelAssessment$readingResponsesArgs<ExtArgs>
+  slangResponses?: boolean | Prisma.LevelAssessment$slangResponsesArgs<ExtArgs>
   _count?: boolean | Prisma.LevelAssessmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelAssessment"]>
 
@@ -953,6 +1214,9 @@ export type LevelAssessmentSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   weaknesses?: boolean
   recommendations?: boolean
   completedAt?: boolean
+  slangScore?: boolean
+  slangLevel?: boolean
+  registerScore?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelAssessment"]>
 
@@ -968,6 +1232,9 @@ export type LevelAssessmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   weaknesses?: boolean
   recommendations?: boolean
   completedAt?: boolean
+  slangScore?: boolean
+  slangLevel?: boolean
+  registerScore?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["levelAssessment"]>
 
@@ -983,13 +1250,17 @@ export type LevelAssessmentSelectScalar = {
   weaknesses?: boolean
   recommendations?: boolean
   completedAt?: boolean
+  slangScore?: boolean
+  slangLevel?: boolean
+  registerScore?: boolean
 }
 
-export type LevelAssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "language" | "cefrLevel" | "vocabularyScore" | "readingScore" | "overallScore" | "strengths" | "weaknesses" | "recommendations" | "completedAt", ExtArgs["result"]["levelAssessment"]>
+export type LevelAssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "language" | "cefrLevel" | "vocabularyScore" | "readingScore" | "overallScore" | "strengths" | "weaknesses" | "recommendations" | "completedAt" | "slangScore" | "slangLevel" | "registerScore", ExtArgs["result"]["levelAssessment"]>
 export type LevelAssessmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vocabularyResponses?: boolean | Prisma.LevelAssessment$vocabularyResponsesArgs<ExtArgs>
   readingResponses?: boolean | Prisma.LevelAssessment$readingResponsesArgs<ExtArgs>
+  slangResponses?: boolean | Prisma.LevelAssessment$slangResponsesArgs<ExtArgs>
   _count?: boolean | Prisma.LevelAssessmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LevelAssessmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1005,6 +1276,7 @@ export type $LevelAssessmentPayload<ExtArgs extends runtime.Types.Extensions.Int
     user: Prisma.$UserPayload<ExtArgs>
     vocabularyResponses: Prisma.$VocabularyTestResponsePayload<ExtArgs>[]
     readingResponses: Prisma.$ReadingTestResponsePayload<ExtArgs>[]
+    slangResponses: Prisma.$SlangTestResponsePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1018,6 +1290,9 @@ export type $LevelAssessmentPayload<ExtArgs extends runtime.Types.Extensions.Int
     weaknesses: string
     recommendations: string
     completedAt: Date
+    slangScore: number | null
+    slangLevel: string | null
+    registerScore: number | null
   }, ExtArgs["result"]["levelAssessment"]>
   composites: {}
 }
@@ -1415,6 +1690,7 @@ export interface Prisma__LevelAssessmentClient<T, Null = never, ExtArgs extends 
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   vocabularyResponses<T extends Prisma.LevelAssessment$vocabularyResponsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelAssessment$vocabularyResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VocabularyTestResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   readingResponses<T extends Prisma.LevelAssessment$readingResponsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelAssessment$readingResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReadingTestResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  slangResponses<T extends Prisma.LevelAssessment$slangResponsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LevelAssessment$slangResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SlangTestResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1455,6 +1731,9 @@ export interface LevelAssessmentFieldRefs {
   readonly weaknesses: Prisma.FieldRef<"LevelAssessment", 'String'>
   readonly recommendations: Prisma.FieldRef<"LevelAssessment", 'String'>
   readonly completedAt: Prisma.FieldRef<"LevelAssessment", 'DateTime'>
+  readonly slangScore: Prisma.FieldRef<"LevelAssessment", 'Float'>
+  readonly slangLevel: Prisma.FieldRef<"LevelAssessment", 'String'>
+  readonly registerScore: Prisma.FieldRef<"LevelAssessment", 'Float'>
 }
     
 
@@ -1896,6 +2175,30 @@ export type LevelAssessment$readingResponsesArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.ReadingTestResponseScalarFieldEnum | Prisma.ReadingTestResponseScalarFieldEnum[]
+}
+
+/**
+ * LevelAssessment.slangResponses
+ */
+export type LevelAssessment$slangResponsesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SlangTestResponse
+   */
+  select?: Prisma.SlangTestResponseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SlangTestResponse
+   */
+  omit?: Prisma.SlangTestResponseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SlangTestResponseInclude<ExtArgs> | null
+  where?: Prisma.SlangTestResponseWhereInput
+  orderBy?: Prisma.SlangTestResponseOrderByWithRelationInput | Prisma.SlangTestResponseOrderByWithRelationInput[]
+  cursor?: Prisma.SlangTestResponseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SlangTestResponseScalarFieldEnum | Prisma.SlangTestResponseScalarFieldEnum[]
 }
 
 /**

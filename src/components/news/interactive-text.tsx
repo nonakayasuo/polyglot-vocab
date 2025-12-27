@@ -1,6 +1,15 @@
 "use client";
 
-import { Loader2, Plus, Sparkles, Volume2, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Flame,
+  Loader2,
+  MessageSquare,
+  Plus,
+  Sparkles,
+  Volume2,
+  X,
+} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { speak } from "@/lib/tts";
 import type { CEFRLevel } from "@/lib/word-difficulty";
@@ -10,12 +19,18 @@ import { getCEFRLevel } from "@/lib/word-difficulty";
 // 型定義
 // ========================================
 
+// レジスター（フォーマル度）の型
+type Register = "FORMAL" | "NEUTRAL" | "CASUAL" | "SLANG" | "TABOO";
+
 interface WordDefinition {
   word: string;
   phonetic?: string;
   partOfSpeech?: string;
   definition?: string;
   examples?: string[];
+  register?: Register;
+  tpoAdvice?: string;
+  synonyms?: Array<{ word: string; register: Register }>;
 }
 
 interface WordPopoverState {
@@ -34,7 +49,140 @@ interface InteractiveTextProps {
   articleSource?: string;
   articleId?: string;
   onWordAdded?: (word: string) => void;
+  showRegister?: boolean; // レジスター表示を有効化
+  showSlang?: boolean; // スラング表示
+  showTaboo?: boolean; // タブー表現表示（18+）
 }
+
+// ========================================
+// レジスター関連の設定
+// ========================================
+
+const REGISTER_STYLES: Record<
+  Register,
+  { bg: string; border: string; text: string; icon: string }
+> = {
+  FORMAL: {
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+    text: "text-blue-700",
+    icon: "💼",
+  },
+  NEUTRAL: {
+    bg: "bg-gray-50",
+    border: "border-gray-200",
+    text: "text-gray-700",
+    icon: "💬",
+  },
+  CASUAL: {
+    bg: "bg-green-50",
+    border: "border-green-200",
+    text: "text-green-700",
+    icon: "🗣️",
+  },
+  SLANG: {
+    bg: "bg-orange-50",
+    border: "border-orange-200",
+    text: "text-orange-700",
+    icon: "🔥",
+  },
+  TABOO: {
+    bg: "bg-red-50",
+    border: "border-red-200",
+    text: "text-red-700",
+    icon: "🔞",
+  },
+};
+
+const REGISTER_LABELS: Record<Register, { en: string; ja: string }> = {
+  FORMAL: { en: "Formal", ja: "フォーマル" },
+  NEUTRAL: { en: "Neutral", ja: "一般的" },
+  CASUAL: { en: "Casual", ja: "カジュアル" },
+  SLANG: { en: "Slang", ja: "スラング" },
+  TABOO: { en: "Taboo", ja: "タブー表現" },
+};
+
+// スラング単語のサンプルデータ（実際はAPIから取得）
+const SLANG_DICTIONARY: Record<
+  string,
+  {
+    register: Register;
+    meaning: string;
+    tpoAdvice: string;
+    synonyms: Array<{ word: string; register: Register }>;
+  }
+> = {
+  slay: {
+    register: "SLANG",
+    meaning: "圧倒的に素晴らしいパフォーマンスをする",
+    tpoAdvice: "SNS、友人との会話で使用。ビジネスシーンでは避ける",
+    synonyms: [
+      { word: "excel", register: "FORMAL" },
+      { word: "do great", register: "NEUTRAL" },
+      { word: "kill it", register: "CASUAL" },
+      { word: "crush it", register: "SLANG" },
+    ],
+  },
+  lit: {
+    register: "SLANG",
+    meaning: "最高に楽しい、盛り上がっている",
+    tpoAdvice: "若者同士の会話、パーティーの話題で使用",
+    synonyms: [
+      { word: "exciting", register: "FORMAL" },
+      { word: "fun", register: "NEUTRAL" },
+      { word: "awesome", register: "CASUAL" },
+      { word: "fire", register: "SLANG" },
+    ],
+  },
+  sus: {
+    register: "SLANG",
+    meaning: "怪しい、疑わしい",
+    tpoAdvice: "カジュアルな会話、ゲーム中で使用。Among Usから広まった表現",
+    synonyms: [
+      { word: "suspicious", register: "FORMAL" },
+      { word: "sketchy", register: "CASUAL" },
+      { word: "fishy", register: "CASUAL" },
+    ],
+  },
+  ghosting: {
+    register: "SLANG",
+    meaning: "突然連絡を絶つこと",
+    tpoAdvice: "恋愛やデートの話題で使用。ビジネスでも使われることがある",
+    synonyms: [
+      { word: "ignoring", register: "NEUTRAL" },
+      { word: "disappearing", register: "NEUTRAL" },
+    ],
+  },
+  flex: {
+    register: "SLANG",
+    meaning: "自慢する、見せびらかす",
+    tpoAdvice: "SNS、カジュアルな会話で使用",
+    synonyms: [
+      { word: "show off", register: "NEUTRAL" },
+      { word: "boast", register: "FORMAL" },
+      { word: "brag", register: "CASUAL" },
+    ],
+  },
+  lowkey: {
+    register: "SLANG",
+    meaning: "ちょっと、密かに、控えめに",
+    tpoAdvice: "若者同士の会話、SNSで使用",
+    synonyms: [
+      { word: "somewhat", register: "FORMAL" },
+      { word: "kind of", register: "NEUTRAL" },
+      { word: "secretly", register: "NEUTRAL" },
+    ],
+  },
+  goat: {
+    register: "SLANG",
+    meaning: "史上最高の人物（Greatest Of All Time）",
+    tpoAdvice: "スポーツ、音楽、エンタメの話題で使用",
+    synonyms: [
+      { word: "the best", register: "NEUTRAL" },
+      { word: "legendary", register: "FORMAL" },
+    ],
+  },
+};
 
 // ========================================
 // CEFRレベルに応じたスタイル
@@ -84,10 +232,19 @@ export function InteractiveText({
   articleSource,
   articleId,
   onWordAdded,
+  showRegister = true,
+  showSlang = true,
+  showTaboo = false,
 }: InteractiveTextProps) {
   const [popover, setPopover] = useState<WordPopoverState | null>(null);
   const [addingWord, setAddingWord] = useState(false);
   const [addedWords, setAddedWords] = useState<Set<string>>(new Set());
+
+  // スラング単語かどうかをチェック
+  const getSlangInfo = useCallback((word: string) => {
+    const cleanWord = word.toLowerCase().replace(/[^a-zA-Z'-]/g, "");
+    return SLANG_DICTIONARY[cleanWord] || null;
+  }, []);
 
   // テキストを単語に分割
   const tokens = useMemo(() => {
@@ -101,6 +258,9 @@ export function InteractiveText({
       const cleanWord = word.replace(/[^a-zA-Z'-]/g, "").toLowerCase();
 
       if (!cleanWord || cleanWord.length < 2) return;
+
+      // スラング情報をチェック
+      const slangInfo = getSlangInfo(cleanWord);
 
       setPopover({
         word: cleanWord,
@@ -134,20 +294,42 @@ export function InteractiveText({
                     word: entry.word,
                     phonetic: entry.phonetic || entry.phonetics?.[0]?.text,
                     partOfSpeech: meaning?.partOfSpeech,
-                    definition: meaning?.definitions?.[0]?.definition,
+                    definition:
+                      slangInfo?.meaning ||
+                      meaning?.definitions?.[0]?.definition,
                     examples,
+                    register: slangInfo?.register || "NEUTRAL",
+                    tpoAdvice: slangInfo?.tpoAdvice,
+                    synonyms: slangInfo?.synonyms,
                   },
                 }
               : null,
           );
         } else {
-          setPopover((prev) => (prev ? { ...prev, loading: false } : null));
+          // APIが失敗してもスラング情報があれば表示
+          setPopover((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  loading: false,
+                  definition: slangInfo
+                    ? {
+                        word: cleanWord,
+                        definition: slangInfo.meaning,
+                        register: slangInfo.register,
+                        tpoAdvice: slangInfo.tpoAdvice,
+                        synonyms: slangInfo.synonyms,
+                      }
+                    : undefined,
+                }
+              : null,
+          );
         }
       } catch {
         setPopover((prev) => (prev ? { ...prev, loading: false } : null));
       }
     },
-    [],
+    [getSlangInfo],
   );
 
   // ポップオーバーを閉じる
@@ -337,6 +519,28 @@ export function InteractiveText({
                   )}
                 </div>
 
+                {/* レジスターバッジ */}
+                {showRegister && popover.definition?.register && (
+                  <div className="flex items-center gap-2 mb-3">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded ${
+                        REGISTER_STYLES[popover.definition.register].bg
+                      } ${REGISTER_STYLES[popover.definition.register].text}`}
+                    >
+                      <span>
+                        {REGISTER_STYLES[popover.definition.register].icon}
+                      </span>
+                      {REGISTER_LABELS[popover.definition.register].ja}
+                    </span>
+                    {popover.definition.register === "SLANG" && (
+                      <Flame className="w-4 h-4 text-orange-500" />
+                    )}
+                    {popover.definition.register === "TABOO" && (
+                      <AlertTriangle className="w-4 h-4 text-red-500" />
+                    )}
+                  </div>
+                )}
+
                 {/* 発音 */}
                 {popover.definition?.phonetic && (
                   <p className="text-gray-500 font-mono text-sm mb-2">
@@ -361,6 +565,56 @@ export function InteractiveText({
                     定義が見つかりませんでした
                   </p>
                 )}
+
+                {/* TPOアドバイス */}
+                {showRegister && popover.definition?.tpoAdvice && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">
+                    <div className="flex items-start gap-2">
+                      <MessageSquare className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-amber-800 mb-1">
+                          使用場面
+                        </p>
+                        <p className="text-xs text-amber-700">
+                          {popover.definition.tpoAdvice}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 類語レジスターマップ */}
+                {showRegister &&
+                  popover.definition?.synonyms &&
+                  popover.definition.synonyms.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <p className="text-xs text-gray-500 mb-2">
+                        📊 レジスター別の類語:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {popover.definition.synonyms
+                          .filter((s) => {
+                            if (s.register === "TABOO" && !showTaboo)
+                              return false;
+                            if (s.register === "SLANG" && !showSlang)
+                              return false;
+                            return true;
+                          })
+                          .map((syn, idx) => (
+                            <span
+                              // biome-ignore lint/suspicious/noArrayIndexKey: synonyms are unique
+                              key={idx}
+                              className={`px-2 py-0.5 text-xs rounded ${
+                                REGISTER_STYLES[syn.register].bg
+                              } ${REGISTER_STYLES[syn.register].text}`}
+                              title={REGISTER_LABELS[syn.register].ja}
+                            >
+                              {REGISTER_STYLES[syn.register].icon} {syn.word}
+                            </span>
+                          ))}
+                      </div>
+                    </div>
+                  )}
 
                 {/* 例文 */}
                 {popover.definition?.examples &&

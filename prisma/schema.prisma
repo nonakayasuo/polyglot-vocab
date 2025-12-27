@@ -29,12 +29,18 @@ model VocabularyWord {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
+  // レジスター情報（v2.0 新規）
+  register           String   @default("NEUTRAL") // FORMAL, NEUTRAL, CASUAL, SLANG, TABOO
+  tpoAdvice          String   @default("") // 使用場面アドバイス
+  synonyms           String   @default("[]") // JSON: レジスター違いの類語
+
   // 単語コンテキスト（どの記事から学んだか）
   contexts WordContext[]
 
   @@index([language])
   @@index([createdAt])
   @@index([displayOrder])
+  @@index([register])
 }
 
 // キャッシュされたニュース記事
@@ -54,6 +60,13 @@ model Article {
   publishedAt DateTime
   cachedAt    DateTime @default(now())
 
+  // v2.0 新規フィールド
+  contentType    String   @default("news") // news, entertainment, gossip, sports, tech, culture
+  cefrLevel      String?  // 記事のCEFRレベル
+  slangLevel     Float    @default(0) // スラング含有度 0-1
+  isAdultContent Boolean  @default(false) // 18+コンテンツフラグ
+  tags           String   @default("[]") // JSON: タグ配列
+
   // リレーション
   readingHistory ReadingHistory[]
   wordContexts   WordContext[]
@@ -62,6 +75,8 @@ model Article {
   @@index([source])
   @@index([publishedAt])
   @@index([cachedAt])
+  @@index([contentType])
+  @@index([isAdultContent])
 }
 
 // 読書履歴
@@ -134,6 +149,7 @@ model User {
 
   // レベル判定関連
   levelAssessments LevelAssessment[]
+  slangLevel       String?   // スラング理解度レベル: NONE, BASIC, INTERMEDIATE, ADVANCED, NATIVE
 
   // ゲーミフィケーション関連
   streak           UserStreak?
@@ -141,8 +157,44 @@ model User {
   weeklyXp         Int       @default(0) // 週間XP（ランキング用）
   totalXp          Int       @default(0) // 累計XP
 
+  // コンテンツ設定関連
+  contentSettings  UserContentSettings?
+
   @@unique([email])
   @@map("user")
+}
+
+// ========================================
+// ユーザーコンテンツ設定（v2.0 新規）
+// ========================================
+
+// ユーザーの18+コンテンツ設定
+model UserContentSettings {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 年齢確認
+  dateOfBirth          DateTime?
+  ageVerified          Boolean  @default(false)
+  ageVerifiedAt        DateTime?
+  
+  // 18+コンテンツ設定
+  adultContentEnabled  Boolean  @default(false)
+  
+  // コンテンツフィルター
+  preferredCategories  String   @default("[]") // JSON: ["news", "entertainment", "sports"]
+  blockedCategories    String   @default("[]") // JSON: カテゴリをブロック
+  
+  // レジスター設定
+  showSlang            Boolean  @default(true)  // スラング表示
+  showTaboo            Boolean  @default(false) // タブー表現表示（18+必須）
+  
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([userId])
+  @@map("user_content_settings")
 }
 
 // ========================================
@@ -164,9 +216,15 @@ model LevelAssessment {
   recommendations String   @default("") // JSON: 学習推奨
   completedAt     DateTime @default(now())
 
+  // スラング理解度（v2.0 新規）
+  slangScore      Float?   // スラング理解度スコア (0-100)
+  slangLevel      String?  // NONE, BASIC, INTERMEDIATE, ADVANCED, NATIVE
+  registerScore   Float?   // レジスター識別スコア (0-100)
+
   // テスト詳細
   vocabularyResponses VocabularyTestResponse[]
   readingResponses    ReadingTestResponse[]
+  slangResponses      SlangTestResponse[]
 
   @@index([userId])
   @@index([language])
@@ -375,4 +433,347 @@ model LearningActivity {
   @@index([activityType])
   @@index([createdAt])
   @@map("learning_activity")
+}
+
+// ========================================
+// スラング・レジスター学習システム（v2.0 新規）
+// ========================================
+
+// 語彙レジスター（フォーマル度）
+enum Register {
+  FORMAL      // フォーマル（ビジネス、学術）
+  NEUTRAL     // ニュートラル（日常会話）
+  CASUAL      // カジュアル（友人との会話）
+  SLANG       // スラング（SNS、若者言葉）
+  TABOO       // タブー（18+、使用注意）
+}
+
+// スラング辞書
+model SlangDictionary {
+  id            String     @id @default(cuid())
+  word          String
+  language      String     @default("english")
+  meaning       String     // 意味
+  meaningJa     String     @default("") // 日本語訳
+  register      Register   @default(SLANG)
+  usageContext  String     @default("[]") // JSON: 使用場面 ["SNS", "友人", "若者"]
+  examples      String     @default("[]") // JSON: 例文配列
+  tpoAdvice     String     @default("") // TPO（時・場所・場合）アドバイス
+  synonyms      String     @default("[]") // JSON: 類語配列（レジスター違いの同義語）
+  popularity    Float      @default(0.5) // 人気度 0-1
+  isActive      Boolean    @default(true)
+  source        String?    // 出典（Urban Dictionary等）
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([word, language])
+  @@index([language])
+  @@index([register])
+  @@index([popularity])
+  @@map("slang_dictionary")
+}
+
+// SNSバズワード（リアルタイムトレンド）
+model BuzzWord {
+  id           String   @id @default(cuid())
+  word         String
+  language     String   @default("english")
+  meaning      String
+  meaningJa    String   @default("") // 日本語訳
+  source       String   // TWITTER, REDDIT, TIKTOK
+  trendScore   Float    @default(0) // トレンドスコア 0-100
+  category     String?  // カテゴリ（褒め言葉、強調、ミーム等）
+  examples     String   @default("[]") // JSON: 使用例
+  firstSeen    DateTime @default(now())
+  lastSeen     DateTime @default(now())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([word, language, source])
+  @@index([language])
+  @@index([source])
+  @@index([trendScore])
+  @@index([lastSeen])
+  @@map("buzz_word")
+}
+
+// スラング理解度テスト問題
+model SlangQuestion {
+  id           String   @id @default(cuid())
+  language     String   @default("english")
+  difficulty   String   // BASIC, INTERMEDIATE, ADVANCED, NATIVE
+  questionType String   // "meaning", "context", "register", "tpo"
+  word         String
+  question     String   // 問題文
+  options      String   // JSON: 選択肢配列
+  correctIndex Int      // 正解のインデックス
+  explanation  String   @default("") // 解説
+  register     Register @default(SLANG)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  responses SlangTestResponse[]
+
+  @@index([language, difficulty])
+  @@index([register])
+  @@index([isActive])
+  @@map("slang_question")
+}
+
+// スラングテスト回答
+model SlangTestResponse {
+  id           String        @id @default(cuid())
+  assessmentId String
+  assessment   LevelAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     SlangQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedIdx  Int           // 選択した回答のインデックス
+  isCorrect    Boolean
+  responseTime Int?          // 回答時間（ミリ秒）
+  createdAt    DateTime      @default(now())
+
+  @@index([assessmentId])
+  @@index([questionId])
+  @@map("slang_test_response")
+}
+
+// ========================================
+// Deep News Integration（v2.0 新規）
+// ========================================
+
+// ニュースタイムライン（トピックの時系列変化）
+model NewsTimeline {
+  id          String   @id @default(cuid())
+  topicId     String   @unique // トピック識別子
+  topicName   String   // トピック名
+  language    String   @default("english")
+  articleIds  String   @default("[]") // JSON: 関連記事ID配列（時系列順）
+  summary     String   @default("") // AI生成のタイムライン要約
+  keywords    String   @default("[]") // JSON: 関連キーワード
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([language])
+  @@index([topicName])
+  @@map("news_timeline")
+}
+
+// 多視点比較（同トピック複数ソース）
+model MultiPerspective {
+  id          String   @id @default(cuid())
+  topicId     String   // トピック識別子
+  language    String   @default("english")
+  sources     String   @default("[]") // JSON: ソース配列 ["BBC", "CNN", "Al Jazeera"]
+  articleIds  String   @default("[]") // JSON: 各ソースの記事ID
+  comparison  String   @default("") // AI生成の比較分析
+  biasNotes   String   @default("") // バイアス分析メモ
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([topicId])
+  @@index([language])
+  @@map("multi_perspective")
+}
+
+// 背景コンテキスト（AI生成）
+model BackgroundContext {
+  id          String   @id @default(cuid())
+  articleId   String   @unique
+  language    String   @default("english")
+  historical  String   @default("") // 歴史的背景
+  cultural    String   @default("") // 文化的背景
+  political   String   @default("") // 政治的背景
+  keyTerms    String   @default("[]") // JSON: 重要用語解説
+  relatedTopics String @default("[]") // JSON: 関連トピック
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([articleId])
+  @@map("background_context")
+}
+
+// ========================================
+// Phase 4: コミュニティ機能（新規）
+// ========================================
+
+// 学習グループ
+model LearningGroup {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  imageUrl    String?
+  ownerId     String
+  isPrivate   Boolean  @default(false)
+  maxMembers  Int      @default(50)
+  language    String   @default("english")
+  level       String?  // 推奨CEFRレベル
+  tags        String   @default("[]") // JSON: グループタグ
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     GroupMember[]
+  discussions GroupDiscussion[]
+
+  @@index([ownerId])
+  @@index([language])
+  @@index([isPrivate])
+  @@map("learning_group")
+}
+
+// グループメンバー
+model GroupMember {
+  id        String   @id @default(cuid())
+  groupId   String
+  group     LearningGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId    String
+  role      String   @default("member") // owner, admin, member
+  joinedAt  DateTime @default(now())
+  
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+  @@map("group_member")
+}
+
+// グループディスカッション（記事ベース）
+model GroupDiscussion {
+  id        String   @id @default(cuid())
+  groupId   String
+  group     LearningGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  articleId String?  // 記事に関連したディスカッション
+  title     String
+  content   String
+  authorId  String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comments DiscussionComment[]
+
+  @@index([groupId])
+  @@index([articleId])
+  @@index([authorId])
+  @@map("group_discussion")
+}
+
+// 記事コメント（ディスカッション）
+model ArticleComment {
+  id          String   @id @default(cuid())
+  articleId   String
+  userId      String
+  content     String
+  parentId    String?  // 返信の場合、親コメントID
+  likesCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 自己参照リレーション
+  parent      ArticleComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     ArticleComment[] @relation("CommentReplies")
+
+  @@index([articleId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([createdAt])
+  @@map("article_comment")
+}
+
+// ディスカッションコメント
+model DiscussionComment {
+  id           String   @id @default(cuid())
+  discussionId String
+  discussion   GroupDiscussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  userId       String
+  content      String
+  parentId     String?
+  likesCount   Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  parent       DiscussionComment?  @relation("DiscussionReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      DiscussionComment[] @relation("DiscussionReplies")
+
+  @@index([discussionId])
+  @@index([userId])
+  @@index([parentId])
+  @@map("discussion_comment")
+}
+
+// ユーザー投稿スラング辞書
+model UserSlangEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  word        String
+  language    String   @default("english")
+  meaning     String
+  meaningJa   String   @default("")
+  example     String   @default("")
+  register    String   @default("SLANG") // CASUAL, SLANG, TABOO
+  source      String?  // どこで聞いた/見た
+  upvotes     Int      @default(0)
+  downvotes   Int      @default(0)
+  isApproved  Boolean  @default(false) // モデレーション済み
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  votes       SlangEntryVote[]
+
+  @@unique([word, language, userId])
+  @@index([language])
+  @@index([userId])
+  @@index([isApproved])
+  @@index([upvotes])
+  @@map("user_slang_entry")
+}
+
+// スラングエントリーへの投票
+model SlangEntryVote {
+  id        String   @id @default(cuid())
+  entryId   String
+  entry     UserSlangEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  userId    String
+  voteType  String   // upvote, downvote
+  createdAt DateTime @default(now())
+
+  @@unique([entryId, userId])
+  @@index([entryId])
+  @@index([userId])
+  @@map("slang_entry_vote")
+}
+
+// 通知
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // comment_reply, group_invite, achievement, streak_reminder
+  title     String
+  body      String
+  data      String   @default("{}") // JSON: 追加データ
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notification")
+}
+
+// アクティビティフィード
+model ActivityFeed {
+  id           String   @id @default(cuid())
+  userId       String
+  activityType String   // word_learned, article_read, achievement_earned, streak_milestone, slang_posted
+  title        String
+  description  String   @default("")
+  metadata     String   @default("{}") // JSON: 追加データ
+  isPublic     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([activityType])
+  @@index([createdAt])
+  @@index([isPublic])
+  @@map("activity_feed")
 }

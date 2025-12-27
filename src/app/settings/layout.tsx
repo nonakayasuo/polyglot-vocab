@@ -1,8 +1,9 @@
-import { Bell, CreditCard, Globe, Shield, User } from "lucide-react";
+import { Bell, CreditCard, Filter, Globe, Shield, User } from "lucide-react";
 import Link from "next/link";
 
 const navItems = [
   { href: "/settings/profile", label: "プロフィール", icon: User },
+  { href: "/settings/content", label: "コンテンツ設定", icon: Filter },
   { href: "/settings/notifications", label: "通知", icon: Bell },
   { href: "/settings/billing", label: "請求・プラン", icon: CreditCard },
   { href: "/settings/language", label: "言語設定", icon: Globe },

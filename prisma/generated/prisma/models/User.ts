@@ -47,6 +47,7 @@ export type UserMinAggregateOutputType = {
   cefrLevel: string | null
   learningLanguage: string | null
   nativeLanguage: string | null
+  slangLevel: string | null
   weeklyXp: number | null
   totalXp: number | null
 }
@@ -62,6 +63,7 @@ export type UserMaxAggregateOutputType = {
   cefrLevel: string | null
   learningLanguage: string | null
   nativeLanguage: string | null
+  slangLevel: string | null
   weeklyXp: number | null
   totalXp: number | null
 }
@@ -77,6 +79,7 @@ export type UserCountAggregateOutputType = {
   cefrLevel: number
   learningLanguage: number
   nativeLanguage: number
+  slangLevel: number
   weeklyXp: number
   totalXp: number
   _all: number
@@ -104,6 +107,7 @@ export type UserMinAggregateInputType = {
   cefrLevel?: true
   learningLanguage?: true
   nativeLanguage?: true
+  slangLevel?: true
   weeklyXp?: true
   totalXp?: true
 }
@@ -119,6 +123,7 @@ export type UserMaxAggregateInputType = {
   cefrLevel?: true
   learningLanguage?: true
   nativeLanguage?: true
+  slangLevel?: true
   weeklyXp?: true
   totalXp?: true
 }
@@ -134,6 +139,7 @@ export type UserCountAggregateInputType = {
   cefrLevel?: true
   learningLanguage?: true
   nativeLanguage?: true
+  slangLevel?: true
   weeklyXp?: true
   totalXp?: true
   _all?: true
@@ -236,6 +242,7 @@ export type UserGroupByOutputType = {
   cefrLevel: string | null
   learningLanguage: string | null
   nativeLanguage: string | null
+  slangLevel: string | null
   weeklyXp: number
   totalXp: number
   _count: UserCountAggregateOutputType | null
@@ -274,6 +281,7 @@ export type UserWhereInput = {
   cefrLevel?: Prisma.StringNullableFilter<"User"> | string | null
   learningLanguage?: Prisma.StringNullableFilter<"User"> | string | null
   nativeLanguage?: Prisma.StringNullableFilter<"User"> | string | null
+  slangLevel?: Prisma.StringNullableFilter<"User"> | string | null
   weeklyXp?: Prisma.IntFilter<"User"> | number
   totalXp?: Prisma.IntFilter<"User"> | number
   sessions?: Prisma.SessionListRelationFilter
@@ -281,6 +289,7 @@ export type UserWhereInput = {
   levelAssessments?: Prisma.LevelAssessmentListRelationFilter
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   achievements?: Prisma.UserAchievementListRelationFilter
+  contentSettings?: Prisma.XOR<Prisma.UserContentSettingsNullableScalarRelationFilter, Prisma.UserContentSettingsWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -294,6 +303,7 @@ export type UserOrderByWithRelationInput = {
   cefrLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   learningLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
   nativeLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -301,6 +311,7 @@ export type UserOrderByWithRelationInput = {
   levelAssessments?: Prisma.LevelAssessmentOrderByRelationAggregateInput
   streak?: Prisma.UserStreakOrderByWithRelationInput
   achievements?: Prisma.UserAchievementOrderByRelationAggregateInput
+  contentSettings?: Prisma.UserContentSettingsOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -317,6 +328,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   cefrLevel?: Prisma.StringNullableFilter<"User"> | string | null
   learningLanguage?: Prisma.StringNullableFilter<"User"> | string | null
   nativeLanguage?: Prisma.StringNullableFilter<"User"> | string | null
+  slangLevel?: Prisma.StringNullableFilter<"User"> | string | null
   weeklyXp?: Prisma.IntFilter<"User"> | number
   totalXp?: Prisma.IntFilter<"User"> | number
   sessions?: Prisma.SessionListRelationFilter
@@ -324,6 +336,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   levelAssessments?: Prisma.LevelAssessmentListRelationFilter
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   achievements?: Prisma.UserAchievementListRelationFilter
+  contentSettings?: Prisma.XOR<Prisma.UserContentSettingsNullableScalarRelationFilter, Prisma.UserContentSettingsWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -337,6 +350,7 @@ export type UserOrderByWithAggregationInput = {
   cefrLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   learningLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
   nativeLanguage?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -360,6 +374,7 @@ export type UserScalarWhereWithAggregatesInput = {
   cefrLevel?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   learningLanguage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   nativeLanguage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  slangLevel?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   weeklyXp?: Prisma.IntWithAggregatesFilter<"User"> | number
   totalXp?: Prisma.IntWithAggregatesFilter<"User"> | number
 }
@@ -375,6 +390,7 @@ export type UserCreateInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -382,6 +398,7 @@ export type UserCreateInput = {
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -395,6 +412,7 @@ export type UserUncheckedCreateInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -402,6 +420,7 @@ export type UserUncheckedCreateInput = {
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -415,6 +434,7 @@ export type UserUpdateInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -422,6 +442,7 @@ export type UserUpdateInput = {
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -435,6 +456,7 @@ export type UserUncheckedUpdateInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -442,6 +464,7 @@ export type UserUncheckedUpdateInput = {
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -455,6 +478,7 @@ export type UserCreateManyInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
 }
@@ -470,6 +494,7 @@ export type UserUpdateManyMutationInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -485,6 +510,7 @@ export type UserUncheckedUpdateManyInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -500,6 +526,7 @@ export type UserCountOrderByAggregateInput = {
   cefrLevel?: Prisma.SortOrder
   learningLanguage?: Prisma.SortOrder
   nativeLanguage?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
 }
@@ -520,6 +547,7 @@ export type UserMaxOrderByAggregateInput = {
   cefrLevel?: Prisma.SortOrder
   learningLanguage?: Prisma.SortOrder
   nativeLanguage?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
 }
@@ -535,6 +563,7 @@ export type UserMinOrderByAggregateInput = {
   cefrLevel?: Prisma.SortOrder
   learningLanguage?: Prisma.SortOrder
   nativeLanguage?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
   weeklyXp?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
 }
@@ -547,6 +576,20 @@ export type UserSumOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserCreateNestedOneWithoutContentSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutContentSettingsInput, Prisma.UserUncheckedCreateWithoutContentSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutContentSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutContentSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutContentSettingsInput, Prisma.UserUncheckedCreateWithoutContentSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutContentSettingsInput
+  upsert?: Prisma.UserUpsertWithoutContentSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutContentSettingsInput, Prisma.UserUpdateWithoutContentSettingsInput>, Prisma.UserUncheckedUpdateWithoutContentSettingsInput>
 }
 
 export type UserCreateNestedOneWithoutLevelAssessmentsInput = {
@@ -619,6 +662,106 @@ export type UserUpdateOneRequiredWithoutAchievementsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAchievementsInput, Prisma.UserUpdateWithoutAchievementsInput>, Prisma.UserUncheckedUpdateWithoutAchievementsInput>
 }
 
+export type UserCreateWithoutContentSettingsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cefrLevel?: string | null
+  learningLanguage?: string | null
+  nativeLanguage?: string | null
+  slangLevel?: string | null
+  weeklyXp?: number
+  totalXp?: number
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutContentSettingsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cefrLevel?: string | null
+  learningLanguage?: string | null
+  nativeLanguage?: string | null
+  slangLevel?: string | null
+  weeklyXp?: number
+  totalXp?: number
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutContentSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutContentSettingsInput, Prisma.UserUncheckedCreateWithoutContentSettingsInput>
+}
+
+export type UserUpsertWithoutContentSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutContentSettingsInput, Prisma.UserUncheckedUpdateWithoutContentSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutContentSettingsInput, Prisma.UserUncheckedCreateWithoutContentSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutContentSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutContentSettingsInput, Prisma.UserUncheckedUpdateWithoutContentSettingsInput>
+}
+
+export type UserUpdateWithoutContentSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
+  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutContentSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
+  totalXp?: Prisma.IntFieldUpdateOperationsInput | number
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutLevelAssessmentsInput = {
   id: string
   name: string
@@ -630,12 +773,14 @@ export type UserCreateWithoutLevelAssessmentsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLevelAssessmentsInput = {
@@ -649,12 +794,14 @@ export type UserUncheckedCreateWithoutLevelAssessmentsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLevelAssessmentsInput = {
@@ -684,12 +831,14 @@ export type UserUpdateWithoutLevelAssessmentsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLevelAssessmentsInput = {
@@ -703,12 +852,14 @@ export type UserUncheckedUpdateWithoutLevelAssessmentsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -722,12 +873,14 @@ export type UserCreateWithoutSessionsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -741,12 +894,14 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -776,12 +931,14 @@ export type UserUpdateWithoutSessionsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -795,12 +952,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -814,12 +973,14 @@ export type UserCreateWithoutAccountsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -833,12 +994,14 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -868,12 +1031,14 @@ export type UserUpdateWithoutAccountsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -887,12 +1052,14 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStreakInput = {
@@ -906,12 +1073,14 @@ export type UserCreateWithoutStreakInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStreakInput = {
@@ -925,12 +1094,14 @@ export type UserUncheckedCreateWithoutStreakInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStreakInput = {
@@ -960,12 +1131,14 @@ export type UserUpdateWithoutStreakInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStreakInput = {
@@ -979,12 +1152,14 @@ export type UserUncheckedUpdateWithoutStreakInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAchievementsInput = {
@@ -998,12 +1173,14 @@ export type UserCreateWithoutAchievementsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAchievementsInput = {
@@ -1017,12 +1194,14 @@ export type UserUncheckedCreateWithoutAchievementsInput = {
   cefrLevel?: string | null
   learningLanguage?: string | null
   nativeLanguage?: string | null
+  slangLevel?: string | null
   weeklyXp?: number
   totalXp?: number
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAchievementsInput = {
@@ -1052,12 +1231,14 @@ export type UserUpdateWithoutAchievementsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAchievementsInput = {
@@ -1071,12 +1252,14 @@ export type UserUncheckedUpdateWithoutAchievementsInput = {
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learningLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nativeLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weeklyXp?: Prisma.IntFieldUpdateOperationsInput | number
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   levelAssessments?: Prisma.LevelAssessmentUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  contentSettings?: Prisma.UserContentSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -1148,6 +1331,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   cefrLevel?: boolean
   learningLanguage?: boolean
   nativeLanguage?: boolean
+  slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1155,6 +1339,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   levelAssessments?: boolean | Prisma.User$levelAssessmentsArgs<ExtArgs>
   streak?: boolean | Prisma.User$streakArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
+  contentSettings?: boolean | Prisma.User$contentSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1169,6 +1354,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cefrLevel?: boolean
   learningLanguage?: boolean
   nativeLanguage?: boolean
+  slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1184,6 +1370,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cefrLevel?: boolean
   learningLanguage?: boolean
   nativeLanguage?: boolean
+  slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1199,17 +1386,19 @@ export type UserSelectScalar = {
   cefrLevel?: boolean
   learningLanguage?: boolean
   nativeLanguage?: boolean
+  slangLevel?: boolean
   weeklyXp?: boolean
   totalXp?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "cefrLevel" | "learningLanguage" | "nativeLanguage" | "weeklyXp" | "totalXp", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "cefrLevel" | "learningLanguage" | "nativeLanguage" | "slangLevel" | "weeklyXp" | "totalXp", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   levelAssessments?: boolean | Prisma.User$levelAssessmentsArgs<ExtArgs>
   streak?: boolean | Prisma.User$streakArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
+  contentSettings?: boolean | Prisma.User$contentSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1223,6 +1412,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     levelAssessments: Prisma.$LevelAssessmentPayload<ExtArgs>[]
     streak: Prisma.$UserStreakPayload<ExtArgs> | null
     achievements: Prisma.$UserAchievementPayload<ExtArgs>[]
+    contentSettings: Prisma.$UserContentSettingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1235,6 +1425,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     cefrLevel: string | null
     learningLanguage: string | null
     nativeLanguage: string | null
+    slangLevel: string | null
     weeklyXp: number
     totalXp: number
   }, ExtArgs["result"]["user"]>
@@ -1636,6 +1827,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   levelAssessments<T extends Prisma.User$levelAssessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$levelAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LevelAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   streak<T extends Prisma.User$streakArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$streakArgs<ExtArgs>>): Prisma.Prisma__UserStreakClient<runtime.Types.Result.GetResult<Prisma.$UserStreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   achievements<T extends Prisma.User$achievementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contentSettings<T extends Prisma.User$contentSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$contentSettingsArgs<ExtArgs>>): Prisma.Prisma__UserContentSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserContentSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1675,6 +1867,7 @@ export interface UserFieldRefs {
   readonly cefrLevel: Prisma.FieldRef<"User", 'String'>
   readonly learningLanguage: Prisma.FieldRef<"User", 'String'>
   readonly nativeLanguage: Prisma.FieldRef<"User", 'String'>
+  readonly slangLevel: Prisma.FieldRef<"User", 'String'>
   readonly weeklyXp: Prisma.FieldRef<"User", 'Int'>
   readonly totalXp: Prisma.FieldRef<"User", 'Int'>
 }
@@ -2177,6 +2370,25 @@ export type User$achievementsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.UserAchievementScalarFieldEnum | Prisma.UserAchievementScalarFieldEnum[]
+}
+
+/**
+ * User.contentSettings
+ */
+export type User$contentSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserContentSettings
+   */
+  select?: Prisma.UserContentSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserContentSettings
+   */
+  omit?: Prisma.UserContentSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserContentSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserContentSettingsWhereInput
 }
 
 /**

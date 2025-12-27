@@ -1,14 +1,20 @@
-# NewsLingua - Product Requirements Document
+# NewsLingua 2.0 - Deep News Experience PRD
 
 ## Project Overview
 
-NewsLinguaは、世界中のニュースを読みながら語学力を向上させる次世代語学学習プラットフォームです。「生きた言語を、生きたニュースから学ぶ」をコンセプトに、AIを活用したパーソナライズド学習体験を提供します。
+NewsLinguaは、世界中のニュースを通じて「生きた言葉」を体験しながら語学力を向上させる次世代語学学習プラットフォームです。「ニュースを読む」から「ニュースで生きた言葉を体験する」へ進化し、AIを活用したDeep News Integration、SNSトレンド分析、多様なコンテンツ（エンタメ、スラング、18+表現まで）を通じて、教科書では学べない実践的な語学学習を実現します。
 
-### Key Differentiators
-- リアルタイムニュースコンテンツで学習
-- 初回レベル判定システム（CEFR A1-C2）
+### Core Concept
+「生きた言語を、生きたニュースから学ぶ」- フォーマルな表現からスラング・ミームまで、言語の全スペクトラムを学ぶ
+
+### Key Features (v2.0)
+- Deep News Integration（ニュースの多層的理解：背景・タイムライン・多視点比較）
+- 生きた言葉の学習（スラング・ミーム・SNS表現・サブカル語彙）
+- リアルタイム言語トレンド（Twitter/X・Reddit・TikTokからバズワード検出）
+- 語彙レジスター学習（フォーマル〜スラングの全スペクトラム）
+- 18+コンテンツオプション（ゴシップ・成人向け表現の教育的学習）
+- レベル判定システム（CEFR A1-C2 + スラング理解度）
 - Python MCP統合によるAI学習アシスタント
-- HelloTalk等の言語交換アプリとの連携
 - マルチプラットフォーム対応（Web, iOS, Android）
 
 ### Target Release: 2026年6月（商用リリース）
@@ -25,16 +31,26 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - セッション管理とミドルウェア実装
 - 認証UI（サインアップ、ログイン、パスワードリセット）
 
-### 1.2 レベル判定システム
+### 1.2 ユーザープロファイル拡張
+- アバター・表示名設定機能
+- 学習言語設定機能
+- 通知設定機能
+- コンテンツ設定機能（18+オプトイン、コンテンツフィルター）
+- 年齢確認システム（生年月日ベース）
+
+### 1.3 レベル判定システム（拡張版）
 - レベル判定データモデル設計（LevelAssessment モデル）
 - 語彙テスト問題データベース作成（A1-C2レベル別）
+- スラング理解度テスト問題データベース
 - 語彙テストUI（段階的難易度、適応型テスト）
 - 読解テストUI（ニュース記事ベースの問題）
+- スラング/口語テストUI
 - CEFRレベル算出アルゴリズム実装
-- レベル判定結果画面（強み・弱み分析）
+- レジスター別レベル判定（フォーマル/カジュアル/スラング）
+- レベル判定結果画面（強み・弱み分析 + スラング理解度）
 - 設定画面からの再診断機能
 
-### 1.3 クラウドDB移行
+### 1.4 クラウドDB移行
 - Neon PostgreSQL環境構築
 - Prisma設定をPostgreSQLに変更
 - 既存データのマイグレーション
@@ -42,33 +58,88 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 
 ---
 
-## Phase 2: ニュース学習コア（2026年2月）
+## Phase 2: ニュース学習コア + Deep News Integration（2026年2月）
 
-### 2.1 ニュースソース拡大
+### 2.1 ニュースソース拡大（フォーマルニュース）
 - ニュースAPI統合基盤（共通インターフェース設計）
 - BBC Learning English連携
 - CNN連携
 - NHK World連携
 - El País連携（スペイン語）
 - 朝鮮日報連携（韓国語）
+- 人民日報/新華社連携（中国語）
+- The Guardian連携
 - ニュースキャッシュ・更新システム
 
-### 2.2 難易度判定システム
+### 2.2 エンタメ・カルチャーソース追加（新規）
+- エンタメニュースAPI統合基盤
+- TMZ連携（セレブ・ゴシップ）
+- People連携（セレブニュース）
+- E! News連携（エンタメ）
+- Billboard連携（音楽ニュース）
+- Rolling Stone連携（音楽・カルチャー）
+- IGN連携（ゲーム）
+- Kotaku連携（ゲーム・カルチャー）
+- Variety連携（映画・TV）
+- Hollywood Reporter連携（映画・TV）
+
+### 2.3 SNS統合システム（新規）
+- SNS API統合基盤設計
+- Twitter/X API統合（トレンドワード取得）
+- Reddit API統合（人気スレッド・コメント取得）
+- TikTok API統合（バイラルコンテンツ分析）
+- SNSトレンドデータのキャッシュ・更新システム
+- リアルタイムバズワード検出エンジン
+
+### 2.4 Deep News Integration（新規）
+- ニュースタイムライン機能（トピックの時系列変化追跡）
+- 背景コンテキスト自動生成（AI）
+- 多視点比較機能（同トピック複数ソース表示）
+- 関連ニュースマップ（関連トピック可視化）
+- Deep News UI（タイムライン・比較・背景パネル）
+
+### 2.5 難易度判定システム（拡張版）
 - 記事難易度分析エンジン（語彙・文法複雑度分析）
 - CEFR難易度タグ自動付与
 - ユーザーレベル別記事フィルタリング
-- カテゴリ自動分類（政治/経済/科学/スポーツ等）
+- カテゴリ自動分類（政治/経済/科学/スポーツ/エンタメ/ゴシップ等）
 - レベル適応型レコメンデーション
+- スラング含有度分析・タグ付け
 
-### 2.3 インタラクティブリーディング
+### 2.6 インタラクティブリーディング（拡張版）
 - 単語ハイライト機能（タップで意味表示）
-- ワンタップ単語帳追加（記事コンテキスト保持）
+- レジスター表示機能（フォーマル〜スラングの分類表示）
+- 使用場面・TPO解説機能
+- 類語レジスターマップ（同義語のフォーマル度比較）
+- ワンタップ単語帳追加（記事コンテキスト + レジスター保持）
 - 高品質TTS導入（読み上げ機能強化）
 - 記事内ミニクイズ（理解度チェック）
 
+### 2.7 SNSコメント分析モード（新規）
+- 人気コメント語彙学習機能
+- ミーム・スラング解説機能
+- ネットスラング辞書統合
+- コメントからの語彙抽出・追加
+
+### 2.8 コンテンツ多様化（新規）
+- ジャンル別コンテンツフィルタリング
+  - エンターテインメント
+  - スポーツ
+  - テクノロジー/ゲーム
+  - カルチャー（K-POP, アニメ等）
+- 18+コンテンツモード実装
+  - 年齢確認システム連携
+  - ゴシップ/スキャンダル語彙学習
+  - 成人向け表現の教育的学習コンテンツ
+  - コンテンツフィルタリング設定UI
+- 言語レジスター学習機能
+  - フォーマル/カジュアル/スラング分類表示
+  - 使用場面ガイド
+  - タブー表現警告システム
+
 ---
 
-## Phase 3: AI統合 - Python実装（2026年3月）
+## Phase 3: AI統合 + トレンド分析（2026年3月）
 
 ### 3.1 Python AIサービス構築
 - FastAPIプロジェクト構築（python-ai-service/）
@@ -77,7 +148,7 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - Next.js⇔FastAPI連携（JWT認証共有）
 - Pinecone統合（ベクトル検索）
 
-### 3.2 MCPツール実装
+### 3.2 MCPツール実装（基本）
 - 単語説明ツール（explain_word）
 - 例文生成ツール（generate_examples）
 - 文法説明ツール（explain_grammar）
@@ -87,11 +158,31 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - 進捗分析ツール（analyze_progress）
 - 学習プラン生成ツール（suggest_next_lesson）
 
-### 3.3 AI学習アシスタントUI
+### 3.3 MCPツール実装（レジスター分析 - 新規）
+- レジスター分析ツール（analyze_register）
+  - 表現のフォーマル度判定
+  - TPO（時・場所・場合）アドバイス生成
+  - 同義語のレジスター比較
+- シチュエーション別例文生成ツール（generate_situational_examples）
+  - ビジネスメール版例文
+  - カジュアル会話版例文
+  - SNS投稿版例文
+
+### 3.4 SNSトレンド分析エンジン（新規）
+- リアルタイムバズワード検出アルゴリズム
+- ミーム語彙データベース構築
+- スラング進化トラッキングシステム
+- Gen Z/ミレニアル語彙分類エンジン
+- 「今日のバズワード」自動生成機能
+- バズワードMCPツール（get_buzzwords, analyze_slang）
+
+### 3.5 AI学習アシスタントUI（拡張版）
 - AIチャットインターフェース
-- 単語説明パネル
+- 単語説明パネル（レジスター情報含む）
 - 文法解説パネル
+- レジスター比較表示UI
 - 学習レコメンデーション表示
+- 今日のバズワードウィジェット
 
 ---
 
@@ -102,26 +193,31 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - 記事ディスカッション機能（コメント・返信）
 - 通知システム（プッシュ通知）
 - アクティビティフィード
+- スラング/ミーム投稿・共有機能（新規）
+- ユーザー投稿スラング辞書（新規）
 
 ### 4.2 ゲーミフィケーション
 - ランキングシステム（デイリー/ウィークリー）
 - ストリーク機能（連続学習日数）
 - バッジ・実績システム
+- スラングマスターバッジ（新規）
 
 ### 4.3 外部連携
 - HelloTalk API連携調査・実装
+- Tandem連携（ディープリンク）
 - API公開（β版、外部開発者向け）
 
 ---
 
 ## Phase 5: モバイル・国際化（2026年5月）
 
-### 5.1 React Nativeアプリ
-- Expo環境構築
+### 5.1 Flutterアプリ開発
+- Flutter環境構築（BtoC向け高パフォーマンス重視）
 - 認証画面実装
-- ニュース一覧・詳細画面
-- 単語帳画面
+- ニュース一覧・詳細画面（Deep News対応）
+- 単語帳画面（レジスター表示）
 - フラッシュカード画面
+- 今日のバズワード通知機能（新規）
 - プッシュ通知実装
 - iOS App Store申請
 - Google Play申請
@@ -140,7 +236,11 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 
 ### 6.1 決済機能
 - Stripe統合
-- 料金プラン実装（Free/Pro/Business）
+- 料金プラン実装
+  - Free: 基本機能
+  - Pro（¥980/月）: 無制限・AIアシスト・エンタメ・Deep News
+  - Ultimate（¥1,980/月）: 全Pro機能 + 18+コンテンツ + SNSトレンド + スラング辞書
+  - Business（¥4,980/月）: 全機能 + チーム管理 + API連携
 - サブスクリプション管理
 - 請求書・領収書発行
 
@@ -149,9 +249,12 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - ユーザー管理画面
 - 分析・レポート機能
 - 企業向けチーム管理機能
+- コンテンツモデレーション機能（新規）
 
 ### 6.3 ローンチ準備
 - セキュリティ監査
+- 年齢確認システム監査（新規）
+- 18+コンテンツ法的確認（新規）
 - パフォーマンス最適化
 - クローズドβテスト
 - フィードバック対応
@@ -166,7 +269,7 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 - Next.js 16+ (App Router)
 - React 19
 - Tailwind CSS 4
-- React Native + Expo
+- Flutter + Dart 3 (Mobile - BtoC向け高パフォーマンス)
 
 ### Backend (TypeScript)
 - Hono (Core API)
@@ -190,6 +293,75 @@ NewsLinguaは、世界中のニュースを読みながら語学力を向上さ�
 ### External Services
 - Anthropic Claude API
 - OpenAI API
-- News APIs (BBC, CNN, etc.)
+- News APIs (BBC, CNN, TMZ, etc.)
+- SNS APIs (Twitter/X, Reddit, TikTok)
+- Urban Dictionary API (Slang)
 - Stripe (Payments)
+
+---
+
+## New Data Models Required
+
+### SlangDictionary
+- word: String
+- language: String
+- meaning: String
+- register: Enum (FORMAL, NEUTRAL, CASUAL, SLANG, TABOO)
+- usageContext: String[]
+- examples: String[]
+- tpoAdvice: String
+- popularity: Float
+- createdAt: DateTime
+- updatedAt: DateTime
+
+### BuzzWord
+- word: String
+- language: String
+- meaning: String
+- source: Enum (TWITTER, REDDIT, TIKTOK)
+- trendScore: Float
+- firstSeen: DateTime
+- lastSeen: DateTime
+- examples: String[]
+
+### NewsTimeline
+- topicId: String
+- articles: Article[]
+- createdAt: DateTime
+
+### MultiPerspective
+- topicId: String
+- sources: Source[]
+- articleIds: String[]
+- createdAt: DateTime
+
+### UserContentSettings
+- userId: String (relation to User)
+- adultContentEnabled: Boolean
+- ageVerified: Boolean
+- dateOfBirth: DateTime
+- preferredCategories: String[]
+- blockedCategories: String[]
+
+---
+
+## Success Metrics (KPI)
+
+### User Metrics
+- MAU: 100,000
+- DAU/MAU: 40%
+- D30 Retention: 35%
+
+### Learning Metrics
+- Daily Articles Read: 2
+- Words Added per Article: 5
+- Monthly Level Up Rate: 10%
+
+### New Metrics (v2.0)
+- Slang Vocabulary Acquired: 50 words/month
+- Entertainment Article Read Rate: 30%
+- SNS Trend Reference Rate: 40%
+- Register Learning Completion Rate: 25%
+- Multi-perspective Usage Rate: 20%
+- 18+ Content Activation Rate: 15%
 

@@ -50,6 +50,9 @@ export type VocabularyWordMinAggregateOutputType = {
   displayOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  register: string | null
+  tpoAdvice: string | null
+  synonyms: string | null
 }
 
 export type VocabularyWordMaxAggregateOutputType = {
@@ -68,6 +71,9 @@ export type VocabularyWordMaxAggregateOutputType = {
   displayOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  register: string | null
+  tpoAdvice: string | null
+  synonyms: string | null
 }
 
 export type VocabularyWordCountAggregateOutputType = {
@@ -86,6 +92,9 @@ export type VocabularyWordCountAggregateOutputType = {
   displayOrder: number
   createdAt: number
   updatedAt: number
+  register: number
+  tpoAdvice: number
+  synonyms: number
   _all: number
 }
 
@@ -114,6 +123,9 @@ export type VocabularyWordMinAggregateInputType = {
   displayOrder?: true
   createdAt?: true
   updatedAt?: true
+  register?: true
+  tpoAdvice?: true
+  synonyms?: true
 }
 
 export type VocabularyWordMaxAggregateInputType = {
@@ -132,6 +144,9 @@ export type VocabularyWordMaxAggregateInputType = {
   displayOrder?: true
   createdAt?: true
   updatedAt?: true
+  register?: true
+  tpoAdvice?: true
+  synonyms?: true
 }
 
 export type VocabularyWordCountAggregateInputType = {
@@ -150,6 +165,9 @@ export type VocabularyWordCountAggregateInputType = {
   displayOrder?: true
   createdAt?: true
   updatedAt?: true
+  register?: true
+  tpoAdvice?: true
+  synonyms?: true
   _all?: true
 }
 
@@ -255,6 +273,9 @@ export type VocabularyWordGroupByOutputType = {
   displayOrder: number
   createdAt: Date
   updatedAt: Date
+  register: string
+  tpoAdvice: string
+  synonyms: string
   _count: VocabularyWordCountAggregateOutputType | null
   _avg: VocabularyWordAvgAggregateOutputType | null
   _sum: VocabularyWordSumAggregateOutputType | null
@@ -296,6 +317,9 @@ export type VocabularyWordWhereInput = {
   displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
+  register?: Prisma.StringFilter<"VocabularyWord"> | string
+  tpoAdvice?: Prisma.StringFilter<"VocabularyWord"> | string
+  synonyms?: Prisma.StringFilter<"VocabularyWord"> | string
   contexts?: Prisma.WordContextListRelationFilter
 }
 
@@ -315,6 +339,9 @@ export type VocabularyWordOrderByWithRelationInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  register?: Prisma.SortOrder
+  tpoAdvice?: Prisma.SortOrder
+  synonyms?: Prisma.SortOrder
   contexts?: Prisma.WordContextOrderByRelationAggregateInput
 }
 
@@ -337,6 +364,9 @@ export type VocabularyWordWhereUniqueInput = Prisma.AtLeast<{
   displayOrder?: Prisma.IntFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"VocabularyWord"> | Date | string
+  register?: Prisma.StringFilter<"VocabularyWord"> | string
+  tpoAdvice?: Prisma.StringFilter<"VocabularyWord"> | string
+  synonyms?: Prisma.StringFilter<"VocabularyWord"> | string
   contexts?: Prisma.WordContextListRelationFilter
 }, "id">
 
@@ -356,6 +386,9 @@ export type VocabularyWordOrderByWithAggregationInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  register?: Prisma.SortOrder
+  tpoAdvice?: Prisma.SortOrder
+  synonyms?: Prisma.SortOrder
   _count?: Prisma.VocabularyWordCountOrderByAggregateInput
   _avg?: Prisma.VocabularyWordAvgOrderByAggregateInput
   _max?: Prisma.VocabularyWordMaxOrderByAggregateInput
@@ -382,6 +415,9 @@ export type VocabularyWordScalarWhereWithAggregatesInput = {
   displayOrder?: Prisma.IntWithAggregatesFilter<"VocabularyWord"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"VocabularyWord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"VocabularyWord"> | Date | string
+  register?: Prisma.StringWithAggregatesFilter<"VocabularyWord"> | string
+  tpoAdvice?: Prisma.StringWithAggregatesFilter<"VocabularyWord"> | string
+  synonyms?: Prisma.StringWithAggregatesFilter<"VocabularyWord"> | string
 }
 
 export type VocabularyWordCreateInput = {
@@ -400,6 +436,9 @@ export type VocabularyWordCreateInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  register?: string
+  tpoAdvice?: string
+  synonyms?: string
   contexts?: Prisma.WordContextCreateNestedManyWithoutWordInput
 }
 
@@ -419,6 +458,9 @@ export type VocabularyWordUncheckedCreateInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  register?: string
+  tpoAdvice?: string
+  synonyms?: string
   contexts?: Prisma.WordContextUncheckedCreateNestedManyWithoutWordInput
 }
 
@@ -438,6 +480,9 @@ export type VocabularyWordUpdateInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
   contexts?: Prisma.WordContextUpdateManyWithoutWordNestedInput
 }
 
@@ -457,6 +502,9 @@ export type VocabularyWordUncheckedUpdateInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
   contexts?: Prisma.WordContextUncheckedUpdateManyWithoutWordNestedInput
 }
 
@@ -476,6 +524,9 @@ export type VocabularyWordCreateManyInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  register?: string
+  tpoAdvice?: string
+  synonyms?: string
 }
 
 export type VocabularyWordUpdateManyMutationInput = {
@@ -494,6 +545,9 @@ export type VocabularyWordUpdateManyMutationInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type VocabularyWordUncheckedUpdateManyInput = {
@@ -512,6 +566,9 @@ export type VocabularyWordUncheckedUpdateManyInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type VocabularyWordCountOrderByAggregateInput = {
@@ -530,6 +587,9 @@ export type VocabularyWordCountOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  register?: Prisma.SortOrder
+  tpoAdvice?: Prisma.SortOrder
+  synonyms?: Prisma.SortOrder
 }
 
 export type VocabularyWordAvgOrderByAggregateInput = {
@@ -552,6 +612,9 @@ export type VocabularyWordMaxOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  register?: Prisma.SortOrder
+  tpoAdvice?: Prisma.SortOrder
+  synonyms?: Prisma.SortOrder
 }
 
 export type VocabularyWordMinOrderByAggregateInput = {
@@ -570,6 +633,9 @@ export type VocabularyWordMinOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  register?: Prisma.SortOrder
+  tpoAdvice?: Prisma.SortOrder
+  synonyms?: Prisma.SortOrder
 }
 
 export type VocabularyWordSumOrderByAggregateInput = {
@@ -631,6 +697,9 @@ export type VocabularyWordCreateWithoutContextsInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  register?: string
+  tpoAdvice?: string
+  synonyms?: string
 }
 
 export type VocabularyWordUncheckedCreateWithoutContextsInput = {
@@ -649,6 +718,9 @@ export type VocabularyWordUncheckedCreateWithoutContextsInput = {
   displayOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  register?: string
+  tpoAdvice?: string
+  synonyms?: string
 }
 
 export type VocabularyWordCreateOrConnectWithoutContextsInput = {
@@ -683,6 +755,9 @@ export type VocabularyWordUpdateWithoutContextsInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type VocabularyWordUncheckedUpdateWithoutContextsInput = {
@@ -701,6 +776,9 @@ export type VocabularyWordUncheckedUpdateWithoutContextsInput = {
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  register?: Prisma.StringFieldUpdateOperationsInput | string
+  tpoAdvice?: Prisma.StringFieldUpdateOperationsInput | string
+  synonyms?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -750,6 +828,9 @@ export type VocabularyWordSelect<ExtArgs extends runtime.Types.Extensions.Intern
   displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  register?: boolean
+  tpoAdvice?: boolean
+  synonyms?: boolean
   contexts?: boolean | Prisma.VocabularyWord$contextsArgs<ExtArgs>
   _count?: boolean | Prisma.VocabularyWordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vocabularyWord"]>
@@ -770,6 +851,9 @@ export type VocabularyWordSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  register?: boolean
+  tpoAdvice?: boolean
+  synonyms?: boolean
 }, ExtArgs["result"]["vocabularyWord"]>
 
 export type VocabularyWordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -788,6 +872,9 @@ export type VocabularyWordSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  register?: boolean
+  tpoAdvice?: boolean
+  synonyms?: boolean
 }, ExtArgs["result"]["vocabularyWord"]>
 
 export type VocabularyWordSelectScalar = {
@@ -806,9 +893,12 @@ export type VocabularyWordSelectScalar = {
   displayOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  register?: boolean
+  tpoAdvice?: boolean
+  synonyms?: boolean
 }
 
-export type VocabularyWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "pronunciation" | "category" | "meaning" | "example" | "exampleTranslation" | "note" | "language" | "check1" | "check2" | "check3" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["vocabularyWord"]>
+export type VocabularyWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "pronunciation" | "category" | "meaning" | "example" | "exampleTranslation" | "note" | "language" | "check1" | "check2" | "check3" | "displayOrder" | "createdAt" | "updatedAt" | "register" | "tpoAdvice" | "synonyms", ExtArgs["result"]["vocabularyWord"]>
 export type VocabularyWordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contexts?: boolean | Prisma.VocabularyWord$contextsArgs<ExtArgs>
   _count?: boolean | Prisma.VocabularyWordCountOutputTypeDefaultArgs<ExtArgs>
@@ -837,6 +927,9 @@ export type $VocabularyWordPayload<ExtArgs extends runtime.Types.Extensions.Inte
     displayOrder: number
     createdAt: Date
     updatedAt: Date
+    register: string
+    tpoAdvice: string
+    synonyms: string
   }, ExtArgs["result"]["vocabularyWord"]>
   composites: {}
 }
@@ -1276,6 +1369,9 @@ export interface VocabularyWordFieldRefs {
   readonly displayOrder: Prisma.FieldRef<"VocabularyWord", 'Int'>
   readonly createdAt: Prisma.FieldRef<"VocabularyWord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"VocabularyWord", 'DateTime'>
+  readonly register: Prisma.FieldRef<"VocabularyWord", 'String'>
+  readonly tpoAdvice: Prisma.FieldRef<"VocabularyWord", 'String'>
+  readonly synonyms: Prisma.FieldRef<"VocabularyWord", 'String'>
 }
     
 

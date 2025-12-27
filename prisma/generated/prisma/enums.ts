@@ -9,7 +9,12 @@
 * 🟢 You can import this file directly.
 */
 
+export const Register = {
+  FORMAL: 'FORMAL',
+  NEUTRAL: 'NEUTRAL',
+  CASUAL: 'CASUAL',
+  SLANG: 'SLANG',
+  TABOO: 'TABOO'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type Register = (typeof Register)[keyof typeof Register]

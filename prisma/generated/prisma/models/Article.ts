@@ -20,8 +20,18 @@ export type ArticleModel = runtime.Types.Result.DefaultSelection<Prisma.$Article
 
 export type AggregateArticle = {
   _count: ArticleCountAggregateOutputType | null
+  _avg: ArticleAvgAggregateOutputType | null
+  _sum: ArticleSumAggregateOutputType | null
   _min: ArticleMinAggregateOutputType | null
   _max: ArticleMaxAggregateOutputType | null
+}
+
+export type ArticleAvgAggregateOutputType = {
+  slangLevel: number | null
+}
+
+export type ArticleSumAggregateOutputType = {
+  slangLevel: number | null
 }
 
 export type ArticleMinAggregateOutputType = {
@@ -38,6 +48,11 @@ export type ArticleMinAggregateOutputType = {
   category: string | null
   publishedAt: Date | null
   cachedAt: Date | null
+  contentType: string | null
+  cefrLevel: string | null
+  slangLevel: number | null
+  isAdultContent: boolean | null
+  tags: string | null
 }
 
 export type ArticleMaxAggregateOutputType = {
@@ -54,6 +69,11 @@ export type ArticleMaxAggregateOutputType = {
   category: string | null
   publishedAt: Date | null
   cachedAt: Date | null
+  contentType: string | null
+  cefrLevel: string | null
+  slangLevel: number | null
+  isAdultContent: boolean | null
+  tags: string | null
 }
 
 export type ArticleCountAggregateOutputType = {
@@ -70,9 +90,22 @@ export type ArticleCountAggregateOutputType = {
   category: number
   publishedAt: number
   cachedAt: number
+  contentType: number
+  cefrLevel: number
+  slangLevel: number
+  isAdultContent: number
+  tags: number
   _all: number
 }
 
+
+export type ArticleAvgAggregateInputType = {
+  slangLevel?: true
+}
+
+export type ArticleSumAggregateInputType = {
+  slangLevel?: true
+}
 
 export type ArticleMinAggregateInputType = {
   id?: true
@@ -88,6 +121,11 @@ export type ArticleMinAggregateInputType = {
   category?: true
   publishedAt?: true
   cachedAt?: true
+  contentType?: true
+  cefrLevel?: true
+  slangLevel?: true
+  isAdultContent?: true
+  tags?: true
 }
 
 export type ArticleMaxAggregateInputType = {
@@ -104,6 +142,11 @@ export type ArticleMaxAggregateInputType = {
   category?: true
   publishedAt?: true
   cachedAt?: true
+  contentType?: true
+  cefrLevel?: true
+  slangLevel?: true
+  isAdultContent?: true
+  tags?: true
 }
 
 export type ArticleCountAggregateInputType = {
@@ -120,6 +163,11 @@ export type ArticleCountAggregateInputType = {
   category?: true
   publishedAt?: true
   cachedAt?: true
+  contentType?: true
+  cefrLevel?: true
+  slangLevel?: true
+  isAdultContent?: true
+  tags?: true
   _all?: true
 }
 
@@ -161,6 +209,18 @@ export type ArticleAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ArticleAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ArticleSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ArticleMinAggregateInputType
@@ -191,6 +251,8 @@ export type ArticleGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: ArticleCountAggregateInputType | true
+  _avg?: ArticleAvgAggregateInputType
+  _sum?: ArticleSumAggregateInputType
   _min?: ArticleMinAggregateInputType
   _max?: ArticleMaxAggregateInputType
 }
@@ -209,7 +271,14 @@ export type ArticleGroupByOutputType = {
   category: string | null
   publishedAt: Date
   cachedAt: Date
+  contentType: string
+  cefrLevel: string | null
+  slangLevel: number
+  isAdultContent: boolean
+  tags: string
   _count: ArticleCountAggregateOutputType | null
+  _avg: ArticleAvgAggregateOutputType | null
+  _sum: ArticleSumAggregateOutputType | null
   _min: ArticleMinAggregateOutputType | null
   _max: ArticleMaxAggregateOutputType | null
 }
@@ -246,6 +315,11 @@ export type ArticleWhereInput = {
   category?: Prisma.StringNullableFilter<"Article"> | string | null
   publishedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
   cachedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
+  contentType?: Prisma.StringFilter<"Article"> | string
+  cefrLevel?: Prisma.StringNullableFilter<"Article"> | string | null
+  slangLevel?: Prisma.FloatFilter<"Article"> | number
+  isAdultContent?: Prisma.BoolFilter<"Article"> | boolean
+  tags?: Prisma.StringFilter<"Article"> | string
   readingHistory?: Prisma.ReadingHistoryListRelationFilter
   wordContexts?: Prisma.WordContextListRelationFilter
 }
@@ -264,6 +338,11 @@ export type ArticleOrderByWithRelationInput = {
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   cachedAt?: Prisma.SortOrder
+  contentType?: Prisma.SortOrder
+  cefrLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  isAdultContent?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   readingHistory?: Prisma.ReadingHistoryOrderByRelationAggregateInput
   wordContexts?: Prisma.WordContextOrderByRelationAggregateInput
 }
@@ -285,6 +364,11 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.StringNullableFilter<"Article"> | string | null
   publishedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
   cachedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
+  contentType?: Prisma.StringFilter<"Article"> | string
+  cefrLevel?: Prisma.StringNullableFilter<"Article"> | string | null
+  slangLevel?: Prisma.FloatFilter<"Article"> | number
+  isAdultContent?: Prisma.BoolFilter<"Article"> | boolean
+  tags?: Prisma.StringFilter<"Article"> | string
   readingHistory?: Prisma.ReadingHistoryListRelationFilter
   wordContexts?: Prisma.WordContextListRelationFilter
 }, "id" | "externalId">
@@ -303,9 +387,16 @@ export type ArticleOrderByWithAggregationInput = {
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   cachedAt?: Prisma.SortOrder
+  contentType?: Prisma.SortOrder
+  cefrLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  isAdultContent?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   _count?: Prisma.ArticleCountOrderByAggregateInput
+  _avg?: Prisma.ArticleAvgOrderByAggregateInput
   _max?: Prisma.ArticleMaxOrderByAggregateInput
   _min?: Prisma.ArticleMinOrderByAggregateInput
+  _sum?: Prisma.ArticleSumOrderByAggregateInput
 }
 
 export type ArticleScalarWhereWithAggregatesInput = {
@@ -325,6 +416,11 @@ export type ArticleScalarWhereWithAggregatesInput = {
   category?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
   publishedAt?: Prisma.DateTimeWithAggregatesFilter<"Article"> | Date | string
   cachedAt?: Prisma.DateTimeWithAggregatesFilter<"Article"> | Date | string
+  contentType?: Prisma.StringWithAggregatesFilter<"Article"> | string
+  cefrLevel?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
+  slangLevel?: Prisma.FloatWithAggregatesFilter<"Article"> | number
+  isAdultContent?: Prisma.BoolWithAggregatesFilter<"Article"> | boolean
+  tags?: Prisma.StringWithAggregatesFilter<"Article"> | string
 }
 
 export type ArticleCreateInput = {
@@ -341,6 +437,11 @@ export type ArticleCreateInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   readingHistory?: Prisma.ReadingHistoryCreateNestedManyWithoutArticleInput
   wordContexts?: Prisma.WordContextCreateNestedManyWithoutArticleInput
 }
@@ -359,6 +460,11 @@ export type ArticleUncheckedCreateInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   readingHistory?: Prisma.ReadingHistoryUncheckedCreateNestedManyWithoutArticleInput
   wordContexts?: Prisma.WordContextUncheckedCreateNestedManyWithoutArticleInput
 }
@@ -377,6 +483,11 @@ export type ArticleUpdateInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   readingHistory?: Prisma.ReadingHistoryUpdateManyWithoutArticleNestedInput
   wordContexts?: Prisma.WordContextUpdateManyWithoutArticleNestedInput
 }
@@ -395,6 +506,11 @@ export type ArticleUncheckedUpdateInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   readingHistory?: Prisma.ReadingHistoryUncheckedUpdateManyWithoutArticleNestedInput
   wordContexts?: Prisma.WordContextUncheckedUpdateManyWithoutArticleNestedInput
 }
@@ -413,6 +529,11 @@ export type ArticleCreateManyInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
 }
 
 export type ArticleUpdateManyMutationInput = {
@@ -429,6 +550,11 @@ export type ArticleUpdateManyMutationInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ArticleUncheckedUpdateManyInput = {
@@ -445,6 +571,11 @@ export type ArticleUncheckedUpdateManyInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ArticleCountOrderByAggregateInput = {
@@ -461,6 +592,15 @@ export type ArticleCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   cachedAt?: Prisma.SortOrder
+  contentType?: Prisma.SortOrder
+  cefrLevel?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  isAdultContent?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+}
+
+export type ArticleAvgOrderByAggregateInput = {
+  slangLevel?: Prisma.SortOrder
 }
 
 export type ArticleMaxOrderByAggregateInput = {
@@ -477,6 +617,11 @@ export type ArticleMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   cachedAt?: Prisma.SortOrder
+  contentType?: Prisma.SortOrder
+  cefrLevel?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  isAdultContent?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
 }
 
 export type ArticleMinOrderByAggregateInput = {
@@ -493,6 +638,15 @@ export type ArticleMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   cachedAt?: Prisma.SortOrder
+  contentType?: Prisma.SortOrder
+  cefrLevel?: Prisma.SortOrder
+  slangLevel?: Prisma.SortOrder
+  isAdultContent?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
+}
+
+export type ArticleSumOrderByAggregateInput = {
+  slangLevel?: Prisma.SortOrder
 }
 
 export type ArticleScalarRelationFilter = {
@@ -502,6 +656,14 @@ export type ArticleScalarRelationFilter = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type ArticleCreateNestedOneWithoutReadingHistoryInput = {
@@ -546,6 +708,11 @@ export type ArticleCreateWithoutReadingHistoryInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   wordContexts?: Prisma.WordContextCreateNestedManyWithoutArticleInput
 }
 
@@ -563,6 +730,11 @@ export type ArticleUncheckedCreateWithoutReadingHistoryInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   wordContexts?: Prisma.WordContextUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -596,6 +768,11 @@ export type ArticleUpdateWithoutReadingHistoryInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   wordContexts?: Prisma.WordContextUpdateManyWithoutArticleNestedInput
 }
 
@@ -613,6 +790,11 @@ export type ArticleUncheckedUpdateWithoutReadingHistoryInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   wordContexts?: Prisma.WordContextUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -630,6 +812,11 @@ export type ArticleCreateWithoutWordContextsInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   readingHistory?: Prisma.ReadingHistoryCreateNestedManyWithoutArticleInput
 }
 
@@ -647,6 +834,11 @@ export type ArticleUncheckedCreateWithoutWordContextsInput = {
   category?: string | null
   publishedAt: Date | string
   cachedAt?: Date | string
+  contentType?: string
+  cefrLevel?: string | null
+  slangLevel?: number
+  isAdultContent?: boolean
+  tags?: string
   readingHistory?: Prisma.ReadingHistoryUncheckedCreateNestedManyWithoutArticleInput
 }
 
@@ -680,6 +872,11 @@ export type ArticleUpdateWithoutWordContextsInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   readingHistory?: Prisma.ReadingHistoryUpdateManyWithoutArticleNestedInput
 }
 
@@ -697,6 +894,11 @@ export type ArticleUncheckedUpdateWithoutWordContextsInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cachedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contentType?: Prisma.StringFieldUpdateOperationsInput | string
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slangLevel?: Prisma.FloatFieldUpdateOperationsInput | number
+  isAdultContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tags?: Prisma.StringFieldUpdateOperationsInput | string
   readingHistory?: Prisma.ReadingHistoryUncheckedUpdateManyWithoutArticleNestedInput
 }
 
@@ -754,6 +956,11 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   category?: boolean
   publishedAt?: boolean
   cachedAt?: boolean
+  contentType?: boolean
+  cefrLevel?: boolean
+  slangLevel?: boolean
+  isAdultContent?: boolean
+  tags?: boolean
   readingHistory?: boolean | Prisma.Article$readingHistoryArgs<ExtArgs>
   wordContexts?: boolean | Prisma.Article$wordContextsArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
@@ -773,6 +980,11 @@ export type ArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   category?: boolean
   publishedAt?: boolean
   cachedAt?: boolean
+  contentType?: boolean
+  cefrLevel?: boolean
+  slangLevel?: boolean
+  isAdultContent?: boolean
+  tags?: boolean
 }, ExtArgs["result"]["article"]>
 
 export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -789,6 +1001,11 @@ export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   category?: boolean
   publishedAt?: boolean
   cachedAt?: boolean
+  contentType?: boolean
+  cefrLevel?: boolean
+  slangLevel?: boolean
+  isAdultContent?: boolean
+  tags?: boolean
 }, ExtArgs["result"]["article"]>
 
 export type ArticleSelectScalar = {
@@ -805,9 +1022,14 @@ export type ArticleSelectScalar = {
   category?: boolean
   publishedAt?: boolean
   cachedAt?: boolean
+  contentType?: boolean
+  cefrLevel?: boolean
+  slangLevel?: boolean
+  isAdultContent?: boolean
+  tags?: boolean
 }
 
-export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "title" | "description" | "content" | "url" | "imageUrl" | "source" | "author" | "language" | "category" | "publishedAt" | "cachedAt", ExtArgs["result"]["article"]>
+export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "title" | "description" | "content" | "url" | "imageUrl" | "source" | "author" | "language" | "category" | "publishedAt" | "cachedAt" | "contentType" | "cefrLevel" | "slangLevel" | "isAdultContent" | "tags", ExtArgs["result"]["article"]>
 export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   readingHistory?: boolean | Prisma.Article$readingHistoryArgs<ExtArgs>
   wordContexts?: boolean | Prisma.Article$wordContextsArgs<ExtArgs>
@@ -836,6 +1058,11 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     category: string | null
     publishedAt: Date
     cachedAt: Date
+    contentType: string
+    cefrLevel: string | null
+    slangLevel: number
+    isAdultContent: boolean
+    tags: string
   }, ExtArgs["result"]["article"]>
   composites: {}
 }
@@ -1274,6 +1501,11 @@ export interface ArticleFieldRefs {
   readonly category: Prisma.FieldRef<"Article", 'String'>
   readonly publishedAt: Prisma.FieldRef<"Article", 'DateTime'>
   readonly cachedAt: Prisma.FieldRef<"Article", 'DateTime'>
+  readonly contentType: Prisma.FieldRef<"Article", 'String'>
+  readonly cefrLevel: Prisma.FieldRef<"Article", 'String'>
+  readonly slangLevel: Prisma.FieldRef<"Article", 'Float'>
+  readonly isAdultContent: Prisma.FieldRef<"Article", 'Boolean'>
+  readonly tags: Prisma.FieldRef<"Article", 'String'>
 }
     
 

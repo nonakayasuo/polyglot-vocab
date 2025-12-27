@@ -231,6 +231,156 @@ async def list_tools() -> list[Tool]:
                 "required": ["content"],
             },
         ),
+        # ========================================
+        # Phase 3.3: レジスター分析ツール（新規）
+        # ========================================
+        Tool(
+            name="analyze_register",
+            description="Analyze the register (formality level) of a word or expression and provide TPO advice.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "The word or expression to analyze",
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language of the expression",
+                        "default": "english",
+                    },
+                    "native_language": {
+                        "type": "string",
+                        "description": "Language for explanations",
+                        "default": "japanese",
+                    },
+                },
+                "required": ["expression"],
+            },
+        ),
+        Tool(
+            name="generate_situational_examples",
+            description="Generate example sentences in different registers (formal, casual, SNS) for a given word.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "The word to create situational examples for",
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language of the word",
+                        "default": "english",
+                    },
+                    "native_language": {
+                        "type": "string",
+                        "description": "Language for translations",
+                        "default": "japanese",
+                    },
+                },
+                "required": ["word"],
+            },
+        ),
+        # ========================================
+        # Phase 3.4: バズワード・スラングツール（新規）
+        # ========================================
+        Tool(
+            name="get_buzzwords",
+            description="Get current trending buzzwords and slang from SNS platforms.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "language": {
+                        "type": "string",
+                        "description": "Language for buzzwords",
+                        "default": "english",
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "SNS source (twitter, reddit, tiktok, all)",
+                        "default": "all",
+                    },
+                    "count": {
+                        "type": "integer",
+                        "description": "Number of buzzwords to return",
+                        "default": 10,
+                    },
+                },
+                "required": [],
+            },
+        ),
+        Tool(
+            name="analyze_slang",
+            description="Analyze a slang word or expression with meaning, origin, usage, and TPO advice.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "slang": {
+                        "type": "string",
+                        "description": "The slang word or expression to analyze",
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language of the slang",
+                        "default": "english",
+                    },
+                    "native_language": {
+                        "type": "string",
+                        "description": "Language for explanations",
+                        "default": "japanese",
+                    },
+                },
+                "required": ["slang"],
+            },
+        ),
+        Tool(
+            name="suggest_learning_plan",
+            description="Generate a personalized learning plan based on user's progress and goals.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "user_level": {
+                        "type": "string",
+                        "description": "User's current CEFR level",
+                        "default": "B1",
+                    },
+                    "target_level": {
+                        "type": "string",
+                        "description": "Target CEFR level",
+                        "default": "B2",
+                    },
+                    "vocabulary_count": {
+                        "type": "integer",
+                        "description": "Number of words user has learned",
+                        "default": 0,
+                    },
+                    "articles_read": {
+                        "type": "integer",
+                        "description": "Number of articles user has read",
+                        "default": 0,
+                    },
+                    "weak_areas": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Areas user struggles with",
+                        "default": [],
+                    },
+                    "interests": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "User's topic interests",
+                        "default": [],
+                    },
+                    "native_language": {
+                        "type": "string",
+                        "description": "Language for the plan",
+                        "default": "japanese",
+                    },
+                },
+                "required": [],
+            },
+        ),
     ]
 
 
@@ -295,6 +445,71 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 language=arguments.get("language", "english"),
                 user_level=arguments.get("user_level", "B1"),
                 max_words=arguments.get("max_words", 10),
+            )
+            return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+        # ========================================
+        # Phase 3.3: レジスター分析ツール
+        # ========================================
+        elif name == "analyze_register":
+            from app.services.register_analyzer import get_register_analyzer
+
+            register_analyzer = get_register_analyzer()
+            result = await register_analyzer.analyze_register(
+                expression=arguments["expression"],
+                language=arguments.get("language", "english"),
+                native_language=arguments.get("native_language", "japanese"),
+            )
+            return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+        elif name == "generate_situational_examples":
+            from app.services.register_analyzer import get_register_analyzer
+
+            register_analyzer = get_register_analyzer()
+            result = await register_analyzer.generate_situational_examples(
+                word=arguments["word"],
+                language=arguments.get("language", "english"),
+                native_language=arguments.get("native_language", "japanese"),
+            )
+            return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+        # ========================================
+        # Phase 3.4: バズワード・スラングツール
+        # ========================================
+        elif name == "get_buzzwords":
+            from app.services.slang_analyzer import get_slang_analyzer
+
+            slang_analyzer = get_slang_analyzer()
+            result = await slang_analyzer.get_buzzwords(
+                language=arguments.get("language", "english"),
+                source=arguments.get("source", "all"),
+                count=arguments.get("count", 10),
+            )
+            return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+        elif name == "analyze_slang":
+            from app.services.slang_analyzer import get_slang_analyzer
+
+            slang_analyzer = get_slang_analyzer()
+            result = await slang_analyzer.analyze_slang(
+                slang=arguments["slang"],
+                language=arguments.get("language", "english"),
+                native_language=arguments.get("native_language", "japanese"),
+            )
+            return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+        elif name == "suggest_learning_plan":
+            from app.services.learning_planner import get_learning_planner
+
+            learning_planner = get_learning_planner()
+            result = await learning_planner.suggest_learning_plan(
+                user_level=arguments.get("user_level", "B1"),
+                target_level=arguments.get("target_level", "B2"),
+                vocabulary_count=arguments.get("vocabulary_count", 0),
+                articles_read=arguments.get("articles_read", 0),
+                weak_areas=arguments.get("weak_areas", []),
+                interests=arguments.get("interests", []),
+                native_language=arguments.get("native_language", "japanese"),
             )
             return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 

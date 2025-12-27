@@ -113,7 +113,7 @@ function ResizableHeader({
       startXRef.current = e.clientX;
       startWidthRef.current = width;
     },
-    [width]
+    [width],
   );
 
   useEffect(() => {
@@ -305,7 +305,7 @@ const highlightWord = (example: string, word: string) => {
   const wordLower = word.toLowerCase();
   const regex = new RegExp(
     `\\b(${word}|${wordLower}|${word}s|${word}ed|${word}ing|${word}d)\\b`,
-    "gi"
+    "gi",
   );
 
   const parts = example.split(regex);
@@ -409,7 +409,7 @@ function ExampleCell({
   const [showTranslation, setShowTranslation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editField, setEditField] = useState<"example" | "exampleTranslation">(
-    "example"
+    "example",
   );
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -482,15 +482,15 @@ function ExampleCell({
           showTranslation
             ? "text-blue-500 bg-blue-50"
             : hasTranslation
-            ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
-            : "text-gray-300 hover:text-blue-400"
+              ? "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+              : "text-gray-300 hover:text-blue-400"
         }`}
         title={
           showTranslation
             ? "原文を表示"
             : hasTranslation
-            ? "日本語訳を表示"
-            : "日本語訳を追加"
+              ? "日本語訳を表示"
+              : "日本語訳を追加"
         }
       >
         <Languages className="w-4 h-4" />
@@ -708,7 +708,7 @@ const SortableRow = memo(function SortableRow({
   columnWidths: typeof DEFAULT_COLUMN_WIDTHS;
   onUpdateField: (
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => void;
   onDelete: () => void;
   onAddBelow: () => void;
@@ -729,7 +729,7 @@ const SortableRow = memo(function SortableRow({
       opacity: isDragging ? 0.5 : 1,
       zIndex: isDragging ? 1000 : undefined,
     }),
-    [transform, transition, isDragging]
+    [transform, transition, isDragging],
   );
 
   return (
@@ -888,7 +888,7 @@ const SortableRowWrapper = memo(function SortableRowWrapper({
   onUpdateField: (
     id: string,
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => void;
   onDelete: (id: string) => void;
   onAddBelow: (afterId: string) => void;
@@ -898,7 +898,7 @@ const SortableRowWrapper = memo(function SortableRowWrapper({
     (field: keyof VocabularyWordDB, value: string | boolean) => {
       onUpdateField(word.id, field, value);
     },
-    [onUpdateField, word.id]
+    [onUpdateField, word.id],
   );
 
   const handleDelete = useCallback(() => {
@@ -989,7 +989,7 @@ function NewWordRow({
         handleSave();
       }, 100);
     },
-    [handleSave]
+    [handleSave],
   );
 
   if (!isAdding) {
@@ -1114,7 +1114,7 @@ export default function VocabularyTable({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // 親からwordsが変わったらローカル状態を更新
@@ -1136,18 +1136,18 @@ export default function VocabularyTable({
         return newWidths;
       });
     },
-    []
+    [],
   );
 
   // オプティミスティック更新：ローカル状態を即座に更新し、APIは非同期で実行
   const handleUpdateField = async (
     id: string,
     field: keyof VocabularyWordDB,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     // ローカル状態を即座に更新
     setLocalWords((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w))
+      prev.map((w) => (w.id === id ? { ...w, [field]: value } : w)),
     );
 
     // APIを非同期で実行（エラー時はリフレッシュ）
@@ -1174,7 +1174,7 @@ export default function VocabularyTable({
         }
       }
     },
-    [onRefresh]
+    [onRefresh],
   );
 
   // ドラッグ終了時のハンドラ
@@ -1207,7 +1207,7 @@ export default function VocabularyTable({
   // ソート可能なアイテムIDリスト（メモ化）
   const sortableItems = useMemo(
     () => localWords.map((w) => w.id),
-    [localWords]
+    [localWords],
   );
 
   // 指定した行の下に新しい行を追加
@@ -1247,7 +1247,7 @@ export default function VocabularyTable({
         onRefresh();
       }
     },
-    [defaultLanguage, localWords, onRefresh]
+    [defaultLanguage, localWords, onRefresh],
   );
 
   return (

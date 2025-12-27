@@ -85,7 +85,7 @@ export default function LanguagePage() {
         }
       }
     },
-    [language]
+    [language],
   );
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function LanguagePage() {
           w.word.toLowerCase().includes(searchLower) ||
           w.meaning.toLowerCase().includes(searchLower) ||
           w.example.toLowerCase().includes(searchLower) ||
-          w.note.toLowerCase().includes(searchLower)
+          w.note.toLowerCase().includes(searchLower),
       );
     }
 
@@ -163,7 +163,7 @@ export default function LanguagePage() {
     }));
     downloadCSV(
       exportWords,
-      `newslingua-${language}-${new Date().toISOString().split("T")[0]}.csv`
+      `newslingua-${language}-${new Date().toISOString().split("T")[0]}.csv`,
     );
   };
 

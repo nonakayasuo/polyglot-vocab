@@ -53,6 +53,11 @@ export type ArticleEmbedding = Prisma.ArticleEmbeddingModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model UserContentSettings
+ * 
+ */
+export type UserContentSettings = Prisma.UserContentSettingsModel
+/**
  * Model LevelAssessment
  * 
  */
@@ -112,3 +117,83 @@ export type UserAchievement = Prisma.UserAchievementModel
  * 
  */
 export type LearningActivity = Prisma.LearningActivityModel
+/**
+ * Model SlangDictionary
+ * 
+ */
+export type SlangDictionary = Prisma.SlangDictionaryModel
+/**
+ * Model BuzzWord
+ * 
+ */
+export type BuzzWord = Prisma.BuzzWordModel
+/**
+ * Model SlangQuestion
+ * 
+ */
+export type SlangQuestion = Prisma.SlangQuestionModel
+/**
+ * Model SlangTestResponse
+ * 
+ */
+export type SlangTestResponse = Prisma.SlangTestResponseModel
+/**
+ * Model NewsTimeline
+ * 
+ */
+export type NewsTimeline = Prisma.NewsTimelineModel
+/**
+ * Model MultiPerspective
+ * 
+ */
+export type MultiPerspective = Prisma.MultiPerspectiveModel
+/**
+ * Model BackgroundContext
+ * 
+ */
+export type BackgroundContext = Prisma.BackgroundContextModel
+/**
+ * Model LearningGroup
+ * 
+ */
+export type LearningGroup = Prisma.LearningGroupModel
+/**
+ * Model GroupMember
+ * 
+ */
+export type GroupMember = Prisma.GroupMemberModel
+/**
+ * Model GroupDiscussion
+ * 
+ */
+export type GroupDiscussion = Prisma.GroupDiscussionModel
+/**
+ * Model ArticleComment
+ * 
+ */
+export type ArticleComment = Prisma.ArticleCommentModel
+/**
+ * Model DiscussionComment
+ * 
+ */
+export type DiscussionComment = Prisma.DiscussionCommentModel
+/**
+ * Model UserSlangEntry
+ * 
+ */
+export type UserSlangEntry = Prisma.UserSlangEntryModel
+/**
+ * Model SlangEntryVote
+ * 
+ */
+export type SlangEntryVote = Prisma.SlangEntryVoteModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model ActivityFeed
+ * 
+ */
+export type ActivityFeed = Prisma.ActivityFeedModel

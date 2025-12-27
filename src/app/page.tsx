@@ -4,17 +4,21 @@ import {
   BookOpen,
   ChevronRight,
   Flame,
+  HelpCircle,
   Languages,
   Loader2,
   Newspaper,
   Settings,
   Sparkles,
   Trophy,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { StreakDisplay } from "@/components/gamification";
+import { MobileMenu } from "@/components/navigation";
 import ReadingStats from "@/components/ReadingStats";
+import { Button } from "@/components/ui/button";
 import {
   fetchStats,
   type LanguageStats,
@@ -57,6 +61,7 @@ export default function Home() {
     mastered: 0,
     notStarted: 0,
   });
+  const [showLegend, setShowLegend] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -136,7 +141,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <StreakDisplay compact />
               <Link
                 href="/settings"
@@ -144,6 +149,7 @@ export default function Home() {
               >
                 <Settings className="w-5 h-5" />
               </Link>
+              <MobileMenu />
             </div>
           </div>
         </div>
@@ -202,33 +208,113 @@ export default function Home() {
         </div>
 
         {/* 統計カード */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            icon={<BookOpen className="w-5 h-5" />}
-            label="総単語数"
-            value={totalStats.total}
-            color="blue"
-          />
-          <StatCard
-            icon={<Trophy className="w-5 h-5" />}
-            label="習得済み"
-            value={totalStats.mastered}
-            color="emerald"
-          />
-          <StatCard
-            icon={<Flame className="w-5 h-5" />}
-            label="学習中"
-            value={
-              totalStats.total - totalStats.mastered - totalStats.notStarted
-            }
-            color="amber"
-          />
-          <StatCard
-            icon={<Languages className="w-5 h-5" />}
-            label="未着手"
-            value={totalStats.notStarted}
-            color="slate"
-          />
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-400">
+              学習進捗
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowLegend(!showLegend)}
+              className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+              title="ステータスの説明"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* ステータス説明パネル */}
+          {showLegend && (
+            <div className="mb-4 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium text-slate-900 dark:text-white text-sm">
+                  📊 ステータスの説明
+                </h4>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setShowLegend(false)}
+                  className="text-slate-400"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-3 h-3 mt-0.5 rounded-full bg-emerald-500" />
+                  <div>
+                    <p className="font-medium text-emerald-600 dark:text-emerald-400">
+                      習得済み（Mastered）
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">
+                      フラッシュカードで5回以上連続正解した単語。
+                      <br />
+                      長期記憶に定着したと判断されます。
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-3 h-3 mt-0.5 rounded-full bg-amber-500" />
+                  <div>
+                    <p className="font-medium text-amber-600 dark:text-amber-400">
+                      学習中（Learning）
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">
+                      1回以上復習した単語。フラッシュカードでの
+                      <br />
+                      正解回数が1〜4回の状態です。
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-3 h-3 mt-0.5 rounded-full bg-slate-400" />
+                  <div>
+                    <p className="font-medium text-slate-600 dark:text-slate-400">
+                      未着手（Not Started）
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">
+                      単語帳に追加したが、まだ一度も
+                      <br />
+                      フラッシュカードで復習していない単語。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <StatCard
+              icon={<BookOpen className="w-5 h-5" />}
+              label="総単語数"
+              value={totalStats.total}
+              color="blue"
+              description="単語帳に追加された全単語"
+            />
+            <StatCard
+              icon={<Trophy className="w-5 h-5" />}
+              label="習得済み"
+              value={totalStats.mastered}
+              color="emerald"
+              description="5回以上連続正解"
+            />
+            <StatCard
+              icon={<Flame className="w-5 h-5" />}
+              label="学習中"
+              value={
+                totalStats.total - totalStats.mastered - totalStats.notStarted
+              }
+              color="amber"
+              description="復習中（正解1〜4回）"
+            />
+            <StatCard
+              icon={<Languages className="w-5 h-5" />}
+              label="未着手"
+              value={totalStats.notStarted}
+              color="slate"
+              description="まだ復習していない"
+            />
+          </div>
         </div>
 
         {/* 言語セクション */}
@@ -349,11 +435,13 @@ function StatCard({
   label,
   value,
   color,
+  description,
 }: {
   icon: React.ReactNode;
   label: string;
   value: number;
   color: "blue" | "emerald" | "amber" | "slate";
+  description?: string;
 }) {
   const colorStyles = {
     blue: "from-blue-500/10 to-blue-500/5 border-blue-200/50 dark:border-blue-800/50",
@@ -375,12 +463,20 @@ function StatCard({
   return (
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${colorStyles[color]} border p-4`}
+      title={description}
     >
       <div className={`mb-2 ${iconColors[color]}`}>{icon}</div>
       <p className="text-2xl font-bold text-slate-900 dark:text-white">
         {value.toLocaleString()}
       </p>
-      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
+        {label}
+      </p>
+      {description && (
+        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
+          {description}
+        </p>
+      )}
     </div>
   );
 }
