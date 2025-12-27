@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "NewsLingua",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "save": "保存",
+    "cancel": "取消",
+    "next": "下一步",
+    "back": "返回",
+    "done": "完成",
+    "settings": "设置"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "退出登录",
+    "email": "电子邮箱",
+    "password": "密码",
+    "name": "姓名",
+    "forgotPassword": "忘记密码？",
+    "noAccount": "没有账户？",
+    "hasAccount": "已有账户？"
+  },
+  "assessment": {
+    "title": "水平测试",
+    "description": "我们将评估您的语言水平，并为您推荐最佳学习计划。",
+    "selectLanguage": "选择要评估的语言",
+    "vocabularyTest": "词汇测试",
+    "readingTest": "阅读理解测试",
+    "startTest": "开始测试",
+    "estimatedTime": "预计时间：15-25分钟",
+    "question": "问题",
+    "answer": "提交答案",
+    "nextQuestion": "下一题",
+    "viewResult": "查看结果",
+    "correct": "正确！",
+    "incorrect": "错误"
+  },
+  "result": {
+    "completed": "测试完成！",
+    "yourLevel": "您的水平",
+    "strengths": "优势",
+    "improvements": "待改进领域",
+    "recommendations": "推荐学习计划",
+    "retake": "重新测试",
+    "startLearning": "开始学习"
+  },
+  "news": {
+    "title": "新闻",
+    "readMore": "阅读更多",
+    "difficulty": "难度",
+    "wordCount": "字数",
+    "addToVocabulary": "添加到词汇表"
+  },
+  "vocabulary": {
+    "title": "词汇表",
+    "addWord": "添加单词",
+    "flashcards": "闪卡",
+    "search": "搜索",
+    "categories": "分类",
+    "total": "总计",
+    "learned": "已学习"
+  },
+  "languages": {
+    "english": "英语",
+    "spanish": "西班牙语",
+    "french": "法语",
+    "german": "德语",
+    "chinese": "中文",
+    "korean": "韩语"
+  },
+  "cefr": {
+    "A1": "入门",
+    "A2": "初级",
+    "B1": "中级",
+    "B2": "中高级",
+    "C1": "高级",
+    "C2": "精通"
+  }
+}
+

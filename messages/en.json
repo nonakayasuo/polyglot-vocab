@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "NewsLingua",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "next": "Next",
+    "back": "Back",
+    "done": "Done",
+    "settings": "Settings"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "assessment": {
+    "title": "Level Assessment Test",
+    "description": "We'll assess your language level and recommend the best learning plan for you.",
+    "selectLanguage": "Select language to assess",
+    "vocabularyTest": "Vocabulary Test",
+    "readingTest": "Reading Test",
+    "startTest": "Start Assessment",
+    "estimatedTime": "Estimated time: 15-25 minutes",
+    "question": "Question",
+    "answer": "Submit Answer",
+    "nextQuestion": "Next Question",
+    "viewResult": "View Results",
+    "correct": "Correct!",
+    "incorrect": "Incorrect"
+  },
+  "result": {
+    "completed": "Assessment Complete!",
+    "yourLevel": "Your Level",
+    "strengths": "Strengths",
+    "improvements": "Areas for Improvement",
+    "recommendations": "Recommended Learning Plan",
+    "retake": "Retake Test",
+    "startLearning": "Start Learning"
+  },
+  "news": {
+    "title": "News",
+    "readMore": "Read more",
+    "difficulty": "Difficulty",
+    "wordCount": "Word count",
+    "addToVocabulary": "Add to vocabulary"
+  },
+  "vocabulary": {
+    "title": "Vocabulary",
+    "addWord": "Add word",
+    "flashcards": "Flashcards",
+    "search": "Search",
+    "categories": "Categories",
+    "total": "Total",
+    "learned": "Learned"
+  },
+  "languages": {
+    "english": "English",
+    "spanish": "Spanish",
+    "french": "French",
+    "german": "German",
+    "chinese": "Chinese",
+    "korean": "Korean"
+  },
+  "cefr": {
+    "A1": "Beginner",
+    "A2": "Elementary",
+    "B1": "Intermediate",
+    "B2": "Upper Intermediate",
+    "C1": "Advanced",
+    "C2": "Proficient"
+  }
+}
+

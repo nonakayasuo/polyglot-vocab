@@ -2,33 +2,35 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
+  provider        = "prisma-client"
+  output          = "./generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider   = "postgresql"
+  extensions = [vector] // pgvector for embeddings
 }
 
 model VocabularyWord {
-  id                  String   @id @default(cuid())
-  word                String
-  pronunciation       String   @default("")
-  category            String   @default("Noun")
-  meaning             String   @default("")
-  example             String   @default("")
-  exampleTranslation  String   @default("") // 例文の日本語訳
-  note                String   @default("")
-  language            String   @default("english")
-  check1              Boolean  @default(false)
-  check2              Boolean  @default(false)
-  check3              Boolean  @default(false)
-  displayOrder        Int      @default(0) // 表示順序
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  word               String
+  pronunciation      String   @default("")
+  category           String   @default("Noun")
+  meaning            String   @default("")
+  example            String   @default("")
+  exampleTranslation String   @default("") // 例文の日本語訳
+  note               String   @default("")
+  language           String   @default("english")
+  check1             Boolean  @default(false)
+  check2             Boolean  @default(false)
+  check3             Boolean  @default(false)
+  displayOrder       Int      @default(0) // 表示順序
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   // 単語コンテキスト（どの記事から学んだか）
-  contexts            WordContext[]
+  contexts WordContext[]
 
   @@index([language])
   @@index([createdAt])
@@ -36,20 +38,21 @@ model VocabularyWord {
 }
 
 // キャッシュされたニュース記事
+
 model Article {
-  id           String   @id @default(cuid())
-  externalId   String   @unique // News APIからのID（URLハッシュ等）
-  title        String
-  description  String   @default("")
-  content      String   @default("")
-  url          String
-  imageUrl     String?
-  source       String   // ニュースソース名
-  author       String?
-  language     String   @default("en")
-  category     String?
-  publishedAt  DateTime
-  cachedAt     DateTime @default(now())
+  id          String   @id @default(cuid())
+  externalId  String   @unique // News APIからのID（URLハッシュ等）
+  title       String
+  description String   @default("")
+  content     String   @default("")
+  url         String
+  imageUrl    String?
+  source      String // ニュースソース名
+  author      String?
+  language    String   @default("en")
+  category    String?
+  publishedAt DateTime
+  cachedAt    DateTime @default(now())
 
   // リレーション
   readingHistory ReadingHistory[]
@@ -62,28 +65,30 @@ model Article {
 }
 
 // 読書履歴
+
 model ReadingHistory {
   id           String   @id @default(cuid())
   articleId    String
   article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   readAt       DateTime @default(now())
   wordsLearned Int      @default(0) // この記事から学んだ単語数
-  readTime     Int?     // 読書時間（秒）
+  readTime     Int? // 読書時間（秒）
 
   @@index([articleId])
   @@index([readAt])
 }
 
 // 単語と記事のコンテキスト（どの記事のどの文から学んだか）
+
 model WordContext {
-  id              String         @id @default(cuid())
-  wordId          String
-  word            VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
-  articleId       String
-  article         Article        @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  sentence        String         // 単語が含まれる文
-  sentenceIndex   Int?           // 記事内での文の位置
-  createdAt       DateTime       @default(now())
+  id            String         @id @default(cuid())
+  wordId        String
+  word          VocabularyWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  articleId     String
+  article       Article        @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  sentence      String // 単語が含まれる文
+  sentenceIndex Int? // 記事内での文の位置
+  createdAt     DateTime       @default(now())
 
   @@unique([wordId, articleId])
   @@index([wordId])
@@ -91,20 +96,222 @@ model WordContext {
 }
 
 // 日次おすすめ単語
+
 model DailyWordRecommendation {
-  id              String   @id @default(cuid())
-  date            DateTime @default(now()) // 推薦日
-  word            String
-  definition      String   @default("")
-  pronunciation   String   @default("")
-  partOfSpeech    String   @default("")
-  cefrLevel       String   @default("") // B2, C1, C2
-  frequencyRank   Int?     // 頻度ランク
-  articleId       String?  // 出典記事
-  sentence        String   @default("") // 例文
-  isAdded         Boolean  @default(false) // 単語帳に追加済みか
-  isSkipped       Boolean  @default(false) // スキップされたか
+  id            String   @id @default(cuid())
+  date          DateTime @default(now()) // 推薦日
+  word          String
+  definition    String   @default("")
+  pronunciation String   @default("")
+  partOfSpeech  String   @default("")
+  cefrLevel     String   @default("") // B2, C1, C2
+  frequencyRank Int? // 頻度ランク
+  articleId     String? // 出典記事
+  sentence      String   @default("") // 例文
+  isAdded       Boolean  @default(false) // 単語帳に追加済みか
+  isSkipped     Boolean  @default(false) // スキップされたか
 
   @@index([date])
   @@index([word])
+}
+
+// ベクトル埋め込み（pgvector使用、意味検索用）
+model WordEmbedding {
+  id        String                   @id @default(cuid())
+  word      String                   @unique
+  language  String                   @default("english")
+  embedding Unsupported("vector(1536)") // OpenAI text-embedding-3-small
+  createdAt DateTime                 @default(now())
+  updatedAt DateTime                 @updatedAt
+
+  @@index([language])
+  @@map("word_embedding")
+}
+
+// 記事埋め込み（類似記事検索用）
+model ArticleEmbedding {
+  id        String                   @id @default(cuid())
+  articleId String                   @unique
+  embedding Unsupported("vector(1536)")
+  createdAt DateTime                 @default(now())
+
+  @@map("article_embedding")
+}
+
+model User {
+  id               String    @id
+  name             String
+  email            String
+  emailVerified    Boolean   @default(false)
+  image            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  cefrLevel        String?
+  learningLanguage String?   @default("english")
+  nativeLanguage   String?   @default("japanese")
+  sessions         Session[]
+  accounts         Account[]
+
+  // レベル判定関連
+  levelAssessments LevelAssessment[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+// ========================================
+// レベル判定システム
+// ========================================
+
+// レベル判定結果
+model LevelAssessment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language        String   @default("english") // 判定対象言語
+  cefrLevel       String   // A1, A2, B1, B2, C1, C2
+  vocabularyScore Float    // 語彙スコア (0-100)
+  readingScore    Float    // 読解スコア (0-100)
+  overallScore    Float    // 総合スコア (0-100)
+  strengths       String   @default("") // JSON: 強み分析
+  weaknesses      String   @default("") // JSON: 弱み分析
+  recommendations String   @default("") // JSON: 学習推奨
+  completedAt     DateTime @default(now())
+
+  // テスト詳細
+  vocabularyResponses VocabularyTestResponse[]
+  readingResponses    ReadingTestResponse[]
+
+  @@index([userId])
+  @@index([language])
+  @@index([completedAt])
+  @@map("level_assessment")
+}
+
+// 語彙テスト問題
+model VocabularyQuestion {
+  id           String   @id @default(cuid())
+  language     String   @default("english")
+  cefrLevel    String   // A1, A2, B1, B2, C1, C2
+  questionType String   // "meaning", "synonym", "antonym", "fill_blank"
+  word         String
+  question     String   // 問題文
+  options      String   // JSON: 選択肢配列
+  correctIndex Int      // 正解のインデックス
+  explanation  String   @default("") // 解説
+  difficulty   Float    @default(0.5) // IRT難易度パラメータ
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  responses VocabularyTestResponse[]
+
+  @@index([language, cefrLevel])
+  @@index([isActive])
+  @@map("vocabulary_question")
+}
+
+// 語彙テスト回答
+model VocabularyTestResponse {
+  id           String             @id @default(cuid())
+  assessmentId String
+  assessment   LevelAssessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     VocabularyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedIdx  Int                // 選択した回答のインデックス
+  isCorrect    Boolean
+  responseTime Int?               // 回答時間（ミリ秒）
+  createdAt    DateTime           @default(now())
+
+  @@index([assessmentId])
+  @@index([questionId])
+  @@map("vocabulary_test_response")
+}
+
+// 読解テスト問題（記事ベース）
+model ReadingQuestion {
+  id           String   @id @default(cuid())
+  language     String   @default("english")
+  cefrLevel    String   // A1, A2, B1, B2, C1, C2
+  title        String   // 記事タイトル
+  content      String   // 記事本文
+  wordCount    Int      // 単語数
+  questions    String   // JSON: 理解度確認問題の配列
+  difficulty   Float    @default(0.5) // IRT難易度パラメータ
+  source       String?  // ニュースソース
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  responses ReadingTestResponse[]
+
+  @@index([language, cefrLevel])
+  @@index([isActive])
+  @@map("reading_question")
+}
+
+// 読解テスト回答
+model ReadingTestResponse {
+  id           String          @id @default(cuid())
+  assessmentId String
+  assessment   LevelAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     ReadingQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answers      String          // JSON: 各問題への回答
+  correctCount Int             // 正解数
+  totalCount   Int             // 問題数
+  readingTime  Int?            // 読解時間（秒）
+  createdAt    DateTime        @default(now())
+
+  @@index([assessmentId])
+  @@index([questionId])
+  @@map("reading_test_response")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

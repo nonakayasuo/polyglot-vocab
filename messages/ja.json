@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "NewsLingua",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "next": "次へ",
+    "back": "戻る",
+    "done": "完了",
+    "settings": "設定"
+  },
+  "auth": {
+    "signIn": "ログイン",
+    "signUp": "新規登録",
+    "signOut": "ログアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "名前",
+    "forgotPassword": "パスワードを忘れた場合",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "hasAccount": "すでにアカウントをお持ちですか？"
+  },
+  "assessment": {
+    "title": "レベル診断テスト",
+    "description": "あなたの語学レベルを診断し、最適な学習プランをご提案します。",
+    "selectLanguage": "診断する言語を選択",
+    "vocabularyTest": "語彙テスト",
+    "readingTest": "読解テスト",
+    "startTest": "診断を開始する",
+    "estimatedTime": "所要時間: 約15〜25分",
+    "question": "問題",
+    "answer": "回答する",
+    "nextQuestion": "次の問題",
+    "viewResult": "結果を見る",
+    "correct": "正解！",
+    "incorrect": "不正解"
+  },
+  "result": {
+    "completed": "診断完了！",
+    "yourLevel": "あなたのレベル",
+    "strengths": "強み",
+    "improvements": "改善点",
+    "recommendations": "おすすめ学習プラン",
+    "retake": "もう一度テスト",
+    "startLearning": "学習を開始"
+  },
+  "news": {
+    "title": "ニュース",
+    "readMore": "続きを読む",
+    "difficulty": "難易度",
+    "wordCount": "単語数",
+    "addToVocabulary": "単語帳に追加"
+  },
+  "vocabulary": {
+    "title": "単語帳",
+    "addWord": "単語を追加",
+    "flashcards": "フラッシュカード",
+    "search": "検索",
+    "categories": "カテゴリ",
+    "total": "合計",
+    "learned": "学習済み"
+  },
+  "languages": {
+    "english": "英語",
+    "spanish": "スペイン語",
+    "french": "フランス語",
+    "german": "ドイツ語",
+    "chinese": "中国語",
+    "korean": "韓国語"
+  },
+  "cefr": {
+    "A1": "入門",
+    "A2": "初級",
+    "B1": "中級",
+    "B2": "中上級",
+    "C1": "上級",
+    "C2": "ネイティブ級"
+  }
+}
+

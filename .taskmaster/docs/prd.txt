@@ -1,0 +1,195 @@
+# NewsLingua - Product Requirements Document
+
+## Project Overview
+
+NewsLinguaは、世界中のニュースを読みながら語学力を向上させる次世代語学学習プラットフォームです。「生きた言語を、生きたニュースから学ぶ」をコンセプトに、AIを活用したパーソナライズド学習体験を提供します。
+
+### Key Differentiators
+- リアルタイムニュースコンテンツで学習
+- 初回レベル判定システム（CEFR A1-C2）
+- Python MCP統合によるAI学習アシスタント
+- HelloTalk等の言語交換アプリとの連携
+- マルチプラットフォーム対応（Web, iOS, Android）
+
+### Target Release: 2026年6月（商用リリース）
+
+---
+
+## Phase 1: 基盤構築（2026年1月）
+
+### 1.1 認証システム（Better Auth統合）
+- Better Authパッケージの導入と設定
+- Prismaスキーマ拡張（User, Session, Account, Verification モデル追加）
+- メール/パスワード認証の実装
+- ソーシャルログイン実装（Google OAuth, Apple Sign In）
+- セッション管理とミドルウェア実装
+- 認証UI（サインアップ、ログイン、パスワードリセット）
+
+### 1.2 レベル判定システム
+- レベル判定データモデル設計（LevelAssessment モデル）
+- 語彙テスト問題データベース作成（A1-C2レベル別）
+- 語彙テストUI（段階的難易度、適応型テスト）
+- 読解テストUI（ニュース記事ベースの問題）
+- CEFRレベル算出アルゴリズム実装
+- レベル判定結果画面（強み・弱み分析）
+- 設定画面からの再診断機能
+
+### 1.3 クラウドDB移行
+- Neon PostgreSQL環境構築
+- Prisma設定をPostgreSQLに変更
+- 既存データのマイグレーション
+- 接続プーリング設定
+
+---
+
+## Phase 2: ニュース学習コア（2026年2月）
+
+### 2.1 ニュースソース拡大
+- ニュースAPI統合基盤（共通インターフェース設計）
+- BBC Learning English連携
+- CNN連携
+- NHK World連携
+- El País連携（スペイン語）
+- 朝鮮日報連携（韓国語）
+- ニュースキャッシュ・更新システム
+
+### 2.2 難易度判定システム
+- 記事難易度分析エンジン（語彙・文法複雑度分析）
+- CEFR難易度タグ自動付与
+- ユーザーレベル別記事フィルタリング
+- カテゴリ自動分類（政治/経済/科学/スポーツ等）
+- レベル適応型レコメンデーション
+
+### 2.3 インタラクティブリーディング
+- 単語ハイライト機能（タップで意味表示）
+- ワンタップ単語帳追加（記事コンテキスト保持）
+- 高品質TTS導入（読み上げ機能強化）
+- 記事内ミニクイズ（理解度チェック）
+
+---
+
+## Phase 3: AI統合 - Python実装（2026年3月）
+
+### 3.1 Python AIサービス構築
+- FastAPIプロジェクト構築（python-ai-service/）
+- MCP Server基盤実装（Python MCP SDK）
+- Claude API統合
+- Next.js⇔FastAPI連携（JWT認証共有）
+- Pinecone統合（ベクトル検索）
+
+### 3.2 MCPツール実装
+- 単語説明ツール（explain_word）
+- 例文生成ツール（generate_examples）
+- 文法説明ツール（explain_grammar）
+- 記事難易度分析ツール（analyze_difficulty）
+- 記事要約ツール（summarize_article）
+- 語彙抽出ツール（extract_vocabulary）
+- 進捗分析ツール（analyze_progress）
+- 学習プラン生成ツール（suggest_next_lesson）
+
+### 3.3 AI学習アシスタントUI
+- AIチャットインターフェース
+- 単語説明パネル
+- 文法解説パネル
+- 学習レコメンデーション表示
+
+---
+
+## Phase 4: ソーシャル・連携（2026年4月）
+
+### 4.1 コミュニティ機能
+- 学習グループ機能（作成・参加・管理）
+- 記事ディスカッション機能（コメント・返信）
+- 通知システム（プッシュ通知）
+- アクティビティフィード
+
+### 4.2 ゲーミフィケーション
+- ランキングシステム（デイリー/ウィークリー）
+- ストリーク機能（連続学習日数）
+- バッジ・実績システム
+
+### 4.3 外部連携
+- HelloTalk API連携調査・実装
+- API公開（β版、外部開発者向け）
+
+---
+
+## Phase 5: モバイル・国際化（2026年5月）
+
+### 5.1 React Nativeアプリ
+- Expo環境構築
+- 認証画面実装
+- ニュース一覧・詳細画面
+- 単語帳画面
+- フラッシュカード画面
+- プッシュ通知実装
+- iOS App Store申請
+- Google Play申請
+
+### 5.2 多言語UI対応（i18n）
+- i18n基盤構築（next-intl）
+- 日本語UI
+- 英語UI
+- スペイン語UI
+- 韓国語UI
+- 中国語UI
+
+---
+
+## Phase 6: 商用化・ローンチ（2026年6月）
+
+### 6.1 決済機能
+- Stripe統合
+- 料金プラン実装（Free/Pro/Business）
+- サブスクリプション管理
+- 請求書・領収書発行
+
+### 6.2 管理機能
+- 管理者ダッシュボード
+- ユーザー管理画面
+- 分析・レポート機能
+- 企業向けチーム管理機能
+
+### 6.3 ローンチ準備
+- セキュリティ監査
+- パフォーマンス最適化
+- クローズドβテスト
+- フィードバック対応
+- ランディングページ
+- 正式リリース
+
+---
+
+## Technical Stack
+
+### Frontend (TypeScript)
+- Next.js 16+ (App Router)
+- React 19
+- Tailwind CSS 4
+- React Native + Expo
+
+### Backend (TypeScript)
+- Hono (Core API)
+- Better Auth (認証)
+- Prisma (ORM)
+
+### Backend (Python)
+- FastAPI (AI Service)
+- MCP SDK (MCPサーバー)
+- LangChain (LLMオーケストレーション)
+- spaCy (NLP)
+
+### Infrastructure
+- Vercel (Web hosting)
+- Railway/Fly.io (Python service)
+- Neon (PostgreSQL)
+- Upstash (Redis)
+- Pinecone (Vector DB)
+- Cloudflare R2 (Storage)
+
+### External Services
+- Anthropic Claude API
+- OpenAI API
+- News APIs (BBC, CNN, etc.)
+- Stripe (Payments)
+

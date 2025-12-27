@@ -1505,6 +1505,7 @@ export type VocabularyWordCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many VocabularyWords.
    */
   data: Prisma.VocabularyWordCreateManyInput | Prisma.VocabularyWordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1523,6 +1524,7 @@ export type VocabularyWordCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many VocabularyWords.
    */
   data: Prisma.VocabularyWordCreateManyInput | Prisma.VocabularyWordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

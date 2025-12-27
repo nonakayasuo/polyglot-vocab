@@ -55,7 +55,18 @@ export const ModelName = {
   Article: 'Article',
   ReadingHistory: 'ReadingHistory',
   WordContext: 'WordContext',
-  DailyWordRecommendation: 'DailyWordRecommendation'
+  DailyWordRecommendation: 'DailyWordRecommendation',
+  WordEmbedding: 'WordEmbedding',
+  ArticleEmbedding: 'ArticleEmbedding',
+  User: 'User',
+  LevelAssessment: 'LevelAssessment',
+  VocabularyQuestion: 'VocabularyQuestion',
+  VocabularyTestResponse: 'VocabularyTestResponse',
+  ReadingQuestion: 'ReadingQuestion',
+  ReadingTestResponse: 'ReadingTestResponse',
+  Session: 'Session',
+  Account: 'Account',
+  Verification: 'Verification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -65,6 +76,9 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  */
 
 export const TransactionIsolationLevel = {
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const
 
@@ -152,12 +166,182 @@ export const DailyWordRecommendationScalarFieldEnum = {
 export type DailyWordRecommendationScalarFieldEnum = (typeof DailyWordRecommendationScalarFieldEnum)[keyof typeof DailyWordRecommendationScalarFieldEnum]
 
 
+export const WordEmbeddingScalarFieldEnum = {
+  id: 'id',
+  word: 'word',
+  language: 'language',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WordEmbeddingScalarFieldEnum = (typeof WordEmbeddingScalarFieldEnum)[keyof typeof WordEmbeddingScalarFieldEnum]
+
+
+export const ArticleEmbeddingScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  createdAt: 'createdAt'
+} as const
+
+export type ArticleEmbeddingScalarFieldEnum = (typeof ArticleEmbeddingScalarFieldEnum)[keyof typeof ArticleEmbeddingScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  cefrLevel: 'cefrLevel',
+  learningLanguage: 'learningLanguage',
+  nativeLanguage: 'nativeLanguage'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const LevelAssessmentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  language: 'language',
+  cefrLevel: 'cefrLevel',
+  vocabularyScore: 'vocabularyScore',
+  readingScore: 'readingScore',
+  overallScore: 'overallScore',
+  strengths: 'strengths',
+  weaknesses: 'weaknesses',
+  recommendations: 'recommendations',
+  completedAt: 'completedAt'
+} as const
+
+export type LevelAssessmentScalarFieldEnum = (typeof LevelAssessmentScalarFieldEnum)[keyof typeof LevelAssessmentScalarFieldEnum]
+
+
+export const VocabularyQuestionScalarFieldEnum = {
+  id: 'id',
+  language: 'language',
+  cefrLevel: 'cefrLevel',
+  questionType: 'questionType',
+  word: 'word',
+  question: 'question',
+  options: 'options',
+  correctIndex: 'correctIndex',
+  explanation: 'explanation',
+  difficulty: 'difficulty',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VocabularyQuestionScalarFieldEnum = (typeof VocabularyQuestionScalarFieldEnum)[keyof typeof VocabularyQuestionScalarFieldEnum]
+
+
+export const VocabularyTestResponseScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  questionId: 'questionId',
+  selectedIdx: 'selectedIdx',
+  isCorrect: 'isCorrect',
+  responseTime: 'responseTime',
+  createdAt: 'createdAt'
+} as const
+
+export type VocabularyTestResponseScalarFieldEnum = (typeof VocabularyTestResponseScalarFieldEnum)[keyof typeof VocabularyTestResponseScalarFieldEnum]
+
+
+export const ReadingQuestionScalarFieldEnum = {
+  id: 'id',
+  language: 'language',
+  cefrLevel: 'cefrLevel',
+  title: 'title',
+  content: 'content',
+  wordCount: 'wordCount',
+  questions: 'questions',
+  difficulty: 'difficulty',
+  source: 'source',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReadingQuestionScalarFieldEnum = (typeof ReadingQuestionScalarFieldEnum)[keyof typeof ReadingQuestionScalarFieldEnum]
+
+
+export const ReadingTestResponseScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  questionId: 'questionId',
+  answers: 'answers',
+  correctCount: 'correctCount',
+  totalCount: 'totalCount',
+  readingTime: 'readingTime',
+  createdAt: 'createdAt'
+} as const
+
+export type ReadingTestResponseScalarFieldEnum = (typeof ReadingTestResponseScalarFieldEnum)[keyof typeof ReadingTestResponseScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  expiresAt: 'expiresAt',
+  token: 'token',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  userId: 'userId'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  userId: 'userId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const VerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const NullsOrder = {

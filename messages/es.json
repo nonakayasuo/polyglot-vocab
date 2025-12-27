@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "NewsLingua",
+    "loading": "Cargando...",
+    "error": "Se produjo un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "done": "Hecho",
+    "settings": "Configuración"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "hasAccount": "¿Ya tienes una cuenta?"
+  },
+  "assessment": {
+    "title": "Test de Nivel",
+    "description": "Evaluaremos tu nivel de idioma y te recomendaremos el mejor plan de aprendizaje.",
+    "selectLanguage": "Selecciona el idioma a evaluar",
+    "vocabularyTest": "Test de Vocabulario",
+    "readingTest": "Test de Comprensión Lectora",
+    "startTest": "Iniciar Evaluación",
+    "estimatedTime": "Tiempo estimado: 15-25 minutos",
+    "question": "Pregunta",
+    "answer": "Enviar Respuesta",
+    "nextQuestion": "Siguiente Pregunta",
+    "viewResult": "Ver Resultados",
+    "correct": "¡Correcto!",
+    "incorrect": "Incorrecto"
+  },
+  "result": {
+    "completed": "¡Evaluación Completada!",
+    "yourLevel": "Tu Nivel",
+    "strengths": "Fortalezas",
+    "improvements": "Áreas de Mejora",
+    "recommendations": "Plan de Aprendizaje Recomendado",
+    "retake": "Repetir Test",
+    "startLearning": "Comenzar a Aprender"
+  },
+  "news": {
+    "title": "Noticias",
+    "readMore": "Leer más",
+    "difficulty": "Dificultad",
+    "wordCount": "Número de palabras",
+    "addToVocabulary": "Añadir al vocabulario"
+  },
+  "vocabulary": {
+    "title": "Vocabulario",
+    "addWord": "Añadir palabra",
+    "flashcards": "Tarjetas de memoria",
+    "search": "Buscar",
+    "categories": "Categorías",
+    "total": "Total",
+    "learned": "Aprendidas"
+  },
+  "languages": {
+    "english": "Inglés",
+    "spanish": "Español",
+    "french": "Francés",
+    "german": "Alemán",
+    "chinese": "Chino",
+    "korean": "Coreano"
+  },
+  "cefr": {
+    "A1": "Principiante",
+    "A2": "Elemental",
+    "B1": "Intermedio",
+    "B2": "Intermedio Alto",
+    "C1": "Avanzado",
+    "C2": "Competente"
+  }
+}
+

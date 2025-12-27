@@ -498,6 +498,7 @@ export type WordContextCreateOrConnectWithoutWordInput = {
 
 export type WordContextCreateManyWordInputEnvelope = {
   data: Prisma.WordContextCreateManyWordInput | Prisma.WordContextCreateManyWordInput[]
+  skipDuplicates?: boolean
 }
 
 export type WordContextUpsertWithWhereUniqueWithoutWordInput = {
@@ -551,6 +552,7 @@ export type WordContextCreateOrConnectWithoutArticleInput = {
 
 export type WordContextCreateManyArticleInputEnvelope = {
   data: Prisma.WordContextCreateManyArticleInput | Prisma.WordContextCreateManyArticleInput[]
+  skipDuplicates?: boolean
 }
 
 export type WordContextUpsertWithWhereUniqueWithoutArticleInput = {
@@ -1364,6 +1366,7 @@ export type WordContextCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many WordContexts.
    */
   data: Prisma.WordContextCreateManyInput | Prisma.WordContextCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1382,6 +1385,7 @@ export type WordContextCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many WordContexts.
    */
   data: Prisma.WordContextCreateManyInput | Prisma.WordContextCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

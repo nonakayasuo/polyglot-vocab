@@ -1223,6 +1223,7 @@ export type DailyWordRecommendationCreateManyArgs<ExtArgs extends runtime.Types.
    * The data used to create many DailyWordRecommendations.
    */
   data: Prisma.DailyWordRecommendationCreateManyInput | Prisma.DailyWordRecommendationCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1241,6 +1242,7 @@ export type DailyWordRecommendationCreateManyAndReturnArgs<ExtArgs extends runti
    * The data used to create many DailyWordRecommendations.
    */
   data: Prisma.DailyWordRecommendationCreateManyInput | Prisma.DailyWordRecommendationCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

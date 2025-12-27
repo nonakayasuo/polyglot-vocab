@@ -42,3 +42,58 @@ export type WordContext = Prisma.WordContextModel
  * 
  */
 export type DailyWordRecommendation = Prisma.DailyWordRecommendationModel
+/**
+ * Model WordEmbedding
+ * 
+ */
+export type WordEmbedding = Prisma.WordEmbeddingModel
+/**
+ * Model ArticleEmbedding
+ * 
+ */
+export type ArticleEmbedding = Prisma.ArticleEmbeddingModel
+/**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel
+/**
+ * Model LevelAssessment
+ * 
+ */
+export type LevelAssessment = Prisma.LevelAssessmentModel
+/**
+ * Model VocabularyQuestion
+ * 
+ */
+export type VocabularyQuestion = Prisma.VocabularyQuestionModel
+/**
+ * Model VocabularyTestResponse
+ * 
+ */
+export type VocabularyTestResponse = Prisma.VocabularyTestResponseModel
+/**
+ * Model ReadingQuestion
+ * 
+ */
+export type ReadingQuestion = Prisma.ReadingQuestionModel
+/**
+ * Model ReadingTestResponse
+ * 
+ */
+export type ReadingTestResponse = Prisma.ReadingTestResponseModel
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel

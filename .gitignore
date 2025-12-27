@@ -58,8 +58,8 @@ node_modules/
 *.sw?
 # OS specific
 
+/src/generated/prisma
+
 # Task files
 # tasks.json
 # tasks/ 
-
-/src/generated/prisma

@@ -438,6 +438,7 @@ export type ReadingHistoryCreateOrConnectWithoutArticleInput = {
 
 export type ReadingHistoryCreateManyArticleInputEnvelope = {
   data: Prisma.ReadingHistoryCreateManyArticleInput | Prisma.ReadingHistoryCreateManyArticleInput[]
+  skipDuplicates?: boolean
 }
 
 export type ReadingHistoryUpsertWithWhereUniqueWithoutArticleInput = {
@@ -1212,6 +1213,7 @@ export type ReadingHistoryCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many ReadingHistories.
    */
   data: Prisma.ReadingHistoryCreateManyInput | Prisma.ReadingHistoryCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1230,6 +1232,7 @@ export type ReadingHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many ReadingHistories.
    */
   data: Prisma.ReadingHistoryCreateManyInput | Prisma.ReadingHistoryCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

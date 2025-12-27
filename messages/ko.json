@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "NewsLingua",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "save": "저장",
+    "cancel": "취소",
+    "next": "다음",
+    "back": "뒤로",
+    "done": "완료",
+    "settings": "설정"
+  },
+  "auth": {
+    "signIn": "로그인",
+    "signUp": "회원가입",
+    "signOut": "로그아웃",
+    "email": "이메일",
+    "password": "비밀번호",
+    "name": "이름",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "noAccount": "계정이 없으신가요?",
+    "hasAccount": "이미 계정이 있으신가요?"
+  },
+  "assessment": {
+    "title": "레벨 테스트",
+    "description": "귀하의 언어 수준을 평가하고 최적의 학습 계획을 추천해 드립니다.",
+    "selectLanguage": "평가할 언어 선택",
+    "vocabularyTest": "어휘 테스트",
+    "readingTest": "독해 테스트",
+    "startTest": "테스트 시작",
+    "estimatedTime": "예상 시간: 15-25분",
+    "question": "문제",
+    "answer": "답변 제출",
+    "nextQuestion": "다음 문제",
+    "viewResult": "결과 보기",
+    "correct": "정답!",
+    "incorrect": "오답"
+  },
+  "result": {
+    "completed": "테스트 완료!",
+    "yourLevel": "당신의 레벨",
+    "strengths": "강점",
+    "improvements": "개선 영역",
+    "recommendations": "추천 학습 계획",
+    "retake": "다시 테스트",
+    "startLearning": "학습 시작"
+  },
+  "news": {
+    "title": "뉴스",
+    "readMore": "더 읽기",
+    "difficulty": "난이도",
+    "wordCount": "단어 수",
+    "addToVocabulary": "단어장에 추가"
+  },
+  "vocabulary": {
+    "title": "단어장",
+    "addWord": "단어 추가",
+    "flashcards": "플래시카드",
+    "search": "검색",
+    "categories": "카테고리",
+    "total": "전체",
+    "learned": "학습 완료"
+  },
+  "languages": {
+    "english": "영어",
+    "spanish": "스페인어",
+    "french": "프랑스어",
+    "german": "독일어",
+    "chinese": "중국어",
+    "korean": "한국어"
+  },
+  "cefr": {
+    "A1": "입문",
+    "A2": "초급",
+    "B1": "중급",
+    "B2": "중상급",
+    "C1": "고급",
+    "C2": "원어민 수준"
+  }
+}
+
