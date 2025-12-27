@@ -17,6 +17,9 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
 class ApiClient {
   late final Dio _dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  
+  /// ベースURL
+  String get baseUrl => AppConfig.apiBaseUrl.replaceAll('/api', '');
 
   ApiClient() {
     _dio = Dio(

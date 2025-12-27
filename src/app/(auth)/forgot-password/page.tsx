@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { ArrowLeft, CheckCircle, Loader2, Mail, Newspaper } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,9 +17,17 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      // TODO: パスワードリセットメール送信機能を実装
-      // 現時点ではダミー実装
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { error: resetError } = await authClient.forgetPassword({
+        email,
+        redirectTo: "/reset-password",
+      });
+
+      if (resetError) {
+        // ユーザーが存在しない場合でもセキュリティのため成功として表示
+        console.error("Password reset error:", resetError);
+      }
+
+      // セキュリティのため、常に成功として表示
       setIsSubmitted(true);
     } catch {
       setError("送信中にエラーが発生しました");

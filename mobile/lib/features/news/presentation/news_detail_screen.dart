@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 import '../domain/news_provider.dart';
 import '../domain/article_model.dart';
 import '../../../shared/widgets/word_popup.dart';
+import '../../vocabulary/domain/vocabulary_provider.dart';
+import '../../vocabulary/domain/word_model.dart';
 
 /// ニュース詳細画面
 class NewsDetailScreen extends ConsumerStatefulWidget {
@@ -166,14 +169,42 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
               word: _selectedWord!,
               position: _popupPosition!,
               onClose: _closePopup,
-              onAddToVocabulary: (definition) {
-                // TODO: 単語帳に追加
-                _closePopup();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('"${definition.word}" を単語帳に追加しました'),
-                  ),
+              onAddToVocabulary: (definition) async {
+                // WordDefinitionからWordに変換して追加
+                final word = Word(
+                  id: const Uuid().v4(),
+                  word: definition.word,
+                  pronunciation: definition.phonetic,
+                  category: definition.partOfSpeech ?? 'Other',
+                  meaning: definition.definitionJa ?? definition.definition ?? '',
+                  example: definition.example,
+                  language: 'english',
                 );
+
+                try {
+                  await ref.read(wordsProvider.notifier).addWord(word);
+                  _closePopup();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('"${definition.word}" を単語帳に追加しました'),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  _closePopup();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('単語の追加に失敗しました: $e'),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                }
               },
             ),
         ],

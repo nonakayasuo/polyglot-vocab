@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../domain/auth_provider.dart';
+import '../data/auth_repository.dart';
 
 /// サインイン画面
 class SignInScreen extends ConsumerStatefulWidget {
@@ -16,6 +18,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
   String? _errorMessage;
 
   @override
@@ -25,7 +28,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
-  Future<void> _handleSignIn() async {
+  Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -44,7 +47,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = 'サインインに失敗しました。メールアドレスとパスワードを確認してください。';
       });
     } finally {
       if (mounted) {
@@ -54,137 +57,230 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     }
   }
+  
+  Future<void> _signInWithGoogle() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    final url = authRepo.getGoogleSignInUrl();
+    
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      setState(() {
+        _errorMessage = 'Google サインインを開けませんでした';
+      });
+    }
+  }
+  
+  Future<void> _signInWithFacebook() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    final url = authRepo.getFacebookSignInUrl();
+    
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      setState(() {
+        _errorMessage = 'Facebook サインインを開けませんでした';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // ロゴ・タイトル
-                  const Icon(
-                    Icons.newspaper,
-                    size: 64,
-                    color: Color(0xFF3B82F6),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'NewsLingua',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ニュースで生きた英語を学ぶ',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 48),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 60),
 
-                  // エラーメッセージ
-                  if (_errorMessage != null) ...[
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.red.shade200),
+                // ロゴ
+                Icon(
+                  Icons.newspaper,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'NewsLingua',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.red.shade700),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'ニュースで学ぶ語学プラットフォーム',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                ),
+                const SizedBox(height: 48),
 
-                  // メールアドレス
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'メールアドレス',
-                      prefixIcon: Icon(Icons.email_outlined),
+                // エラーメッセージ
+                if (_errorMessage != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'メールアドレスを入力してください';
-                      }
-                      if (!value.contains('@')) {
-                        return '有効なメールアドレスを入力してください';
-                      }
-                      return null;
-                    },
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red.shade700),
+                    ),
                   ),
                   const SizedBox(height: 16),
-
-                  // パスワード
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'パスワード',
-                      prefixIcon: Icon(Icons.lock_outlined),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'パスワードを入力してください';
-                      }
-                      if (value.length < 8) {
-                        return 'パスワードは8文字以上にしてください';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 24),
-
-                  // サインインボタン
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : _handleSignIn,
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('サインイン'),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // サインアップリンク
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('アカウントをお持ちでない方は'),
-                      TextButton(
-                        onPressed: () => context.go('/signup'),
-                        child: const Text('新規登録'),
-                      ),
-                    ],
-                  ),
-
-                  // ゲストとして続行
-                  const SizedBox(height: 16),
-                  OutlinedButton(
-                    onPressed: () => context.go('/news'),
-                    child: const Text('ゲストとして続行'),
-                  ),
                 ],
-              ),
+
+                // メールアドレス
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'メールアドレス',
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'メールアドレスを入力してください';
+                    }
+                    if (!value.contains('@')) {
+                      return '有効なメールアドレスを入力してください';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // パスワード
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    labelText: 'パスワード',
+                    prefixIcon: const Icon(Icons.lock_outlined),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'パスワードを入力してください';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // サインインボタン
+                FilledButton(
+                  onPressed: _isLoading ? null : _signIn,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('サインイン'),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // 区切り線
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'または',
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Google サインインボタン
+                OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  icon: Image.network(
+                    'https://www.google.com/favicon.ico',
+                    width: 20,
+                    height: 20,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.g_mobiledata, size: 24),
+                  ),
+                  label: const Text('Googleでサインイン'),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Facebook サインインボタン
+                OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithFacebook,
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(color: Colors.grey.shade300),
+                    foregroundColor: const Color(0xFF1877F2),
+                  ),
+                  icon: const Icon(Icons.facebook, size: 20),
+                  label: const Text('Facebookでサインイン'),
+                ),
+                
+                const SizedBox(height: 24),
+
+                // アカウント作成リンク
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('アカウントをお持ちでない方は'),
+                    TextButton(
+                      onPressed: () => context.push('/signup'),
+                      child: const Text('新規登録'),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // ゲストとして続ける
+                TextButton(
+                  onPressed: () => context.go('/news'),
+                  child: Text(
+                    'ゲストとして続ける',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -192,4 +288,3 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     );
   }
 }
-

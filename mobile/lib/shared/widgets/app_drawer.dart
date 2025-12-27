@@ -102,7 +102,7 @@ class AppDrawer extends ConsumerWidget {
                     title: '設定',
                     onTap: () {
                       Navigator.pop(context);
-                      // TODO: 設定画面
+                      context.go('/settings');
                     },
                   ),
                   _DrawerItem(
@@ -110,7 +110,7 @@ class AppDrawer extends ConsumerWidget {
                     title: 'ヘルプ・使い方',
                     onTap: () {
                       Navigator.pop(context);
-                      // TODO: ヘルプ画面
+                      context.go('/help');
                     },
                   ),
                 ],

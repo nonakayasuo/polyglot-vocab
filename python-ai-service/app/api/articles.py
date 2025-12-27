@@ -91,8 +91,21 @@ async def summarize_article(request: SummarizeArticleRequest):
     ユーザーのレベルに合わせた難易度で要約を生成し、
     学習すべき語彙もピックアップします。
     """
-    # TODO: AIサービスを使って実装
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    from app.services.llm import get_llm_service
+
+    try:
+        llm = get_llm_service()
+        result = await llm.summarize_article(
+            content=request.content,
+            language=request.language,
+            user_level=request.user_level,
+            target_language=request.target_language,
+        )
+        return SummarizeArticleResponse(**result)
+    except ValueError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI処理エラー: {str(e)}")
 
 
 @router.post("/extract-vocabulary", response_model=ExtractVocabularyResponse)
@@ -103,5 +116,18 @@ async def extract_vocabulary(request: ExtractVocabularyRequest):
     ユーザーのレベルに適した語彙を選択し、
     記事内での使用例とともに返します。
     """
-    # TODO: AIサービスを使って実装
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    from app.services.llm import get_llm_service
+
+    try:
+        llm = get_llm_service()
+        result = await llm.extract_vocabulary(
+            content=request.content,
+            language=request.language,
+            user_level=request.user_level,
+            max_words=request.max_words,
+        )
+        return ExtractVocabularyResponse(**result)
+    except ValueError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI処理エラー: {str(e)}")

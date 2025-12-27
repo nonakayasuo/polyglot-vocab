@@ -264,6 +264,144 @@ Provide your analysis as JSON:
             "reading_time_minutes": 5,
         }
 
+    async def summarize_article(
+        self,
+        content: str,
+        language: str = "english",
+        user_level: str = "B1",
+        target_language: str = "japanese",
+    ) -> dict[str, Any]:
+        """
+        Summarize an article for language learners.
+
+        Args:
+            content: Article content
+            language: Article language
+            user_level: User's CEFR level
+            target_language: Language for summary output
+
+        Returns:
+            Summary with key points and vocabulary
+        """
+        level_descriptions = {
+            "A1": "beginner (simple vocabulary, very short sentences)",
+            "A2": "elementary (basic vocabulary, simple sentences)",
+            "B1": "intermediate (everyday vocabulary, moderate complexity)",
+            "B2": "upper-intermediate (wider vocabulary, complex sentences OK)",
+            "C1": "advanced (sophisticated vocabulary, nuanced language)",
+            "C2": "proficient (native-like vocabulary and complexity)",
+        }
+
+        level_desc = level_descriptions.get(user_level, level_descriptions["B1"])
+
+        system_prompt = f"""You are a language learning assistant helping a {user_level} level learner.
+Summarize the article in {target_language}, adjusted for a {level_desc} learner.
+Also identify the main topic and pick out key vocabulary that would be useful to learn.
+
+Respond ONLY with valid JSON in this exact format:
+{{
+  "summary": "Article summary in {target_language}",
+  "key_points": ["Key point 1", "Key point 2", "Key point 3"],
+  "main_topic": "Brief topic description",
+  "vocabulary_to_learn": [
+    {{"word": "English word", "definition": "Definition in {target_language}"}},
+    {{"word": "Another word", "definition": "Its definition"}}
+  ]
+}}"""
+
+        response = await self.generate(
+            prompt=f"Summarize this {language} article for a {user_level} learner:\n\n{content[:4000]}",
+            system=system_prompt,
+            temperature=0.4,
+        )
+
+        import json
+
+        try:
+            json_start = response.find("{")
+            json_end = response.rfind("}") + 1
+            if json_start != -1 and json_end > json_start:
+                return json.loads(response[json_start:json_end])
+        except json.JSONDecodeError:
+            logger.warning("failed_to_parse_summary", response=response[:200])
+
+        return {
+            "summary": response,
+            "key_points": [],
+            "main_topic": "",
+            "vocabulary_to_learn": [],
+        }
+
+    async def extract_vocabulary(
+        self,
+        content: str,
+        language: str = "english",
+        user_level: str = "B1",
+        max_words: int = 10,
+    ) -> dict[str, Any]:
+        """
+        Extract learning vocabulary from an article.
+
+        Args:
+            content: Article content
+            language: Article language
+            user_level: User's CEFR level
+            max_words: Maximum number of words to extract
+
+        Returns:
+            List of vocabulary words with definitions and examples
+        """
+        level_target = {
+            "A1": "A2-B1 level words (slightly above user level)",
+            "A2": "B1 level words (slightly above user level)",
+            "B1": "B1-B2 level words (at or slightly above user level)",
+            "B2": "B2-C1 level words (at or slightly above user level)",
+            "C1": "C1-C2 level words (at or slightly above user level)",
+            "C2": "advanced vocabulary, idioms, and rare expressions",
+        }
+
+        target = level_target.get(user_level, level_target["B1"])
+
+        system_prompt = f"""You are a vocabulary extraction assistant for language learners.
+Extract up to {max_words} useful vocabulary words from the article that would be valuable for a {user_level} level learner.
+Focus on: {target}
+
+For each word, provide:
+- The word itself
+- A clear definition in Japanese
+- The CEFR level of the word
+- An example sentence from or inspired by the article
+
+Respond ONLY with valid JSON in this exact format:
+{{
+  "words": [
+    {{
+      "word": "vocabulary",
+      "definition": "語彙、単語",
+      "cefr_level": "B1",
+      "sentence": "Building your vocabulary is essential for language learning."
+    }}
+  ]
+}}"""
+
+        response = await self.generate(
+            prompt=f"Extract {max_words} useful vocabulary words from this {language} article for a {user_level} learner:\n\n{content[:4000]}",
+            system=system_prompt,
+            temperature=0.3,
+        )
+
+        import json
+
+        try:
+            json_start = response.find("{")
+            json_end = response.rfind("}") + 1
+            if json_start != -1 and json_end > json_start:
+                return json.loads(response[json_start:json_end])
+        except json.JSONDecodeError:
+            logger.warning("failed_to_parse_vocabulary", response=response[:200])
+
+        return {"words": []}
+
 
 # Singleton instance
 _llm_service: LLMService | None = None

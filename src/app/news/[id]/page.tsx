@@ -56,7 +56,7 @@ export default function ArticleDetailPage() {
 
   const [article, setArticle] = useState<Article | null>(null);
   const [articleContent, setArticleContent] = useState<ArticleContent | null>(
-    null
+    null,
   );
   const [contentLoading, setContentLoading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -112,7 +112,7 @@ export default function ArticleDetailPage() {
     try {
       const decodedUrl = decodeURIComponent(articleUrl);
       const res = await fetch(
-        `/api/news/content?url=${encodeURIComponent(decodedUrl)}`
+        `/api/news/content?url=${encodeURIComponent(decodedUrl)}`,
       );
 
       if (res.ok) {
@@ -182,7 +182,7 @@ export default function ArticleDetailPage() {
       try {
         // Free Dictionary API で定義を取得
         const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`,
         );
 
         if (response.ok) {
@@ -204,8 +204,8 @@ export default function ArticleDetailPage() {
             try {
               const translateRes = await fetch(
                 `/api/translate?text=${encodeURIComponent(
-                  englishDefinition
-                )}&from=en&to=ja`
+                  englishDefinition,
+                )}&from=en&to=ja`,
               );
               if (translateRes.ok) {
                 const translateData = await translateRes.json();
@@ -228,20 +228,20 @@ export default function ArticleDetailPage() {
           setPopover((prev) =>
             prev
               ? { ...prev, loading: false, definition: definitionData }
-              : null
+              : null,
           );
         } else {
           setPopover((prev) =>
-            prev ? { ...prev, loading: false, definition: undefined } : null
+            prev ? { ...prev, loading: false, definition: undefined } : null,
           );
         }
       } catch {
         setPopover((prev) =>
-          prev ? { ...prev, loading: false, definition: undefined } : null
+          prev ? { ...prev, loading: false, definition: undefined } : null,
         );
       }
     },
-    []
+    [],
   );
 
   // ポップオーバーを閉じる（開いてすぐは閉じないように保護）
@@ -307,7 +307,7 @@ export default function ArticleDetailPage() {
       const handleTap = (
         e:
           | React.MouseEvent<HTMLButtonElement>
-          | React.PointerEvent<HTMLButtonElement>
+          | React.PointerEvent<HTMLButtonElement>,
       ) => {
         e.preventDefault();
         e.stopPropagation();

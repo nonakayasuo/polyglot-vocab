@@ -50,7 +50,7 @@ function Overlay({ onClose, className }: OverlayProps) {
       className={cn(
         "fixed inset-0 z-40 bg-black/20",
         "touch-none", // タッチイベントのスクロールを防止
-        className
+        className,
       )}
       onClick={handleClick}
       onTouchEnd={handleTouchEnd}

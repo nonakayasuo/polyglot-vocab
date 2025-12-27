@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type TouchEvent,
@@ -64,7 +65,7 @@ function FloatingPanel({
         const halfWidth = maxWidth / 2;
         adjustedX = Math.max(
           viewportMargin + halfWidth,
-          Math.min(x, vw - halfWidth - viewportMargin)
+          Math.min(x, vw - halfWidth - viewportMargin),
         );
       }
 
@@ -97,7 +98,10 @@ function FloatingPanel({
 
   // イベント伝播を防止
   const stopPropagation = (
-    e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
+    e:
+      | MouseEvent<HTMLDivElement>
+      | TouchEvent<HTMLDivElement>
+      | KeyboardEvent<HTMLDivElement>,
   ) => {
     e.stopPropagation();
   };
@@ -116,7 +120,7 @@ function FloatingPanel({
         "p-4",
         "transition-opacity duration-150",
         isVisible ? "opacity-100" : "opacity-0",
-        className
+        className,
       )}
       style={{
         left: `${position.left}px`,
@@ -126,6 +130,7 @@ function FloatingPanel({
         transform: getTransform(),
       }}
       onClick={stopPropagation}
+      onKeyDown={stopPropagation}
       onTouchEnd={stopPropagation}
       onTouchStart={stopPropagation}
     >

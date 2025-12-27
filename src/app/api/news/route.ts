@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
-      }
+      },
     );
   } catch (error) {
     console.error("Failed to fetch news:", error);

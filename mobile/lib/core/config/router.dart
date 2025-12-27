@@ -8,6 +8,8 @@ import '../../features/news/presentation/news_list_screen.dart';
 import '../../features/news/presentation/news_detail_screen.dart';
 import '../../features/vocabulary/presentation/vocabulary_screen.dart';
 import '../../features/flashcard/presentation/flashcard_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/settings/presentation/help_screen.dart';
 import '../../features/auth/domain/auth_provider.dart';
 
 /// ルーター Provider
@@ -88,6 +90,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/flashcard',
         name: 'flashcard',
         builder: (context, state) => const FlashcardScreen(),
+      ),
+
+      // 設定
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+
+      // ヘルプ
+      GoRoute(
+        path: '/help',
+        name: 'help',
+        builder: (context, state) => const HelpScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

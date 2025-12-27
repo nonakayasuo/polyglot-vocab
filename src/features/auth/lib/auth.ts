@@ -1,7 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { bearer } from "better-auth/plugins";
 import { prisma } from "@/lib/prisma";
+import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -15,6 +17,18 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     // メール確認を後で有効化（Phase 1では無効）
     requireEmailVerification: false,
+    // パスワードリセットメール送信
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail(user.email, url);
+    },
+  },
+
+  // メール確認設定
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmail(user.email, url);
+    },
+    sendOnSignUp: false, // 現時点では無効
   },
 
   // セッション設定
@@ -65,6 +79,14 @@ export const auth = betterAuth({
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         },
       }),
+    // Facebook OAuth（環境変数が設定されている場合のみ有効）
+    ...(process.env.FACEBOOK_CLIENT_ID &&
+      process.env.FACEBOOK_CLIENT_SECRET && {
+        facebook: {
+          clientId: process.env.FACEBOOK_CLIENT_ID,
+          clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+        },
+      }),
     // Apple Sign In（環境変数が設定されている場合のみ有効）
     ...(process.env.APPLE_CLIENT_ID &&
       process.env.APPLE_CLIENT_SECRET && {
@@ -78,10 +100,14 @@ export const auth = betterAuth({
   // プラグイン
   plugins: [
     nextCookies(), // Server Actionsでのcookie処理
+    bearer(), // モバイルアプリ用のBearer token認証
   ],
 
-  // 信頼するオリジン
-  trustedOrigins: [process.env.BETTER_AUTH_URL || "http://localhost:3000"],
+  // 信頼するオリジン（Flutter開発環境を追加）
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    "http://localhost:8080", // Flutter Web開発環境
+  ],
 });
 
 // 型エクスポート
