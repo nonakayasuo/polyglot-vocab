@@ -57,8 +57,6 @@ const NAV_ITEMS: NavItem[] = [
     labelJa: "レベル診断",
     icon: Trophy,
     description: "CEFRレベルをチェック",
-    badge: "NEW",
-    badgeColor: "bg-amber-500",
   },
   {
     href: "/assessment/slang",
@@ -66,8 +64,20 @@ const NAV_ITEMS: NavItem[] = [
     labelJa: "スラングテスト",
     icon: Flame,
     description: "スラング理解度テスト",
-    badge: "NEW",
-    badgeColor: "bg-orange-500",
+  },
+  {
+    href: "/community",
+    label: "Community",
+    labelJa: "コミュニティ",
+    icon: Users,
+    description: "ランキング・仲間と交流",
+  },
+  {
+    href: "/achievements",
+    label: "Achievements",
+    labelJa: "実績",
+    icon: Award,
+    description: "バッジ・実績を確認",
   },
   {
     href: "/settings/content",
@@ -82,27 +92,6 @@ const NAV_ITEMS: NavItem[] = [
     labelJa: "設定",
     icon: Settings,
     description: "アカウント・表示設定",
-  },
-];
-
-const COMING_SOON_ITEMS: NavItem[] = [
-  {
-    href: "#",
-    label: "Community",
-    labelJa: "コミュニティ",
-    icon: Users,
-    description: "学習グループ・ディスカッション",
-    badge: "近日公開",
-    badgeColor: "bg-purple-500",
-  },
-  {
-    href: "#",
-    label: "Achievements",
-    labelJa: "実績",
-    icon: Award,
-    description: "バッジ・実績を確認",
-    badge: "近日公開",
-    badgeColor: "bg-purple-500",
   },
 ];
 
@@ -224,45 +213,12 @@ export function MobileMenu() {
               );
             })}
           </div>
-
-          {/* Coming Soon セクション */}
-          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <p className="px-4 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase mb-2">
-              Coming Soon
-            </p>
-            <div className="space-y-1 opacity-60">
-              {COMING_SOON_ITEMS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={item.label}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                  >
-                    <Icon className="w-5 h-5" />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{item.labelJa}</span>
-                        {item.badge && (
-                          <span
-                            className={`px-1.5 py-0.5 text-[10px] font-bold text-white rounded ${item.badgeColor}`}
-                          >
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs">{item.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </nav>
 
         {/* フッター */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-700">
           <Link
-            href="#"
+            href="/help"
             className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
           >
             <HelpCircle className="w-5 h-5" />

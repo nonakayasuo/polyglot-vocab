@@ -189,7 +189,7 @@ export async function GET(request: Request) {
     let filteredBuzzwords = BUZZWORDS_DATABASE;
     if (source !== "all") {
       filteredBuzzwords = BUZZWORDS_DATABASE.filter(
-        (bw) => bw.source.toLowerCase() === source.toLowerCase()
+        (bw) => bw.source.toLowerCase() === source.toLowerCase(),
       );
     }
 
@@ -207,7 +207,7 @@ export async function GET(request: Request) {
     console.error("Failed to fetch buzzwords:", error);
     return NextResponse.json(
       { error: "Failed to fetch buzzwords" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

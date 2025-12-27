@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
       // ブロックカテゴリに含まれる記事を除外
       if (userSettings.blockedCategories.length > 0) {
         const _blockedNewsCategories = userSettings.blockedCategories.flatMap(
-          (cat) => CATEGORY_MAPPING[cat] || []
+          (cat) => CATEGORY_MAPPING[cat] || [],
         );
 
         articles = articles.filter((_article) => {
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
           const description = (article.description || "").toLowerCase();
           return !adultKeywords.some(
             (keyword) =>
-              title.includes(keyword) || description.includes(keyword)
+              title.includes(keyword) || description.includes(keyword),
           );
         });
       }
@@ -145,13 +145,13 @@ export async function GET(request: NextRequest) {
           error: "News API is not configured",
           message: "Please set NEWS_API_KEY in your environment variables",
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to fetch news articles" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

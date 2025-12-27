@@ -13,8 +13,6 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ArticleComments } from "@/components/community";
-import { BuzzWordWidget } from "@/components/news/buzzword-widget";
-import { Button } from "@/components/ui/button";
 import { speak } from "@/lib/tts";
 import type { Article } from "@/types/news";
 
@@ -102,7 +100,7 @@ export default function ArticleDetailPage() {
       try {
         // Free Dictionary API で定義を取得
         const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`,
         );
 
         if (response.ok) {
@@ -122,20 +120,20 @@ export default function ArticleDetailPage() {
                     definition: meaning?.definitions?.[0]?.definition,
                   },
                 }
-              : null
+              : null,
           );
         } else {
           setPopover((prev) =>
-            prev ? { ...prev, loading: false, definition: undefined } : null
+            prev ? { ...prev, loading: false, definition: undefined } : null,
           );
         }
       } catch (_err) {
         setPopover((prev) =>
-          prev ? { ...prev, loading: false, definition: undefined } : null
+          prev ? { ...prev, loading: false, definition: undefined } : null,
         );
       }
     },
-    []
+    [],
   );
 
   // ポップオーバーを閉じる
@@ -321,9 +319,6 @@ export default function ArticleDetailPage() {
 
           {/* サイドバー */}
           <div className="space-y-6">
-            {/* バズワードウィジェット */}
-            <BuzzWordWidget compact maxItems={5} />
-
             {/* クイックアクション */}
             <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-3">

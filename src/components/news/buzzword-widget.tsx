@@ -137,7 +137,7 @@ export function BuzzWordWidget({
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/buzzwords?limit=${maxItems}&t=${Date.now()}`
+        `/api/buzzwords?limit=${maxItems}&t=${Date.now()}`,
       );
       if (res.ok) {
         const data = await res.json();

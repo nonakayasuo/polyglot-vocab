@@ -73,7 +73,7 @@ export default function NewsPage() {
     } catch (err) {
       console.error("Failed to fetch news:", err);
       setError(
-        err instanceof Error ? err.message : "ニュースの取得に失敗しました"
+        err instanceof Error ? err.message : "ニュースの取得に失敗しました",
       );
     } finally {
       setLoading(false);
@@ -329,11 +329,11 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700/50">
           <Link
             href={`/news/${article.id}?title=${encodeURIComponent(
-              article.title
+              article.title,
             )}&url=${encodeURIComponent(
-              article.url
+              article.url,
             )}&source=${encodeURIComponent(
-              article.source
+              article.source,
             )}&description=${encodeURIComponent(article.description || "")}`}
             className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors group/link"
           >

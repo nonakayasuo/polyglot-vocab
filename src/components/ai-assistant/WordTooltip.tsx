@@ -36,6 +36,83 @@ interface ContentSettings {
   showTaboo: boolean;
 }
 
+// レジスターを推定（簡易版）- コンポーネント外で定義
+const estimateRegister = (
+  word: string,
+  definitions?: Array<{ definition: string }>,
+): Register => {
+  const slangWords = [
+    "slay",
+    "lit",
+    "goat",
+    "sus",
+    "bet",
+    "cap",
+    "bussin",
+    "rizz",
+    "delulu",
+    "ate",
+    "vibe",
+    "lowkey",
+    "highkey",
+    "flex",
+    "salty",
+    "ghost",
+    "simp",
+    "stan",
+    "tea",
+    "yeet",
+  ];
+  const tabooWords = ["damn", "hell", "crap", "ass", "shit", "fuck"];
+
+  const lowerWord = word.toLowerCase();
+
+  if (tabooWords.some((tw) => lowerWord.includes(tw))) {
+    return "TABOO";
+  }
+  if (slangWords.includes(lowerWord)) {
+    return "SLANG";
+  }
+
+  // 定義からも推定
+  const defText = definitions?.map((d) => d.definition).join(" ") || "";
+  if (
+    defText.includes("informal") ||
+    defText.includes("slang") ||
+    defText.includes("colloquial")
+  ) {
+    return "SLANG";
+  }
+  if (
+    defText.includes("vulgar") ||
+    defText.includes("offensive") ||
+    defText.includes("taboo")
+  ) {
+    return "TABOO";
+  }
+  if (defText.includes("formal") || defText.includes("literary")) {
+    return "FORMAL";
+  }
+
+  return "NEUTRAL";
+};
+
+// TPOアドバイス生成 - コンポーネント外で定義
+const generateTPOAdvice = (register: Register): string => {
+  switch (register) {
+    case "FORMAL":
+      return "ビジネスや学術的な場面で使用できます";
+    case "NEUTRAL":
+      return "ほとんどの場面で使用できます";
+    case "CASUAL":
+      return "友人との会話など、カジュアルな場面で使用します";
+    case "SLANG":
+      return "SNSや若者同士の会話で使用。ビジネスでは避けましょう";
+    case "TABOO":
+      return "⚠️ 非常にカジュアルな場面のみ。公の場では避けてください";
+  }
+};
+
 const REGISTER_STYLES: Record<
   Register,
   { bg: string; text: string; icon: string; label: string }
@@ -113,8 +190,8 @@ export default function WordTooltip({
       // Free Dictionary APIを使用
       const res = await fetch(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(
-          word
-        )}`
+          word,
+        )}`,
       );
 
       if (res.ok) {
@@ -175,83 +252,6 @@ export default function WordTooltip({
   useEffect(() => {
     fetchWordData();
   }, [fetchWordData]);
-
-  // レジスターを推定（簡易版）
-  const estimateRegister = (
-    word: string,
-    definitions?: Array<{ definition: string }>
-  ): Register => {
-    const slangWords = [
-      "slay",
-      "lit",
-      "goat",
-      "sus",
-      "bet",
-      "cap",
-      "bussin",
-      "rizz",
-      "delulu",
-      "ate",
-      "vibe",
-      "lowkey",
-      "highkey",
-      "flex",
-      "salty",
-      "ghost",
-      "simp",
-      "stan",
-      "tea",
-      "yeet",
-    ];
-    const tabooWords = ["damn", "hell", "crap", "ass", "shit", "fuck"];
-
-    const lowerWord = word.toLowerCase();
-
-    if (tabooWords.some((tw) => lowerWord.includes(tw))) {
-      return "TABOO";
-    }
-    if (slangWords.includes(lowerWord)) {
-      return "SLANG";
-    }
-
-    // 定義からも推定
-    const defText = definitions?.map((d) => d.definition).join(" ") || "";
-    if (
-      defText.includes("informal") ||
-      defText.includes("slang") ||
-      defText.includes("colloquial")
-    ) {
-      return "SLANG";
-    }
-    if (
-      defText.includes("vulgar") ||
-      defText.includes("offensive") ||
-      defText.includes("taboo")
-    ) {
-      return "TABOO";
-    }
-    if (defText.includes("formal") || defText.includes("literary")) {
-      return "FORMAL";
-    }
-
-    return "NEUTRAL";
-  };
-
-  // TPOアドバイス生成
-  const generateTPOAdvice = (register: Register): string => {
-    switch (register) {
-      case "FORMAL":
-        return "ビジネスや学術的な場面で使用できます";
-      case "NEUTRAL":
-        return "ほとんどの場面で使用できます";
-      case "CASUAL":
-        return "友人との会話など、カジュアルな場面で使用します";
-      case "SLANG":
-        return "SNSや若者同士の会話で使用。ビジネスでは避けましょう";
-      case "TABOO":
-        return "⚠️ 非常にカジュアルな場面のみ。公の場では避けてください";
-    }
-  };
 
   const handleSpeak = () => {
     const utterance = new SpeechSynthesisUtterance(word);
@@ -366,9 +366,9 @@ export default function WordTooltip({
                     例文
                   </h4>
                   <ul className="space-y-2">
-                    {wordData.examples.map((example, idx) => (
+                    {wordData.examples.map((example) => (
                       <li
-                        key={`example-${idx}`}
+                        key={example}
                         className="text-sm text-slate-300 pl-3 border-l-2 border-emerald-500/50"
                       >
                         {example}
