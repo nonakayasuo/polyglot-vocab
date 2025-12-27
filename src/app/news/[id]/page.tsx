@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArticleComments } from "@/components/community";
+import { FloatingPanel } from "@/components/ui/floating-panel";
+import { Overlay } from "@/components/ui/overlay";
 import { speak } from "@/lib/tts";
 import type { Article } from "@/types/news";
 
@@ -28,6 +30,8 @@ interface WordPopover {
     phonetic?: string;
     partOfSpeech?: string;
     definition?: string;
+    definitionJa?: string; // 日本語訳
+    example?: string;
   };
   loading: boolean;
 }
@@ -59,6 +63,9 @@ export default function ArticleDetailPage() {
   const [popover, setPopover] = useState<WordPopover | null>(null);
   const [showComments, setShowComments] = useState(false);
   const [userId, setUserId] = useState<string | undefined>();
+
+  // ポップオーバーの開閉タイミングを追跡（即座に閉じるのを防止）
+  const popoverOpenTimeRef = useRef<number>(0);
 
   // セッション確認
   useEffect(() => {
@@ -147,12 +154,28 @@ export default function ArticleDetailPage() {
       const rect = event.currentTarget.getBoundingClientRect();
       const cleanWord = word.replace(/[^a-zA-Z]/g, "").toLowerCase();
 
-      if (!cleanWord || cleanWord.length < 2) return;
+      if (!cleanWord || cleanWord.length < 2) {
+        return;
+      }
+
+      // ビューポート内で適切な位置を計算
+      const viewportHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      // ポップオーバーが画面下に出ないように調整
+      let yPos = rect.bottom + scrollY + 8;
+      if (rect.bottom > viewportHeight - 350) {
+        // 下に余裕がない場合は上に表示
+        yPos = rect.top + scrollY - 8;
+      }
+
+      // ポップオーバー開始時刻を記録（即座に閉じるのを防止）
+      popoverOpenTimeRef.current = Date.now();
 
       setPopover({
         word: cleanWord,
         x: rect.left + rect.width / 2,
-        y: rect.bottom + window.scrollY + 8,
+        y: yPos,
         loading: true,
       });
 
@@ -165,20 +188,46 @@ export default function ArticleDetailPage() {
         if (response.ok) {
           const data = await response.json();
           const entry = data[0];
-          const meaning = entry.meanings?.[0];
+          const meaning = entry?.meanings?.[0];
+
+          // phoneticsから発音記号を取得（entry.phoneticがない場合）
+          const phonetic =
+            entry?.phonetic ||
+            entry?.phonetics?.find((p: { text?: string }) => p.text)?.text;
+
+          const englishDefinition = meaning?.definitions?.[0]?.definition;
+          const example = meaning?.definitions?.[0]?.example;
+
+          // 日本語訳を取得
+          let definitionJa = "";
+          if (englishDefinition) {
+            try {
+              const translateRes = await fetch(
+                `/api/translate?text=${encodeURIComponent(
+                  englishDefinition
+                )}&from=en&to=ja`
+              );
+              if (translateRes.ok) {
+                const translateData = await translateRes.json();
+                definitionJa = translateData.translatedText;
+              }
+            } catch {
+              // 翻訳エラーは無視
+            }
+          }
+
+          const definitionData = {
+            word: entry?.word || cleanWord,
+            phonetic: phonetic,
+            partOfSpeech: meaning?.partOfSpeech,
+            definition: englishDefinition,
+            definitionJa: definitionJa,
+            example: example,
+          };
 
           setPopover((prev) =>
             prev
-              ? {
-                  ...prev,
-                  loading: false,
-                  definition: {
-                    word: entry.word,
-                    phonetic: entry.phonetic,
-                    partOfSpeech: meaning?.partOfSpeech,
-                    definition: meaning?.definitions?.[0]?.definition,
-                  },
-                }
+              ? { ...prev, loading: false, definition: definitionData }
               : null
           );
         } else {
@@ -186,7 +235,7 @@ export default function ArticleDetailPage() {
             prev ? { ...prev, loading: false, definition: undefined } : null
           );
         }
-      } catch (_err) {
+      } catch {
         setPopover((prev) =>
           prev ? { ...prev, loading: false, definition: undefined } : null
         );
@@ -195,8 +244,13 @@ export default function ArticleDetailPage() {
     []
   );
 
-  // ポップオーバーを閉じる
+  // ポップオーバーを閉じる（開いてすぐは閉じないように保護）
   const closePopover = useCallback(() => {
+    const timeSinceOpen = Date.now() - popoverOpenTimeRef.current;
+    // 200ms以内は閉じないようにする（タッチイベントの誤動作防止）
+    if (timeSinceOpen < 200) {
+      return;
+    }
     setPopover(null);
   }, []);
 
@@ -205,6 +259,13 @@ export default function ArticleDetailPage() {
     if (!popover?.definition) return;
 
     try {
+      // 日本語訳がある場合は「日本語訳\n(英語定義)」形式で保存
+      const meaningText = popover.definition.definitionJa
+        ? `${popover.definition.definitionJa}\n(${
+            popover.definition.definition || ""
+          })`
+        : popover.definition.definition || "";
+
       const response = await fetch("/api/words", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,8 +273,8 @@ export default function ArticleDetailPage() {
           word: popover.definition.word,
           pronunciation: popover.definition.phonetic || "",
           category: popover.definition.partOfSpeech || "Other",
-          meaning: popover.definition.definition || "",
-          example: "",
+          meaning: meaningText,
+          example: popover.definition.example || "",
           exampleTranslation: "",
           note: article ? `[${article.source}]` : "",
           language: "english",
@@ -243,23 +304,28 @@ export default function ArticleDetailPage() {
         return <span key={`space-${index}`}>{word}</span>;
       }
       // 単語はクリック/タップ可能にする
+      const handleTap = (
+        e:
+          | React.MouseEvent<HTMLButtonElement>
+          | React.PointerEvent<HTMLButtonElement>
+      ) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const rect = e.currentTarget.getBoundingClientRect();
+        const syntheticEvent = {
+          currentTarget: {
+            getBoundingClientRect: () => rect,
+          },
+        } as React.MouseEvent<HTMLSpanElement>;
+        handleWordClick(syntheticEvent, word);
+      };
+
       return (
         <button
           type="button"
           key={`word-${index}-${word}`}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // ボタンの位置情報を取得してhandleWordClickに渡す
-            const rect = e.currentTarget.getBoundingClientRect();
-            const syntheticEvent = {
-              currentTarget: {
-                getBoundingClientRect: () => rect,
-              },
-            } as React.MouseEvent<HTMLSpanElement>;
-            handleWordClick(syntheticEvent, word);
-          }}
-          className="inline cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/50 active:bg-yellow-300 dark:active:bg-yellow-800/70 text-inherit rounded px-0.5 transition-colors touch-manipulation border-none bg-transparent p-0 m-0 font-inherit text-left"
+          onPointerUp={handleTap}
+          className="inline cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/50 active:bg-yellow-300 dark:active:bg-yellow-800/70 text-inherit rounded px-0.5 transition-colors touch-manipulation border-none bg-transparent p-0 m-0 font-inherit text-left select-none"
           style={{ WebkitTapHighlightColor: "rgba(234, 179, 8, 0.3)" }}
         >
           {word}
@@ -501,22 +567,10 @@ export default function ArticleDetailPage() {
       {popover && (
         <>
           {/* 背景クリックで閉じる */}
-          <button
-            type="button"
-            className="fixed inset-0 z-40 cursor-default"
-            onClick={closePopover}
-            aria-label="閉じる"
-          />
+          <Overlay onClose={closePopover} />
 
           {/* ポップオーバー本体 */}
-          <div
-            className="fixed z-50 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 p-4 min-w-[280px] max-w-[360px]"
-            style={{
-              left: `${Math.min(popover.x, window.innerWidth - 380)}px`,
-              top: `${popover.y}px`,
-              transform: "translateX(-50%)",
-            }}
-          >
+          <FloatingPanel x={popover.x} y={popover.y}>
             {popover.loading ? (
               <div className="flex items-center justify-center py-4">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
@@ -551,9 +605,26 @@ export default function ArticleDetailPage() {
                   </span>
                 )}
 
-                <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
+                {/* 日本語訳（メイン表示） */}
+                {popover.definition.definitionJa && (
+                  <p className="text-gray-900 dark:text-white font-medium mb-2">
+                    {popover.definition.definitionJa}
+                  </p>
+                )}
+
+                {/* 英語定義 */}
+                <p className="text-gray-500 dark:text-gray-400 text-xs mb-2">
                   {popover.definition.definition}
                 </p>
+
+                {/* 例文 */}
+                {popover.definition.example && (
+                  <div className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-2 mb-3">
+                    <p className="text-gray-600 dark:text-gray-300 text-xs italic">
+                      例: {popover.definition.example}
+                    </p>
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -574,7 +645,7 @@ export default function ArticleDetailPage() {
                 </p>
               </div>
             )}
-          </div>
+          </FloatingPanel>
         </>
       )}
     </div>
