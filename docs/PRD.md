@@ -446,9 +446,9 @@
 
 1. **技術設計書の作成** → [ARCHITECTURE.md](./ARCHITECTURE.md)
 2. **開発スケジュールの詳細化** → [ROADMAP.md](./ROADMAP.md)
-3. **Better Auth統合計画** → [AUTH_DESIGN.md](./AUTH_DESIGN.md)
-4. **MCP活用計画** → [MCP_INTEGRATION.md](./MCP_INTEGRATION.md)
-5. **API設計** → [API_SPEC.md](./API_SPEC.md)
+3. **MCP活用計画** → [MCP_INTEGRATION.md](./MCP_INTEGRATION.md)
+4. **API設計** → [API_SPEC.md](./API_SPEC.md)
+5. **インフラコスト** → [INFRASTRUCTURE_COST.md](./INFRASTRUCTURE_COST.md)
 
 ---
 

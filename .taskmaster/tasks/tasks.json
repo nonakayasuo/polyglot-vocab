@@ -461,7 +461,7 @@
   "feature-news-integration": {
     "tasks": [
       {
-        "id": 1,
+        "id": "1",
         "title": "Better Auth パッケージ導入と基本設定",
         "description": "Better Authパッケージをインストールし、認証システムの基盤を構築する",
         "details": "pnpm add better-auth @better-auth/prisma-adapter を実行。src/lib/auth.ts にBetter Authサーバー設定を作成。セッション管理、Cookie設定、メール/パスワード認証を設定。",
@@ -472,221 +472,221 @@
         "subtasks": []
       },
       {
-        "id": 2,
+        "id": "2",
         "title": "Prisma スキーマ拡張（認証モデル追加）",
         "description": "User, Session, Account, Verificationモデルをスキーマに追加",
         "details": "prisma/schema.prismaにBetter Authに必要なモデル追加。既存のVocabularyWordモデルとのリレーション設定。マイグレーション実行。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          1
+          "1"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 3,
+        "id": "3",
         "title": "認証UI実装（サインアップ・ログイン）",
         "description": "サインアップ、ログイン、パスワードリセットのUIを実装",
         "details": "src/app/(auth)/signin, signup, forgot-passwordページ作成。フォームバリデーション、エラー表示、ローディング状態実装。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          1,
-          2
+          "1",
+          "2"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 4,
+        "id": "4",
         "title": "ソーシャルログイン実装（Google, Apple）",
         "description": "Google OAuthとApple Sign Inを実装",
         "details": "Google Cloud ConsoleでOAuthクライアント設定。Apple Developer Portalでサインイン設定。Better AuthのsocialProviders設定追加。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          1,
-          2,
-          3
+          "1",
+          "2",
+          "3"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 5,
+        "id": "5",
         "title": "セッション管理とミドルウェア実装",
         "description": "認証ミドルウェアとセッション管理を実装",
         "details": "src/middleware.tsで認証チェック実装。保護されたルートのアクセス制御。セッション有効期限管理。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          1,
-          2
+          "1",
+          "2"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 6,
+        "id": "6",
         "title": "レベル判定データモデル設計",
         "description": "LevelAssessmentモデルとテスト問題データベースを設計",
         "details": "LevelAssessmentモデルをPrismaスキーマに追加。語彙・読解テスト問題のデータ構造設計。CEFR A1-C2レベル別問題セット準備。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          2
+          "2"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 7,
+        "id": "7",
         "title": "語彙テストUI実装",
         "description": "段階的難易度の語彙テストUIを実装",
         "details": "適応型テストUI実装。正解なら難しい問題、不正解なら簡単な問題を出題。進捗表示、時間制限、結果表示。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          6
+          "6"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 8,
+        "id": "8",
         "title": "読解テストUI実装",
         "description": "ニュース記事ベースの読解テストUIを実装",
         "details": "短いニュース記事と理解度確認問題を表示。複数選択問題、文章完成問題実装。時間計測と結果表示。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          6
+          "6"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 9,
+        "id": "9",
         "title": "CEFRレベル算出アルゴリズム実装",
         "description": "テスト結果からCEFRレベルを算出するアルゴリズムを実装",
         "details": "語彙・読解テストスコア統合。IRT(Item Response Theory)ベースの能力推定。CEFR A1-C2へのマッピング。強み・弱み分析生成。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          7,
-          8
+          "7",
+          "8"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 10,
+        "id": "10",
         "title": "レベル判定結果画面と再診断機能",
         "description": "レベル判定結果の表示と設定からの再診断機能を実装",
         "details": "CEFRレベル、強み・弱み、推奨学習プラン表示。設定画面から再診断へのリンク。レベル履歴の保存と表示。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          9
+          "9"
         ],
         "priority": "medium",
         "subtasks": []
       },
       {
-        "id": 11,
+        "id": "11",
         "title": "Neon PostgreSQL環境構築とマイグレーション",
         "description": "クラウドDBへの移行を実施",
         "details": "Neonプロジェクト作成。Prisma設定をPostgreSQLに変更。既存SQLiteデータをマイグレーション。接続プーリング設定。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          2
+          "2"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 12,
+        "id": "12",
         "title": "ニュースAPI統合基盤構築",
         "description": "複数ニュースソースを統合する共通インターフェースを設計",
         "details": "ニュースソースの抽象化レイヤー設計。共通Article型定義。キャッシュ戦略実装。エラーハンドリングとリトライ。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          11
+          "11"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 13,
+        "id": "13",
         "title": "BBC Learning English連携",
         "description": "BBC Learning Englishからのコンテンツ取得を実装",
         "details": "BBC Learning English APIまたはRSSフィードからの記事取得。教育コンテンツの難易度タグ付け。定期更新スケジュール設定。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          12
+          "12"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 14,
+        "id": "14",
         "title": "CNN, NHK World連携",
         "description": "CNNとNHK Worldからのニュース取得を実装",
         "details": "各ニュースソースのAPI/RSS連携。記事のパースと正規化。言語検出と分類。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          12
+          "12"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 15,
+        "id": "15",
         "title": "記事難易度分析エンジン実装",
         "description": "記事の語彙・文法複雑度からCEFRレベルを判定",
         "details": "語彙頻度分析、平均文長計算、複雑な文法構造の検出。CEFR難易度スコア算出。難しい単語のハイライト情報生成。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          12
+          "12"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 16,
+        "id": "16",
         "title": "レベル別記事フィルタリングとレコメンド",
         "description": "ユーザーのCEFRレベルに基づいた記事フィルタリングを実装",
         "details": "ユーザーレベルに適した記事のフィルタリング。カテゴリ別レコメンデーション。既読記事の除外。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          9,
-          15
+          "9",
+          "15"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 17,
+        "id": "17",
         "title": "インタラクティブリーディング機能",
         "description": "単語ハイライト、ワンタップ追加、ミニクイズを実装",
         "details": "記事内の単語タップで意味表示。ワンタップで単語帳に追加（記事コンテキスト保持）。記事読了後のミニクイズ。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          15
+          "15"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 18,
+        "id": "18",
         "title": "Python FastAPIプロジェクト構築",
         "description": "AIサービス用のFastAPIプロジェクトを作成",
         "details": "python-ai-service/ディレクトリ構造作成。FastAPI基本設定、Pydanticスキーマ、環境設定。requirements.txtとDockerfile作成。",
@@ -697,145 +697,146 @@
         "subtasks": []
       },
       {
-        "id": 19,
+        "id": "19",
         "title": "Python MCP Server基盤実装",
         "description": "Python MCP SDKを使用したMCPサーバーを実装",
         "details": "MCP SDKのインストールと設定。基本的なMCPサーバー構造。ツールとリソースの定義フレームワーク。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          18
+          "18"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 20,
+        "id": "20",
         "title": "Claude API統合",
         "description": "AnthropicのClaude APIをPythonサービスに統合",
         "details": "Anthropic SDKインストール。LLMサービスクラス実装。プロンプトテンプレート管理。エラーハンドリングとリトライ。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          18
+          "18"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 21,
+        "id": "21",
         "title": "Next.js⇔FastAPI連携実装",
         "description": "TypeScriptフロントエンドとPythonバックエンドの連携を構築",
         "details": "JWT認証トークンの共有。Next.jsからFastAPIへのAPI呼び出し。エラーハンドリングとタイムアウト設定。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          5,
-          18
+          "5",
+          "18"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 22,
+        "id": "22",
         "title": "単語説明MCPツール実装",
         "description": "explain_wordツールを実装",
         "details": "単語、言語、ユーザーレベル、コンテキストを入力として詳細説明を生成。語源、類義語、例文、覚え方のコツを含む。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          19,
-          20
+          "19",
+          "20"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 23,
+        "id": "23",
         "title": "例文生成・文法説明MCPツール実装",
         "description": "generate_examples, explain_grammarツールを実装",
         "details": "ニュースコンテキストに基づいた自然な例文生成。文法ポイントの説明と間違いやすいパターンの指摘。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          19,
-          20
+          "19",
+          "20"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 24,
+        "id": "24",
         "title": "記事分析・要約MCPツール実装",
         "description": "analyze_difficulty, summarize_article, extract_vocabularyツールを実装",
         "details": "記事の難易度分析、要約生成、学習すべき語彙の抽出。ユーザーレベルに適応した出力。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          19,
-          20
+          "19",
+          "20"
         ],
         "priority": "high",
         "subtasks": []
       },
       {
-        "id": 25,
+        "id": "25",
         "title": "AI学習アシスタントUI実装",
         "description": "AIチャット、単語説明パネル、文法解説パネルを実装",
         "details": "AIとのチャットインターフェース。記事を読みながらのAI支援表示。学習レコメンデーション表示。",
         "testStrategy": "",
         "status": "done",
         "dependencies": [
-          21,
-          22,
-          23
+          "21",
+          "22",
+          "23"
         ],
         "priority": "medium",
         "subtasks": []
       },
       {
-        "id": 26,
+        "id": "26",
         "title": "コミュニティ機能（グループ・ディスカッション）",
         "description": "学習グループと記事ディスカッション機能を実装",
         "details": "グループ作成・参加・管理機能。記事へのコメント・返信機能。通知システム。",
         "testStrategy": "",
         "status": "pending",
         "dependencies": [
-          5,
-          11
+          "5",
+          "11"
         ],
         "priority": "medium",
         "subtasks": []
       },
       {
-        "id": 27,
+        "id": "27",
         "title": "ゲーミフィケーション機能",
         "description": "ランキング、ストリーク、バッジシステムを実装",
         "details": "デイリー/ウィークリーランキング。連続学習日数のストリーク。達成バッジシステム。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
-          5,
-          11
+          "5",
+          "11"
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-12-27T10:09:27.133Z"
       },
       {
-        "id": 28,
+        "id": "28",
         "title": "Flutter モバイルアプリ開発",
         "description": "iOS/Android向けFlutterアプリを開発（BtoC向け高パフォーマンス）",
         "details": "Flutter + Dart環境構築。riverpodで状態管理、go_routerでルーティング。認証、ニュース一覧、単語帳、フラッシュカード画面。Firebase連携でプッシュ通知実装。60fpsスムーズアニメーション重視。",
         "testStrategy": "主要機能がモバイルで正常に動作することを確認。60fpsでスムーズに動作することをプロファイリング。",
         "status": "pending",
         "dependencies": [
-          21
+          "21"
         ],
         "priority": "medium",
         "subtasks": []
       },
       {
-        "id": 29,
+        "id": "29",
         "title": "多言語UI対応（i18n）",
         "description": "日本語、英語、スペイン語、韓国語、中国語UIを実装",
         "details": "next-intl導入。翻訳ファイル作成。言語切り替え機能。RTL対応基盤。",
@@ -846,66 +847,74 @@
         "subtasks": []
       },
       {
-        "id": 30,
+        "id": "30",
         "title": "Stripe決済統合",
         "description": "サブスクリプション決済機能を実装",
         "details": "Stripe統合。Free/Pro/Businessプラン。サブスクリプション管理。Webhookによる状態同期。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
-          5,
-          11
+          "5",
+          "11"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-12-27T10:12:50.926Z"
       },
       {
-        "id": 31,
+        "id": "31",
         "title": "管理者ダッシュボード",
         "description": "ユーザー管理、分析、レポート機能を実装",
         "details": "管理者専用ダッシュボード。ユーザー一覧・管理。利用統計・レポート。企業向けチーム管理。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
-          5,
-          11,
-          30
+          "5",
+          "11",
+          "30"
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-12-27T10:16:12.055Z"
       },
       {
-        "id": 32,
+        "id": "32",
         "title": "セキュリティ監査とパフォーマンス最適化",
         "description": "商用リリース前のセキュリティ監査と最適化を実施",
         "details": "ペネトレーションテスト。脆弱性修正。負荷テスト。パフォーマンスチューニング。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
-          30,
-          31
+          "30",
+          "31"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-12-27T10:18:05.723Z"
       },
       {
-        "id": 33,
+        "id": "33",
         "title": "βテストとローンチ準備",
         "description": "クローズドβ、フィードバック対応、正式リリース",
         "details": "βユーザー招待。フィードバック収集・対応。ランディングページ作成。ドキュメント整備。正式リリース。",
         "testStrategy": "",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
-          32
+          "32"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-12-27T10:18:12.418Z"
       }
     ],
     "metadata": {
-      "created": "2025-12-27T03:55:14.032Z",
-      "updated": "2025-12-27T09:37:56.871Z",
-      "description": "NewsLingua商用化 - 2026年前期リリース"
+      "version": "1.0.0",
+      "lastModified": "2025-12-27T10:18:12.419Z",
+      "taskCount": 33,
+      "completedCount": 30,
+      "tags": [
+        "feature-news-integration"
+      ]
     }
   }
 }

@@ -97,3 +97,23 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model UserStreak
+ * 
+ */
+export type UserStreak = Prisma.UserStreakModel
+/**
+ * Model Achievement
+ * 
+ */
+export type Achievement = Prisma.AchievementModel
+/**
+ * Model UserAchievement
+ * 
+ */
+export type UserAchievement = Prisma.UserAchievementModel
+/**
+ * Model LearningActivity
+ * 
+ */
+export type LearningActivity = Prisma.LearningActivityModel

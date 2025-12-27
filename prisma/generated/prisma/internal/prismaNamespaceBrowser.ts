@@ -66,7 +66,11 @@ export const ModelName = {
   ReadingTestResponse: 'ReadingTestResponse',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  UserStreak: 'UserStreak',
+  Achievement: 'Achievement',
+  UserAchievement: 'UserAchievement',
+  LearningActivity: 'LearningActivity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,7 +200,9 @@ export const UserScalarFieldEnum = {
   updatedAt: 'updatedAt',
   cefrLevel: 'cefrLevel',
   learningLanguage: 'learningLanguage',
-  nativeLanguage: 'nativeLanguage'
+  nativeLanguage: 'nativeLanguage',
+  weeklyXp: 'weeklyXp',
+  totalXp: 'totalXp'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -326,6 +332,61 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const UserStreakScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentStreak: 'currentStreak',
+  longestStreak: 'longestStreak',
+  lastActiveAt: 'lastActiveAt',
+  streakFreezes: 'streakFreezes',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserStreakScalarFieldEnum = (typeof UserStreakScalarFieldEnum)[keyof typeof UserStreakScalarFieldEnum]
+
+
+export const AchievementScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  nameJa: 'nameJa',
+  description: 'description',
+  descriptionJa: 'descriptionJa',
+  icon: 'icon',
+  category: 'category',
+  requirement: 'requirement',
+  xpReward: 'xpReward',
+  rarity: 'rarity',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type AchievementScalarFieldEnum = (typeof AchievementScalarFieldEnum)[keyof typeof AchievementScalarFieldEnum]
+
+
+export const UserAchievementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  achievementId: 'achievementId',
+  earnedAt: 'earnedAt',
+  progress: 'progress'
+} as const
+
+export type UserAchievementScalarFieldEnum = (typeof UserAchievementScalarFieldEnum)[keyof typeof UserAchievementScalarFieldEnum]
+
+
+export const LearningActivityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  activityType: 'activityType',
+  xpEarned: 'xpEarned',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type LearningActivityScalarFieldEnum = (typeof LearningActivityScalarFieldEnum)[keyof typeof LearningActivityScalarFieldEnum]
 
 
 export const SortOrder = {

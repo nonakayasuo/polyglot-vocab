@@ -1,9 +1,20 @@
 "use client";
 
-import { ChevronRight, Languages, Loader2, Newspaper } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  Flame,
+  Languages,
+  Loader2,
+  Newspaper,
+  Settings,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import DailyRecommendations from "@/components/DailyRecommendations";
+import { StreakDisplay } from "@/components/gamification";
 import ReadingStats from "@/components/ReadingStats";
 import {
   fetchStats,
@@ -90,192 +101,285 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center animate-pulse">
+              <Newspaper className="w-8 h-8 text-white" />
+            </div>
+            <div className="absolute -inset-2 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-3xl blur-xl" />
+          </div>
+          <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* ヘッダー */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-2">
-              <Newspaper className="w-5 h-5 text-blue-600" />
-              <h1 className="text-lg font-semibold text-gray-900">
-                NewsLingua
-              </h1>
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                  <Newspaper className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                  NewsLingua
+                </h1>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 -mt-0.5">
+                  ニュースで学ぶ語彙
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <StreakDisplay compact />
+              <Link
+                href="/settings"
+                className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+              >
+                <Settings className="w-5 h-5" />
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* タイトル */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            📰 ニュースで学ぶ語彙
-          </h2>
-          <p className="text-gray-500">
-            ニュースを読みながら、実践的な語彙力を身につけよう
-          </p>
-        </div>
-
-        {/* 総合統計 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-500 text-xs">総単語数</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">
-              {totalStats.total}
-            </p>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* ヒーローセクション */}
+        <div className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white">
+          {/* 背景装飾 */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/30 rounded-full blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
           </div>
-          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-            <p className="text-emerald-600 text-xs">■■■ 習得済み</p>
-            <p className="text-2xl font-bold text-emerald-600 mt-1">
-              {totalStats.mastered}
-            </p>
-          </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-500 text-xs">□□□ 未習得</p>
-            <p className="text-2xl font-bold text-gray-500 mt-1">
-              {totalStats.notStarted}
-            </p>
-          </div>
-        </div>
 
-        {/* 言語リスト（Notion風テーブル） */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 text-gray-500 text-xs font-medium">
-                  言語
-                </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden sm:table-cell">
-                  単語数
-                </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
-                  習得済み
-                </th>
-                <th className="text-center px-4 py-3 text-gray-500 text-xs font-medium hidden md:table-cell">
-                  未習得
-                </th>
-                <th className="px-4 py-3 text-gray-500 text-xs font-medium">
-                  進捗
-                </th>
-                <th className="w-10" />
-              </tr>
-            </thead>
-            <tbody>
-              {LANGUAGES.map((lang) => {
-                const stats = languageStats[lang.value];
-                const progressPercent = getProgressPercent(stats);
-
-                return (
-                  <tr
-                    key={lang.value}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-4 py-4">
-                      <Link
-                        href={`/${lang.value}`}
-                        className="flex items-center gap-3 group"
-                      >
-                        <span className="text-2xl">{lang.flag}</span>
-                        <div>
-                          <span className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {lang.label}
-                          </span>
-                          <p className="text-xs text-gray-500">
-                            Vocabulary Book
-                          </p>
-                        </div>
-                      </Link>
-                    </td>
-                    <td className="text-center px-4 py-4 hidden sm:table-cell">
-                      <span className="font-semibold text-gray-900">
-                        {stats.total}
-                      </span>
-                    </td>
-                    <td className="text-center px-4 py-4 hidden md:table-cell">
-                      <span className="text-emerald-600 font-medium">
-                        {stats.mastered}
-                      </span>
-                    </td>
-                    <td className="text-center px-4 py-4 hidden md:table-cell">
-                      <span className="text-gray-500 font-medium">
-                        {stats.notStarted}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-emerald-500 transition-all duration-500"
-                            style={{ width: `${progressPercent}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-gray-500 w-10 text-right">
-                          {progressPercent}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4">
-                      <Link
-                        href={`/${lang.value}`}
-                        className="p-1 text-gray-400 hover:text-gray-900 transition-colors"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* 今日のおすすめ単語 */}
-        <div className="mt-8">
-          <DailyRecommendations onWordAdded={loadData} />
-        </div>
-
-        {/* 読書統計 */}
-        <div className="mt-6">
-          <ReadingStats />
-        </div>
-
-        {/* ニュースリーダーへのリンク */}
-        <div className="mt-6">
-          <Link
-            href="/news"
-            className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl hover:shadow-md transition-shadow group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Newspaper className="w-5 h-5 text-blue-600" />
+          <div className="relative z-10 grid lg:grid-cols-2 gap-8">
+            {/* 左側: 挨拶とクイックアクション */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                <span className="text-sm text-slate-300">今日も学習しましょう！</span>
               </div>
-              <div>
-                <p className="font-medium text-gray-900">📰 News Reader</p>
-                <p className="text-sm text-gray-500">
-                  英語ニュースを読んで語彙を増やそう
-                </p>
+              <h2 className="text-3xl font-bold mb-2">
+                📰 ニュースで学ぶ
+              </h2>
+              <p className="text-slate-400 mb-6">
+                世界のニュースを読みながら、実践的な語彙力を身につけよう
+              </p>
+
+              {/* クイックアクションボタン */}
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/news"
+                  className="group flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl font-medium hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+                >
+                  <Newspaper className="w-4 h-4" />
+                  ニュースを読む
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  href="/assessment"
+                  className="flex items-center gap-2 px-5 py-3 bg-white/10 backdrop-blur rounded-xl font-medium hover:bg-white/20 transition-all"
+                >
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                  レベル診断
+                </Link>
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
-          </Link>
+
+            {/* 右側: ストリーク */}
+            <div className="lg:pl-8">
+              <StreakDisplay />
+            </div>
+          </div>
         </div>
 
-        {/* ヒント */}
-        <div className="mt-6 text-center text-gray-500 text-sm">
-          <p>
-            💡 各言語をクリックして、フラッシュカードで効率的に復習しましょう
-          </p>
+        {/* 統計カード */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatCard
+            icon={<BookOpen className="w-5 h-5" />}
+            label="総単語数"
+            value={totalStats.total}
+            color="blue"
+          />
+          <StatCard
+            icon={<Trophy className="w-5 h-5" />}
+            label="習得済み"
+            value={totalStats.mastered}
+            color="emerald"
+          />
+          <StatCard
+            icon={<Flame className="w-5 h-5" />}
+            label="学習中"
+            value={totalStats.total - totalStats.mastered - totalStats.notStarted}
+            color="amber"
+          />
+          <StatCard
+            icon={<Languages className="w-5 h-5" />}
+            label="未着手"
+            value={totalStats.notStarted}
+            color="slate"
+          />
         </div>
+
+        {/* 言語セクション */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+              <Languages className="w-5 h-5 text-blue-500" />
+              言語別単語帳
+            </h3>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {LANGUAGES.map((lang, index) => {
+              const stats = languageStats[lang.value];
+              const progressPercent = getProgressPercent(stats);
+
+              return (
+                <Link
+                  key={lang.value}
+                  href={`/${lang.value}`}
+                  className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 p-5 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 transition-all duration-300 hover:-translate-y-1"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {/* 背景グラデーション */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 opacity-50" />
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-4xl">{lang.flag}</span>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                    </div>
+
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">
+                      {lang.label}
+                    </h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                      {stats.total} 単語
+                    </p>
+
+                    {/* プログレスバー */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400 w-10 text-right">
+                        {progressPercent}%
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 今日のおすすめ単語 */}
+        <section className="mb-8">
+          <DailyRecommendations onWordAdded={loadData} />
+        </section>
+
+        {/* 読書統計 */}
+        <section className="mb-8">
+          <ReadingStats />
+        </section>
+
+        {/* クイックアクセス */}
+        <section className="grid sm:grid-cols-2 gap-4">
+          <Link
+            href="/news"
+            className="group flex items-center gap-4 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border border-blue-200/50 dark:border-blue-800/50 rounded-2xl hover:shadow-lg hover:shadow-blue-200/30 dark:hover:shadow-blue-900/30 transition-all duration-300"
+          >
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl shadow-lg shadow-blue-500/25">
+              <Newspaper className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-slate-900 dark:text-white">
+                📰 News Reader
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                英語ニュースを読んで語彙を増やそう
+              </p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+          </Link>
+
+          <Link
+            href="/assessment"
+            className="group flex items-center gap-4 p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/50 dark:to-orange-950/50 border border-amber-200/50 dark:border-amber-800/50 rounded-2xl hover:shadow-lg hover:shadow-amber-200/30 dark:hover:shadow-amber-900/30 transition-all duration-300"
+          >
+            <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl shadow-lg shadow-amber-500/25">
+              <Trophy className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-slate-900 dark:text-white">
+                🏆 レベル診断
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                あなたのCEFRレベルをチェック
+              </p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
+          </Link>
+        </section>
+
+        {/* フッターヒント */}
+        <footer className="mt-12 text-center">
+          <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            毎日の学習で語彙力を伸ばそう
+          </p>
+        </footer>
       </main>
+    </div>
+  );
+}
+
+// 統計カードコンポーネント
+function StatCard({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  color: "blue" | "emerald" | "amber" | "slate";
+}) {
+  const colorStyles = {
+    blue: "from-blue-500/10 to-blue-500/5 border-blue-200/50 dark:border-blue-800/50",
+    emerald: "from-emerald-500/10 to-emerald-500/5 border-emerald-200/50 dark:border-emerald-800/50",
+    amber: "from-amber-500/10 to-amber-500/5 border-amber-200/50 dark:border-amber-800/50",
+    slate: "from-slate-500/10 to-slate-500/5 border-slate-200/50 dark:border-slate-800/50",
+  };
+
+  const iconColors = {
+    blue: "text-blue-500",
+    emerald: "text-emerald-500",
+    amber: "text-amber-500",
+    slate: "text-slate-500",
+  };
+
+  return (
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${colorStyles[color]} border p-4`}>
+      <div className={`mb-2 ${iconColors[color]}`}>{icon}</div>
+      <p className="text-2xl font-bold text-slate-900 dark:text-white">
+        {value.toLocaleString()}
+      </p>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
     </div>
   );
 }

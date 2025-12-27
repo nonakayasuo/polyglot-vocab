@@ -155,6 +155,12 @@ model User {
   // レベル判定関連
   levelAssessments LevelAssessment[]
 
+  // ゲーミフィケーション関連
+  streak           UserStreak?
+  achievements     UserAchievement[]
+  weeklyXp         Int       @default(0) // 週間XP（ランキング用）
+  totalXp          Int       @default(0) // 累計XP
+
   @@unique([email])
   @@map("user")
 }
@@ -314,4 +320,79 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// ========================================
+// ゲーミフィケーションシステム
+// ========================================
+
+// ユーザーのストリーク（連続学習日数）
+model UserStreak {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak Int      @default(0)  // 現在の連続日数
+  longestStreak Int      @default(0)  // 最長連続日数
+  lastActiveAt  DateTime @default(now()) // 最後のアクティビティ日時
+  streakFreezes Int      @default(0)  // ストリークフリーズ残数
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([currentStreak])
+  @@map("user_streak")
+}
+
+// 達成可能なバッジ/実績の定義
+model Achievement {
+  id           String   @id @default(cuid())
+  code         String   @unique // "first_word", "streak_7", "vocabulary_100" など
+  name         String   // 表示名
+  nameJa       String   // 日本語名
+  description  String   // 説明
+  descriptionJa String  // 日本語説明
+  icon         String   // 絵文字またはアイコン名
+  category     String   // "streak", "vocabulary", "reading", "milestone"
+  requirement  Int      // 達成に必要な数値
+  xpReward     Int      @default(0) // 獲得XP
+  rarity       String   @default("common") // "common", "rare", "epic", "legendary"
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  userAchievements UserAchievement[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("achievement")
+}
+
+// ユーザーが獲得したバッジ
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  earnedAt      DateTime    @default(now())
+  progress      Int         @default(0) // 進捗（達成前）
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@index([achievementId])
+  @@index([earnedAt])
+  @@map("user_achievement")
+}
+
+// 学習アクティビティログ（XP計算用）
+model LearningActivity {
+  id          String   @id @default(cuid())
+  userId      String?  // 匿名ユーザーも対応
+  activityType String  // "word_added", "word_mastered", "article_read", "quiz_completed"
+  xpEarned    Int      @default(0)
+  metadata    String   @default("{}") // JSON: 追加情報
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([activityType])
+  @@index([createdAt])
+  @@map("learning_activity")
 }
