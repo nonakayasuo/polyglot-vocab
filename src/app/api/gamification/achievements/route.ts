@@ -2,6 +2,77 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "@/lib/session";
 
+// 実績チェックと付与のヘルパー関数
+async function checkAndAwardAchievements(
+  userId: string,
+  wordCount: number,
+  masteredCount: number,
+  articleCount: number,
+  streakCount: number,
+) {
+  // 既に獲得済みのバッジを取得
+  const existingAchievements = await prisma.userAchievement.findMany({
+    where: { userId },
+    select: { achievementId: true },
+  });
+  const earnedIds = new Set(existingAchievements.map((a) => a.achievementId));
+
+  // すべての実績を取得
+  const allAchievements = await prisma.achievement.findMany({
+    where: { isActive: true },
+  });
+
+  for (const achievement of allAchievements) {
+    if (earnedIds.has(achievement.id)) continue;
+
+    // カテゴリに応じた進捗を確認
+    let currentProgress = 0;
+    switch (achievement.category) {
+      case "vocabulary":
+        currentProgress = wordCount;
+        break;
+      case "mastery":
+        currentProgress = masteredCount;
+        break;
+      case "reading":
+        currentProgress = articleCount;
+        break;
+      case "streak":
+        currentProgress = streakCount;
+        break;
+    }
+
+    if (currentProgress >= achievement.requirement) {
+      // バッジ獲得！
+      try {
+        await prisma.userAchievement.create({
+          data: {
+            userId,
+            achievementId: achievement.id,
+            progress: currentProgress,
+          },
+        });
+
+        // XP報酬を付与
+        if (achievement.xpReward > 0) {
+          await prisma.user.update({
+            where: { id: userId },
+            data: {
+              totalXp: { increment: achievement.xpReward },
+              weeklyXp: { increment: achievement.xpReward },
+            },
+          });
+        }
+      } catch (_e) {
+        // 既に存在する場合は無視
+        console.log(
+          `Achievement ${achievement.id} already exists for user ${userId}`,
+        );
+      }
+    }
+  }
+}
+
 export async function GET() {
   try {
     const session = await getServerSession();
@@ -29,6 +100,7 @@ export async function GET() {
       });
 
       // 進捗を計算
+      // Note: 現在のスキーマではVocabularyWord/ReadingHistoryにuserIdがないため全体カウント
       const [wordCount, masteredCount, articleCount] = await Promise.all([
         prisma.vocabularyWord.count(),
         prisma.vocabularyWord.count({
@@ -41,6 +113,7 @@ export async function GET() {
         where: { userId },
       });
 
+      // 各実績のcodeをキーとして進捗を設定
       progress = {
         // 語彙系
         first_word: wordCount,
@@ -64,6 +137,21 @@ export async function GET() {
         streak_30: streak?.currentStreak || 0,
         streak_100: streak?.currentStreak || 0,
       };
+
+      // 実績チェックを自動実行（ページ訪問時に獲得チェック）
+      await checkAndAwardAchievements(
+        userId,
+        wordCount,
+        masteredCount,
+        articleCount,
+        streak?.currentStreak || 0,
+      );
+
+      // 獲得後のデータを再取得
+      userAchievements = await prisma.userAchievement.findMany({
+        where: { userId },
+        include: { achievement: true },
+      });
     }
 
     return NextResponse.json({

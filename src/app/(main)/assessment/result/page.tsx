@@ -38,8 +38,17 @@ function AssessmentResultContent() {
   const router = useRouter();
 
   const type = searchParams.get("type") || "vocabulary";
-  const score = parseInt(searchParams.get("score") || "0", 10);
+  // スラングテストからのスコアも取得
+  const slangScore = searchParams.get("slangScore");
+  const regularScore = searchParams.get("score");
+  const score = parseInt(slangScore || regularScore || "0", 10);
   const language = searchParams.get("lang") || "english";
+
+  // スラングテスト結果の追加情報
+  const slangLevel = searchParams.get("slangLevel");
+  const correctCount = searchParams.get("correct");
+  const totalCount = searchParams.get("total");
+  const isSlangTest = !!slangScore;
 
   const cefrLevel = getCEFRLevel(score);
 
@@ -59,17 +68,55 @@ function AssessmentResultContent() {
 
           <h1 className="text-3xl font-bold text-white mb-2">診断完了！</h1>
           <p className="text-slate-400 mb-8">
-            {type === "vocabulary" ? "語彙テスト" : "読解テスト"}の結果
+            {isSlangTest
+              ? "スラング理解度テスト"
+              : type === "vocabulary"
+                ? "語彙テスト"
+                : "読解テスト"}
+            の結果
           </p>
 
           {/* Score Display */}
           <div className="mb-8">
             <div className="text-6xl font-bold text-white mb-2">{score}%</div>
-            <div
-              className={`inline-block px-4 py-2 ${cefrLevel.color} rounded-full text-white font-semibold`}
-            >
-              {cefrLevel.level} - {cefrLevel.label}
-            </div>
+            {isSlangTest ? (
+              <div className="space-y-2">
+                <div
+                  className={`inline-block px-4 py-2 rounded-full text-white font-semibold ${
+                    slangLevel === "NATIVE"
+                      ? "bg-purple-500"
+                      : slangLevel === "ADVANCED"
+                        ? "bg-blue-500"
+                        : slangLevel === "INTERMEDIATE"
+                          ? "bg-cyan-500"
+                          : slangLevel === "BASIC"
+                            ? "bg-emerald-500"
+                            : "bg-slate-500"
+                  }`}
+                >
+                  {slangLevel === "NATIVE"
+                    ? "🔥 ネイティブ級"
+                    : slangLevel === "ADVANCED"
+                      ? "⭐ 上級"
+                      : slangLevel === "INTERMEDIATE"
+                        ? "📚 中級"
+                        : slangLevel === "BASIC"
+                          ? "🌱 初級"
+                          : "入門"}
+                </div>
+                {correctCount && totalCount && (
+                  <p className="text-slate-400 text-sm">
+                    {correctCount} / {totalCount} 問正解
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div
+                className={`inline-block px-4 py-2 ${cefrLevel.color} rounded-full text-white font-semibold`}
+              >
+                {cefrLevel.level} - {cefrLevel.label}
+              </div>
+            )}
           </div>
 
           {/* Score Bar */}
@@ -189,8 +236,7 @@ function AssessmentResultContent() {
           </Button>
           <Button
             asChild
-            variant="outline"
-            className="h-auto px-6 py-3 border-slate-600 hover:bg-slate-700/50 text-white font-medium rounded-xl transition-all"
+            className="h-auto px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-all border-0"
           >
             <Link href="/">
               <Home className="w-5 h-5" />

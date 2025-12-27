@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 
 interface Achievement {
   id: string;
+  code: string;
   name: string;
   nameJa: string;
   description: string;
@@ -260,8 +261,7 @@ export default function AchievementsPage() {
                 const style =
                   RARITY_STYLES[achievement.rarity] || RARITY_STYLES.common;
                 const catInfo = CATEGORY_INFO[achievement.category];
-                const progress =
-                  data?.progress[achievement.id.replace(/-/g, "_")] || 0;
+                const progress = data?.progress[achievement.code] || 0;
                 const progressPercent = Math.min(
                   (progress / achievement.requirement) * 100,
                   100,

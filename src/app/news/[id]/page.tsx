@@ -1,12 +1,14 @@
 "use client";
 
 import {
+  AlertTriangle,
   ArrowLeft,
   BookOpen,
   ExternalLink,
   Loader2,
   MessageSquare,
   Plus,
+  RefreshCw,
   Volume2,
 } from "lucide-react";
 import Link from "next/link";
@@ -30,6 +32,13 @@ interface WordPopover {
   loading: boolean;
 }
 
+// 記事コンテンツの状態
+interface ArticleContent {
+  content: string;
+  wordCount: number;
+  error?: string;
+}
+
 export default function ArticleDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -42,6 +51,10 @@ export default function ArticleDetailPage() {
   const articleDescription = searchParams.get("description") || "";
 
   const [article, setArticle] = useState<Article | null>(null);
+  const [articleContent, setArticleContent] = useState<ArticleContent | null>(
+    null
+  );
+  const [contentLoading, setContentLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [popover, setPopover] = useState<WordPopover | null>(null);
   const [showComments, setShowComments] = useState(false);
@@ -51,7 +64,7 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch("/api/auth/session");
+        const res = await fetch("/api/auth/get-session");
         if (res.ok) {
           const data = await res.json();
           setUserId(data?.user?.id);
@@ -82,13 +95,59 @@ export default function ArticleDetailPage() {
     setLoading(false);
   }, [articleId, articleTitle, articleUrl, articleSource, articleDescription]);
 
+  // 記事の全文を取得
+  const fetchArticleContent = useCallback(async () => {
+    if (!articleUrl) return;
+
+    setContentLoading(true);
+    setArticleContent(null);
+
+    try {
+      const decodedUrl = decodeURIComponent(articleUrl);
+      const res = await fetch(
+        `/api/news/content?url=${encodeURIComponent(decodedUrl)}`
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        setArticleContent({
+          content: data.content,
+          wordCount: data.wordCount,
+        });
+      } else {
+        const errorData = await res.json();
+        setArticleContent({
+          content: "",
+          wordCount: 0,
+          error: errorData.error || "記事の取得に失敗しました",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch article content:", error);
+      setArticleContent({
+        content: "",
+        wordCount: 0,
+        error: "記事の取得に失敗しました",
+      });
+    } finally {
+      setContentLoading(false);
+    }
+  }, [articleUrl]);
+
+  // 初回ロード時に記事を取得
+  useEffect(() => {
+    if (articleUrl && !articleContent && !contentLoading) {
+      fetchArticleContent();
+    }
+  }, [articleUrl, articleContent, contentLoading, fetchArticleContent]);
+
   // 単語クリック時の処理
-  const _handleWordClick = useCallback(
+  const handleWordClick = useCallback(
     async (event: React.MouseEvent<HTMLSpanElement>, word: string) => {
       const rect = event.currentTarget.getBoundingClientRect();
       const cleanWord = word.replace(/[^a-zA-Z]/g, "").toLowerCase();
 
-      if (!cleanWord) return;
+      if (!cleanWord || cleanWord.length < 2) return;
 
       setPopover({
         word: cleanWord,
@@ -100,7 +159,7 @@ export default function ArticleDetailPage() {
       try {
         // Free Dictionary API で定義を取得
         const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`,
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`
         );
 
         if (response.ok) {
@@ -120,20 +179,20 @@ export default function ArticleDetailPage() {
                     definition: meaning?.definitions?.[0]?.definition,
                   },
                 }
-              : null,
+              : null
           );
         } else {
           setPopover((prev) =>
-            prev ? { ...prev, loading: false, definition: undefined } : null,
+            prev ? { ...prev, loading: false, definition: undefined } : null
           );
         }
       } catch (_err) {
         setPopover((prev) =>
-          prev ? { ...prev, loading: false, definition: undefined } : null,
+          prev ? { ...prev, loading: false, definition: undefined } : null
         );
       }
     },
-    [],
+    []
   );
 
   // ポップオーバーを閉じる
@@ -154,7 +213,7 @@ export default function ArticleDetailPage() {
           pronunciation: popover.definition.phonetic || "",
           category: popover.definition.partOfSpeech || "Other",
           meaning: popover.definition.definition || "",
-          example: "", // TODO: 記事のコンテキストを追加
+          example: "",
           exampleTranslation: "",
           note: article ? `[${article.source}]` : "",
           language: "english",
@@ -174,6 +233,41 @@ export default function ArticleDetailPage() {
     }
   }, [popover, article, closePopover]);
 
+  // テキストをクリック可能な単語に分割
+  const renderClickableText = (text: string) => {
+    const words = text.split(/(\s+)/);
+    return words.map((word, index) => {
+      // 空白はそのまま返す（順序は変わらないためindexで問題ない）
+      if (/^\s+$/.test(word)) {
+        // biome-ignore lint/suspicious/noArrayIndexKey: 空白文字は同一内容のためindexが必要
+        return <span key={`space-${index}`}>{word}</span>;
+      }
+      // 単語はクリック/タップ可能にする
+      return (
+        <button
+          type="button"
+          key={`word-${index}-${word}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // ボタンの位置情報を取得してhandleWordClickに渡す
+            const rect = e.currentTarget.getBoundingClientRect();
+            const syntheticEvent = {
+              currentTarget: {
+                getBoundingClientRect: () => rect,
+              },
+            } as React.MouseEvent<HTMLSpanElement>;
+            handleWordClick(syntheticEvent, word);
+          }}
+          className="inline cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/50 active:bg-yellow-300 dark:active:bg-yellow-800/70 text-inherit rounded px-0.5 transition-colors touch-manipulation border-none bg-transparent p-0 m-0 font-inherit text-left"
+          style={{ WebkitTapHighlightColor: "rgba(234, 179, 8, 0.3)" }}
+        >
+          {word}
+        </button>
+      );
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -183,21 +277,21 @@ export default function ArticleDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* ヘッダー */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             <Link
               href="/news"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>ニュース一覧</span>
             </Link>
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-600">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Article Reader
               </span>
             </div>
@@ -218,55 +312,97 @@ export default function ArticleDetailPage() {
                     <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium rounded">
                       {article.source}
                     </span>
+                    {articleContent?.wordCount && (
+                      <span className="px-2 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 text-xs rounded">
+                        約 {articleContent.wordCount} 語
+                      </span>
+                    )}
                   </div>
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                     {article.title}
                   </h1>
                   {article.description && (
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {article.description}
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      {renderClickableText(article.description)}
                     </p>
                   )}
                 </div>
 
-                {/* 記事本文へのリンク */}
+                {/* 記事本文 */}
                 <div className="p-6">
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
-                    <BookOpen className="w-10 h-10 mx-auto mb-3 text-blue-500" />
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                      記事の全文を読む
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      News APIの制限により、全文は元サイトでご確認ください。
-                      <br />
-                      単語をクリックして意味を確認し、学習に活用できます。
-                    </p>
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      元サイトで読む
-                    </a>
-                  </div>
+                  {contentLoading ? (
+                    <div className="flex flex-col items-center justify-center py-12">
+                      <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+                      <p className="text-gray-500 dark:text-gray-400">
+                        記事を読み込んでいます...
+                      </p>
+                    </div>
+                  ) : articleContent?.content ? (
+                    <div className="prose dark:prose-invert max-w-none">
+                      <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 mb-6">
+                        <p className="text-sm text-emerald-700 dark:text-emerald-400">
+                          💡 <strong>単語をクリック</strong>
+                          すると意味を確認できます。気になる単語は単語帳に追加しましょう！
+                        </p>
+                      </div>
+                      <div className="text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
+                        {articleContent.content.split("\n\n").map((para, i) => (
+                          <p
+                            key={`para-${i}-${para.slice(0, 20)}`}
+                            className="mb-4"
+                          >
+                            {renderClickableText(para)}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ) : articleContent?.error ? (
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-6 text-center">
+                      <AlertTriangle className="w-10 h-10 mx-auto mb-3 text-amber-500" />
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                        記事の取得に失敗しました
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        一部のサイトはコンテンツの取得を制限しています。
+                        <br />
+                        元サイトで直接お読みください。
+                      </p>
+                      <div className="flex gap-3 justify-center">
+                        <button
+                          type="button"
+                          onClick={fetchArticleContent}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          再試行
+                        </button>
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          元サイトで読む
+                        </a>
+                      </div>
+                    </div>
+                  ) : null}
 
-                  {/* 学習ヒント */}
-                  <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-                    <h4 className="font-medium text-emerald-800 dark:text-emerald-300 mb-2">
-                      💡 学習のヒント
-                    </h4>
-                    <ul className="text-sm text-emerald-700 dark:text-emerald-400 space-y-1">
-                      <li>
-                        • 記事を読みながら、わからない単語をメモしましょう
-                      </li>
-                      <li>
-                        • 戻ってきたら下のディスカッションで感想を共有できます
-                      </li>
-                      <li>• 新しいスラングを見つけたら単語帳に追加！</li>
-                    </ul>
-                  </div>
+                  {/* 元サイトへのリンク */}
+                  {articleContent?.content && (
+                    <div className="mt-6 pt-6 border-t border-gray-100 dark:border-slate-700">
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        元サイトで読む
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 {/* ディスカッションセクション */}
@@ -345,6 +481,18 @@ export default function ArticleDetailPage() {
                 </Link>
               </div>
             </div>
+
+            {/* 学習ヒント */}
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
+              <h4 className="font-medium text-emerald-800 dark:text-emerald-300 mb-2">
+                💡 学習のヒント
+              </h4>
+              <ul className="text-sm text-emerald-700 dark:text-emerald-400 space-y-1">
+                <li>• 単語をクリックして意味を確認</li>
+                <li>• 気になる単語は単語帳に追加</li>
+                <li>• ディスカッションで感想を共有</li>
+              </ul>
+            </div>
           </div>
         </div>
       </main>
@@ -362,7 +510,7 @@ export default function ArticleDetailPage() {
 
           {/* ポップオーバー本体 */}
           <div
-            className="fixed z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-4 min-w-[280px] max-w-[360px]"
+            className="fixed z-50 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 p-4 min-w-[280px] max-w-[360px]"
             style={{
               left: `${Math.min(popover.x, window.innerWidth - 380)}px`,
               top: `${popover.y}px`,
@@ -376,7 +524,7 @@ export default function ArticleDetailPage() {
             ) : popover.definition ? (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                     {popover.definition.word}
                   </h3>
                   <button
@@ -385,25 +533,25 @@ export default function ArticleDetailPage() {
                       popover.definition?.word &&
                       speak(popover.definition.word, "english")
                     }
-                    className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
                   >
                     <Volume2 className="w-5 h-5" />
                   </button>
                 </div>
 
                 {popover.definition.phonetic && (
-                  <p className="text-gray-500 font-mono text-sm mb-2">
+                  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm mb-2">
                     /{popover.definition.phonetic}/
                   </p>
                 )}
 
                 {popover.definition.partOfSpeech && (
-                  <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded mb-2">
+                  <span className="inline-block px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs rounded mb-2">
                     {popover.definition.partOfSpeech}
                   </span>
                 )}
 
-                <p className="text-gray-700 text-sm mb-4">
+                <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
                   {popover.definition.definition}
                 </p>
 
@@ -418,8 +566,12 @@ export default function ArticleDetailPage() {
               </div>
             ) : (
               <div className="text-center py-4">
-                <p className="text-gray-500">定義が見つかりませんでした</p>
-                <p className="text-gray-400 text-sm mt-1">「{popover.word}」</p>
+                <p className="text-gray-500 dark:text-gray-400">
+                  定義が見つかりませんでした
+                </p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+                  「{popover.word}」
+                </p>
               </div>
             )}
           </div>

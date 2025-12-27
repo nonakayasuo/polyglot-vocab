@@ -3,57 +3,55 @@
     "projectName": "NewsLingua",
     "version": "1.0.0",
     "createdAt": "2025-12-27T00:00:00.000Z",
-    "updatedAt": "2025-12-27T00:00:00.000Z"
+    "updatedAt": "2025-12-27T15:00:00.000Z"
   },
   "tags": {
     "master": {
-      "tasks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "title": "Flutter モバイルアプリ開発",
+          "description": "iOS/Android向けFlutterアプリを開発（BtoC向け高パフォーマンス）",
+          "details": "Flutter + Dart環境構築。riverpodで状態管理、go_routerでルーティング。認証、ニュース一覧、単語帳、フラッシュカード画面。Firebase連携でプッシュ通知実装。60fpsスムーズアニメーション重視。",
+          "testStrategy": "主要機能がモバイルで正常に動作することを確認。60fpsでスムーズに動作することをプロファイリング。",
+          "status": "pending",
+          "dependencies": [],
+          "priority": "high",
+          "subtasks": []
+        },
+        {
+          "id": "2",
+          "title": "Stripe決済統合",
+          "description": "Stripeを使用した決済システムを実装",
+          "details": "Free/Pro/Ultimate/Businessプラン実装。サブスクリプション管理。決済履歴。",
+          "testStrategy": "テストモードで各プランの決済フローを確認",
+          "status": "pending",
+          "dependencies": [],
+          "priority": "high",
+          "subtasks": []
+        },
+        {
+          "id": "3",
+          "title": "βテスト・ローンチ準備",
+          "description": "セキュリティ監査、パフォーマンス最適化、クローズドβテスト実施",
+          "details": "セキュリティ監査。パフォーマンス最適化。クローズドβ招待。フィードバック収集・対応。ランディングページ作成。",
+          "testStrategy": "βテスターからのフィードバックを収集し、主要なバグを修正",
+          "status": "pending",
+          "dependencies": ["1", "2"],
+          "priority": "high",
+          "subtasks": []
+        }
+      ],
       "metadata": {
         "createdAt": "2025-12-27T00:00:00.000Z",
-        "description": "メイン開発タスク"
+        "description": "メイン開発タスク",
+        "version": "1.0.0",
+        "lastModified": "2025-12-27T15:00:00.000Z",
+        "taskCount": 3,
+        "completedCount": 0
       }
     }
   },
-  "activeTag": "feature-news-integration",
-  "version": 1,
-  "feature-news-integration": {
-    "tasks": [
-      {
-        "id": "26",
-        "title": "コミュニティ機能（グループ・ディスカッション）",
-        "description": "学習グループと記事ディスカッション機能を実装",
-        "details": "グループ作成・参加・管理機能。記事へのコメント・返信機能。通知システム。",
-        "testStrategy": "",
-        "status": "pending",
-        "dependencies": [
-          "5",
-          "11"
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": "28",
-        "title": "Flutter モバイルアプリ開発",
-        "description": "iOS/Android向けFlutterアプリを開発（BtoC向け高パフォーマンス）",
-        "details": "Flutter + Dart環境構築。riverpodで状態管理、go_routerでルーティング。認証、ニュース一覧、単語帳、フラッシュカード画面。Firebase連携でプッシュ通知実装。60fpsスムーズアニメーション重視。",
-        "testStrategy": "主要機能がモバイルで正常に動作することを確認。60fpsでスムーズに動作することをプロファイリング。",
-        "status": "pending",
-        "dependencies": [
-          "21"
-        ],
-        "priority": "medium",
-        "subtasks": []
-      }
-    ],
-    "metadata": {
-      "version": "1.0.0",
-      "lastModified": "2025-12-27T10:20:59.344Z",
-      "taskCount": 2,
-      "completedCount": 0,
-      "tags": [
-        "feature-news-integration"
-      ]
-    }
-  }
+  "activeTag": "master",
+  "version": 1
 }
